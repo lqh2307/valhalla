@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-set -o errexit -o pipefail -o nounset
+set -e  # Exit immediately if a command exits with a non-zero status
 
 # Runs the Clang Formatter in parallel on the code base.
 # Return codes:
 #  - 1 there are files to be formatted
 #  - 0 everything looks fine
-
 
 readonly CLANG_FORMAT_VERSION=11.0.0
 

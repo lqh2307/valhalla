@@ -34,7 +34,7 @@ Important build options include:
 To install on a Debian or Ubuntu system you need to install its dependencies with:
 
 ```bash
-./scripts/install-linux-deps.sh
+./scripts/install_deps.sh
 ```
 
 Now you can build and install Valhalla, e.g. 

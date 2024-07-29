@@ -17,7 +17,7 @@ Demo valhalla app on https://valhalla.openstreetmap.de.
 
 ## Platform Compatibility
 
-Valhalla is fully functional on many Linux and Mac OS distributions, and is also used on iOS and Android devices.
+Valhalla is fully functional on many Linux distributions, and is also used on iOS and Android devices.
 
 ## Organization
 
@@ -42,7 +42,7 @@ Documentation is stored in the `docs/` folder in this GitHub repository. It can 
 
 ## Build & Run
 
-Valhalla uses CMake as build system. When compiling with `gcc` (GNU Compiler Collection), currently version 5 or newer is supported.
+Valhalla uses CMake as build system. When compiling with `gcc`, currently version 5 or newer is supported.
 
 Important build options include:
 
@@ -62,7 +62,7 @@ Important build options include:
 | `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`) | If ON builds Valhalla modules as STATIC library targets (defaults to off)|
 | `-DENABLE_COMPILER_WARNINGS` (`ON` / `OFF`) | Build with common compiler warnings (defaults to off)|
 | `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`) | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)|
-| `-DENABLE_WERROR` (`ON` / `OFF`) | Treat compiler warnings as errors  (defaults to off). Requires `-DENABLE_COMPILER_WARNINGS=ON` to take effect.|
+| `-DENABLE_WERROR` (`ON` / `OFF`) | Treat compiler warnings as errors (defaults to off). Requires `-DENABLE_COMPILER_WARNINGS=ON` to take effect.|
 | `-DENABLE_SANITIZERS` (`ON` / `OFF`) | Build with all the integrated sanitizers (defaults to off).|
 | `-DENABLE_ADDRESS_SANITIZER` (`ON` / `OFF`) | Build with address sanitizer (defaults to off).|
 | `-DENABLE_UNDEFINED_SANITIZER` (`ON` / `OFF`) | Build with undefined behavior sanitizer (defaults to off).|
@@ -77,9 +77,21 @@ Seitch to dev branch:
 
 	git checkout dev
 
-Build image:
+### Build from source
+
+Install dependencies:
+
+  ./scripts/install_deps.sh
+
+Build (will build to ./build):
+
+  ./scripts/build_and_install.sh
+
+### Build docker image
 
   docker build -t quanghuy2307/valhalla:1.0.0 .
+
+### Run
 
 Create folders and go to it:
 

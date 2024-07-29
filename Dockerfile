@@ -15,18 +15,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
   apt-get install -y sudo
 
-# install deps
 WORKDIR /usr/local/src/valhalla
 ADD . .
-RUN bash ./scripts/install-linux-deps.sh
+RUN ./scripts/install_deps.sh
+RUN ./scripts/build_and_install.sh
 RUN rm -rf /var/lib/apt/lists/*
-
-# configure the build with symbols turned on so that crashes can be triaged
-WORKDIR /usr/local/src/valhalla/build
-# switch back to -DCMAKE_BUILD_TYPE=RelWithDebInfo and uncomment the block below if you want debug symbols
-RUN cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off
-RUN make all -j${CONCURRENCY:-$(nproc)}
-RUN make install
 
 # we wont leave the source around but we'll drop the commit hash we'll also keep the locales
 WORKDIR /usr/local/src
