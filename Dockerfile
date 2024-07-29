@@ -1,5 +1,6 @@
 ARG BUILDER_IMAGE=ubuntu:23.04
 ARG TARGET_IMAGE=ubuntu:23.04
+ARG VERSION=1.0.0
 
 FROM $BUILDER_IMAGE as builder
 
@@ -18,9 +19,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # get the code into the right place and prepare to build it
 ADD . .
-RUN ls -la
 RUN git submodule sync && git submodule update --init --recursive
-RUN rm -rf build && mkdir build
 
 # configure the build with symbols turned on so that crashes can be triaged
 WORKDIR /usr/local/src/valhalla/build
@@ -31,7 +30,7 @@ RUN make install
 
 # we wont leave the source around but we'll drop the commit hash we'll also keep the locales
 WORKDIR /usr/local/src
-RUN cd valhalla && echo "1.0.0" > ../valhalla_version
+RUN cd valhalla && echo $VERSION > ../valhalla_version
 RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales
 RUN rm -rf valhalla
 
@@ -54,7 +53,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     libcurl4 libczmq4 libluajit-5.1-2 libgdal32 \
     libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
     curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
-    spatialite-bin unzip wget && rm -rf /var/lib/apt/lists/*
+    spatialite-bin unzip wget && \
+  rm -rf /var/lib/apt/lists/*
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
 # python smoke test
