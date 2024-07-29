@@ -9,8 +9,6 @@ FROM $BUILDER_IMAGE AS builder
 
 ARG CONCURRENCY
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
   apt-get install -y sudo
@@ -19,7 +17,6 @@ WORKDIR /usr/local/src/valhalla
 ADD . .
 RUN ./scripts/install_deps.sh
 RUN ./scripts/build_and_install.sh
-RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/local/src
 RUN cd valhalla
@@ -33,8 +30,6 @@ FROM $TARGET_IMAGE AS runner
 # ARG http_proxy=http://10.55.123.98:3333
 # ARG https_proxy=http://10.55.123.98:3333
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y \
@@ -43,6 +38,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
     curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
     spatialite-bin unzip wget && \
+  apt-get -y --purge autoremove && \
+  apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local

@@ -48,7 +48,10 @@ DEBIAN_FRONTEND=noninteractive && \
     python3-pip \
     spatialite-bin \
     unzip \
-    zlib1g-dev
+    zlib1g-dev && \
+  sudo apt-get -y --purge autoremove && \
+  sudo apt-get clean && \
+  sudo rm -rf /var/lib/apt/lists/*
 
 git submodule sync
 git submodule update --init --recursive
