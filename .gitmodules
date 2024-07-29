@@ -46,3 +46,6 @@
 [submodule "third_party/prime_server"]
 	path = third_party/prime_server
 	url = https://github.com/kevinkreiser/prime_server.git
+[submodule "third_party/demos"]
+	path = third_party/demos
+	url = https://github.com/valhalla/demos.git
