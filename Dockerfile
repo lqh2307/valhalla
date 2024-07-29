@@ -1,7 +1,7 @@
 ARG BUILDER_IMAGE=ubuntu:23.04
 ARG TARGET_IMAGE=ubuntu:23.04
 
-FROM $BUILDER_IMAGE as builder
+FROM $BUILDER_IMAGE AS builder
 
 # set proxy
 # ARG http_proxy=http://10.55.123.98:3333
@@ -35,7 +35,7 @@ RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; impo
 RUN rm -rf valhalla
 
 
-FROM $TARGET_IMAGE as runner
+FROM $TARGET_IMAGE AS runner
 
 # set proxy
 # ARG http_proxy=http://10.55.123.98:3333
