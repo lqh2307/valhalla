@@ -6,11 +6,26 @@ INPUT_OSM_FILES=$(ls *.osm.pbf | tr '\n' ' ')
 ELEVATION_BOUNDING_BOX=96,4,120,28
 SERVICE_NUM_THREADS=1
 
+echo "[1/8] ==> Build config..."
 valhalla_build_config > valhalla/valhalla.json
+
+echo "[2/8] ==> Build timezones..."
 valhalla_build_timezones > valhalla/tz_world.sqlite
-valhalla_build_landmarks -c valhalla/valhalla.json $OSM_FILES
-valhalla_build_admins -c valhalla/valhalla.json $OSM_FILES
-valhalla_build_elevation -c valhalla/valhalla.json -b $BOUNDING_BOX
-valhalla_build_tiles -c valhalla/valhalla.json $OSM_FILES
+
+echo "[3/8] ==> Build landmarks..."
+valhalla_build_landmarks -c valhalla/valhalla.json $INPUT_OSM_FILES
+
+echo "[4/8] ==> Build admins..."
+valhalla_build_admins -c valhalla/valhalla.json $INPUT_OSM_FILES
+
+echo "[5/8] ==> Build elevation..."
+valhalla_build_elevation -c valhalla/valhalla.json -b $ELEVATION_BOUNDING_BOX
+
+echo "[6/8] ==> Build tiles..."
+valhalla_build_tiles -c valhalla/valhalla.json $INPUT_OSM_FILES
+
+echo "[7/8] ==> Build extract..."
 valhalla_build_extract -c valhalla/valhalla.json
-valhalla_service valhalla/valhalla.json $NUM_THREADS
+
+echo "[8/8] ==> Start service..."
+valhalla_service valhalla/valhalla.json $SERVICE_NUM_THREADS
