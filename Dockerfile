@@ -4,17 +4,22 @@ ARG VERSION=1.0.0
 
 FROM $BUILDER_IMAGE as builder
 
+# set proxy
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
+
 ARG CONCURRENCY
 
-# set paths
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
-RUN export DEBIAN_FRONTEND=noninteractive && apt update && apt install -y sudo
+RUN export DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
+  apt-get install -y sudo
 
 # install deps
 WORKDIR /usr/local/src/valhalla
 ADD . .
-RUN bash /usr/local/src/valhalla/scripts/install-linux-deps.sh
+RUN bash ./scripts/install-linux-deps.sh
 RUN rm -rf /var/lib/apt/lists/*
 
 # configure the build with symbols turned on so that crashes can be triaged
@@ -33,7 +38,10 @@ RUN rm -rf valhalla
 
 FROM $TARGET_IMAGE as runner
 
-# basic paths
+# set proxy
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
+
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 # grab the builder stages artifacts
@@ -43,11 +51,17 @@ COPY --from=builder /usr/lib/python3/dist-packages/valhalla/* /usr/lib/python3/d
 # we need to add back some runtime dependencies for binaries and scripts
 # install all the posix locales that we support
 RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt update && \
-  apt install -y \
+  apt-get update && \
+  apt-get install -y \
     libcurl4 libczmq4 libluajit-5.1-2 libgdal32 \
     libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
     curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
     spatialite-bin unzip wget && \
   rm -rf /var/lib/apt/lists/*
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
+
+WORKDIR /data
+
+VOLUME /data
+
+EXPOSE 8002

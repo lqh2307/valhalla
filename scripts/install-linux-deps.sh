@@ -3,9 +3,13 @@
 
 set -x -o errexit -o pipefail -o nounset
 
-# Now, go through and install the build dependencies
-sudo apt-get update --assume-yes
-env DEBIAN_FRONTEND=noninteractive sudo apt install --yes --quiet \
+http_proxy=http://10.55.123.98:3333
+https_proxy=http://10.55.123.98:3333
+
+# Install the build dependencies
+DEBIAN_FRONTEND=noninteractive && \
+  sudo apt-get update --assume-yes && \
+  sudo apt install --yes --quiet \
     autoconf \
     automake \
     ccache \
@@ -47,7 +51,9 @@ env DEBIAN_FRONTEND=noninteractive sudo apt install --yes --quiet \
     spatialite-bin \
     unzip \
     zlib1g-dev
-  
+
+git submodule sync && git submodule update --init --recursive
+
 # build prime_server from source
 cd third_party/prime_server
 ./autogen.sh && ./configure
@@ -55,9 +61,4 @@ make -j${CONCURRENCY:-$(nproc)}
 sudo make install
 cd -
 
-# for boost and scripts deps
-if [[ $(python3 -c 'import sys; print(int(sys.base_prefix != sys.prefix or hasattr(sys, "real_prefix")))') -eq 1 ]]; then
-  python3 -m pip install --upgrade requests shapely
-else
-  sudo PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --upgrade requests shapely
-fi
+sudo PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --upgrade requests shapely
