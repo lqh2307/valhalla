@@ -49,14 +49,11 @@ env DEBIAN_FRONTEND=noninteractive sudo apt install --yes --quiet \
     zlib1g-dev
   
 # build prime_server from source
-# readonly primeserver_version=0.7.0
-readonly primeserver_dir=/tmp/prime_server
-git clone --recurse-submodules https://github.com/kevinkreiser/prime_server $primeserver_dir
-pushd $primeserver_dir
+cd third_party/prime_server
 ./autogen.sh && ./configure
 make -j${CONCURRENCY:-$(nproc)}
 sudo make install
-popd && rm -rf $primeserver_dir
+cd -
 
 # for boost and scripts deps
 if [[ $(python3 -c 'import sys; print(int(sys.base_prefix != sys.prefix or hasattr(sys, "real_prefix")))') -eq 1 ]]; then
