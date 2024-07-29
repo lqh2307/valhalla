@@ -1,24 +1,14 @@
 # OSM Tag Usage
 
-## Table of Contents
-
-1. [OSM Data Model Overview](#osm-data-model-overview)
-2. [OSM Processing Overview](#osm-processing-overview)
-3. [Lua Tag Processing](#lua-tag-processing)
-4. [C++ Tag Processing](#c++-tag-processing)
-5. [Common Pitfalls and Debugging](#common-pitfalls-and-debugging)
-
 ## OSM Data Model Overview
 
-OSM's data is mostly schemaless. It currently has a top level structure which consists of 3 element types. Those are nodes, ways and relations. Nodes are point features, ways are linear features (comprised of nodes) and relations are multi features (comprised of nodes and/or ways). See [here](https://wiki.openstreetmap.org/wiki/Relation) for more on the types of elements within the OSM dataset.
-
-Each of these objects can have any number of key value pairs, called [tags](https://wiki.openstreetmap.org/wiki/Tags) associated with it. The tags are used to delineate physical, political, temporal, etc attribution of the element to which they are attached.
+OSM's data has a top level structure which consists of 3 element types: nodes, ways and relations. Nodes are point features, ways are linear features (comprised of nodes) and [relations](https://wiki.openstreetmap.org/wiki/Relation). Each of these objects can have any number of key value pairs, called [tags](https://wiki.openstreetmap.org/wiki/Tags) associated with it. The tags are used to delineate physical, political, temporal, etc attribution of the element to which they are attached.
 
 Valhalla creates a routable graph directly from OSM elements and their tags. The connectivity of the graph is a direct result of how the nodes, ways and relations are correlated in the data model. The attribution on edges and nodes in the resulting graph come directly from the tags on those OSM elements. Note that many OSM elements, because of their tags (or lack thereof), will not be useful in creating a routable graph and are simply ignored.
 
 ## OSM Processing Overview
 
-The basic flow valhalla follows when creating routing tiles is as follows:
+The basic flow creating routing tiles:
 
 * Parse all the ways and their tags
 * Parse all the relations and their tags

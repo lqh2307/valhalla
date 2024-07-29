@@ -120,16 +120,7 @@ Run docker container:
 
 Run command in container:
 
-  valhalla_build_config \
-      --mjolnir-tile-dir ${PWD}/valhalla/tiles \
-      --mjolnir-transit-dir ${PWD}/valhalla/transit \
-      --additional-data-elevation ${PWD}/valhalla/elevation_tiles \
-      --mjolnir-tile-extract ${PWD}/valhalla/tiles.tar \
-      --mjolnir-traffic-extract ${PWD}/valhalla/traffic.tar \
-      --mjolnir-timezone ${PWD}/valhalla/tz_world.sqlite \
-      --mjolnir-admin ${PWD}/valhalla/admin.sqlite \
-      --mjolnir-landmarks ${PWD}/valhalla/landmarks.sqlite \
-      > valhalla/valhalla.json
+  valhalla_build_config > valhalla/valhalla.json
   valhalla_build_timezones -f > valhalla/tz_world.sqlite
   valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf
   valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf

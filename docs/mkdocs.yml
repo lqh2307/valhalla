@@ -116,5 +116,3 @@ nav:
     - Data sources: mjolnir/data_sources.md
     - Administrative data: mjolnir/admins.md
     - Attribution requirements: mjolnir/attribution.md
-  - Development:
-    - releasing.md

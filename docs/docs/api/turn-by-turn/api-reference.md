@@ -1,22 +1,43 @@
 # Valhalla routing service API reference
 
-Valhalla's routing service (a.k.a. turn-by-turn), is an open-source routing service that lets you integrate routing and navigation into a web or mobile application.
+## Routing overview
 
-[View an interactive demo](http://valhalla.github.io/demos/routing)
+The Valhalla route service (a.k.a. turn-by-turn) is an open-source routing service that lets you integrate routing and navigation into a web or mobile application. The service works globally, and provides dynamic and customizable routing by driving, walking, bicycling, and using multimodal and transit options, with clear directions for maneuvers along the route.
 
-The default logic for the OpenStreetMap tags, keys, and values used when routing are documented on an [OSM wiki page](http://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Valhalla).
+You can display Valhalla routes on web and mobile maps, e.g. [https://valhalla.openstreetmap.de](https://valhalla.openstreetmap.de).
 
 ## Inputs of a route
 
 The route request run locally takes the form of `localhost:8002/route?json={}`, where the JSON inputs inside the `{}` include location information, name and options for the costing model, and output options. Here is the JSON payload for an example request:
 
 ```json
-{"locations":[{"lat":42.358528,"lon":-83.271400,"street":"Appleton"},{"lat":42.996613,"lon":-78.749855,"street":"Ranch Trail"}],"costing":"auto","costing_options":{"auto":{"country_crossing_penalty":2000.0}},"units":"miles","id":"my_work_route"}
+{
+    "locations": [
+        {
+            "lat": 42.358528,
+            "lon": -83.271400,
+            "street": "Appleton"
+        },
+        {
+            "lat": 42.996613,
+            "lon": -78.749855,
+            "street": "Ranch Trail"
+        }
+    ],
+    "costing": "auto",
+    "costing_options": {
+        "auto": {
+            "country_crossing_penalty": 2000.0
+        }
+    },
+    "units": "miles",
+    "id": "my_work_route"
+}
 ```
 
 This request provides automobile routing between the Detroit, Michigan area and Buffalo, New York, with an optional street name parameter to improve navigation at the start and end points. It attempts to avoid routing north through Canada by adding a penalty for crossing international borders. The resulting route is displayed in miles.
 
-There is an option to name your route request. You can do this by appending the following to your request `&id=`. The `id` is returned with the response so a user could match to the corresponding request.
+`id` is an option to name your route request. The `id` is returned with the response so a user could match to the corresponding request.
 
 ### Locations
 
@@ -46,7 +67,7 @@ To build a route, you need to specify two `break` locations. In addition, you ca
 | `street_side_tolerance` | If your input coordinate is less than this tolerance away from the edge centerline then we set your side of street to none otherwise your side of street will be left or right depending on direction of travel. The default is 5 meters. |
 | `street_side_max_distance` | The max distance in meters that the input coordinates or display ll can be from the edge centerline for them to be used for determining the side of street. Beyond this distance the side of street is set to none. The default is 1000 meters. |
 | `street_side_cutoff` | Disables the `preferred_side` when set to `same` or `opposite` if the edge has a road class less than that provided by `street_side_cutoff`. The road class must be one of the following strings: motorway, trunk, primary, secondary, tertiary, unclassified, residential, service_other.  The default value is `service_other` so that `preferred_side` will not be disabled for any edges. |
-| `search_filter` | A set of optional filters to exclude candidate edges based on their attribution. The following exclusion filters are supported: <ul><li>`exclude_tunnel` (boolean, defaults to `false`): whether to exclude roads marked as tunnels</li><li>`exclude_bridge` (boolean, defaults to `false`): whether to exclude roads marked as bridges</li><li>`exclude_ramp` (boolean, defaults to `false`): whether to exclude link roads marked as ramps, note that some turn channels are also marked as ramps</li><li>`exclude_closures` (boolean, defaults to `true`): whether to exclude roads considered closed due to live traffic closure. **Note:** This option cannot be set if `costing_options.<costing>.ignore_closures` is also specified. An error is returned if both options are specified. **Note 2:** Ignoring closures at destination and source locations does NOT work for date_time type `0/1` & `2` respectively</li><li>`min_road_class` (string, defaults to `"service_other"`): lowest road class allowed</li><li>`max_road_class` (string, defaults to `"motorway"`): highest road class allowed</li></ul>Road classes from highest to lowest are: motorway, trunk, primary, secondary, tertiary, unclassified, residential, service_other.
+| `search_filter` | A set of optional filters to exclude candidate edges based on their attribution. The following exclusion filters are supported: <ul><li>`exclude_tunnel` (boolean, default: `false`): whether to exclude roads marked as tunnels</li><li>`exclude_bridge` (boolean, default: `false`): whether to exclude roads marked as bridges</li><li>`exclude_ramp` (boolean, default: `false`): whether to exclude link roads marked as ramps, note that some turn channels are also marked as ramps</li><li>`exclude_closures` (boolean, default: `true`): whether to exclude roads considered closed due to live traffic closure. **Note:** This option cannot be set if `costing_options.<costing>.ignore_closures` is also specified. An error is returned if both options are specified. **Note 2:** Ignoring closures at destination and source locations does NOT work for date_time type `0/1` & `2` respectively</li><li>`min_road_class` (string, default: `"service_other"`): lowest road class allowed</li><li>`max_road_class` (string, default: `"motorway"`): highest road class allowed</li></ul>Road classes from highest to lowest are: motorway, trunk, primary, secondary, tertiary, unclassified, residential, service_other.
 
 Optionally, you can include the following location information without impacting the routing. This information is carried through the request and returned as a convenience.
 
@@ -128,7 +149,7 @@ These options are available for `auto`, `bus`, and `truck` costing methods.
 | `shortest` | Changes the metric to quasi-shortest, i.e. purely distance-based costing. Note, this will disable all other costings & penalties. Also note, `shortest` will not disable hierarchy pruning, leading to potentially sub-optimal routes for some costing models. The default is `false`. |
 | `use_distance` | A factor that allows controlling the contribution of distance and time to the route costs. The value is in range between 0 and 1, where 0 only takes time into account (default) and 1 only distance. A factor of 0.5 will weight them roughly equally. **Note:** this costing is currently only available for auto costing. |
 | `disable_hierarchy_pruning` | Disable hierarchies to calculate the actual optimal route. The default is `false`. **Note:** This could be quite a performance drainer so there is a upper limit of distance. If the upper limit is exceeded, this option will always be `false`. |
-| `top_speed` | Top speed the vehicle can go. Also used to avoid roads with higher speeds than this value. `top_speed` must be between 10 and 252 KPH. The default value is 120 KPH for `truck` and 140 KPH for `auto` and `bus`. |
+| `top_speed` | Top speed the vehicle can go. Also used to avoid roads with higher speeds than this value. `top_speed` must be between 10 and 252 KPH. The default value is 90 KPH for `truck` and 140 KPH for `auto` and `bus`. |
 | `fixed_speed` | Fixed speed the vehicle can go. Used to override the calculated speed. Can be useful if speed of vehicle is known. `fixed_speed` must be between 1 and 252 KPH. The default value is 0 KPH which disables fixed speed and falls back to the standard calculated speed based on the road attribution. |
 | `ignore_closures` | If set to `true`, ignores all closures, marked due to live traffic closures, during routing. **Note:** This option cannot be set if `location.search_filter.exclude_closures` is also specified in the request and will return an error if it is |
 | `closure_factor` | A factor that penalizes the cost when traversing a closed edge (eg: if `search_filter.exclude_closures` is `false` for origin and/or destination location and the route starts/ends on closed edges). Its value can range from `1.0` - don't penalize closed edges, to `10.0` - apply high cost penalty to closed edges. Default value is `9.0`. **Note:** This factor is applicable only for motorized modes of transport, i.e `auto`, `motorcycle`, `motor_scooter`, `bus`, `truck` & `taxi`. |
@@ -163,7 +184,6 @@ The following options are available for `truck` costing.
 | `hazmat` | A value indicating if the truck is carrying hazardous materials. Default false. |
 | `hgv_no_access_penalty` | A penalty applied to roads with no HGV/truck access. If set to a value less than 43200 seconds, HGV will be allowed on these roads and the penalty applies. Default 43200, i.e. trucks are not allowed. |
 | `low_class_penalty` | A penalty (in seconds) which is applied when going to residential or service roads. Default is 30 seconds. |
-| `use_truck_route` | This value is a range of values from 0 to 1, where 0 indicates a light preference for streets marked as truck routes, and 1 indicates that streets not marked as truck routes should be avoided. This information is derived from the `hgv=designated` tag. Note that even with values near 1, there is no guarantee the returned route will include streets marked as truck routes. The default value is 0. | 
 
 
 ##### Bicycle costing options
@@ -264,25 +284,120 @@ These options are available for transit costing when the multimodal costing mode
 A multimodal request at the current date and time:
 
 ```json
-{"locations":[{"lat":40.730930,"lon":-73.991379,"street":"Wanamaker Place"},{"lat":40.749706,"lon":-73.991562,"street":"Penn Plaza"}],"costing":"multimodal","units":"miles"}
+{
+    "locations": [
+        {
+            "lat": 40.730930,
+            "lon": -73.991379,
+            "street": "Wanamaker Place"
+        },
+        {
+            "lat": 40.749706,
+            "lon": -73.991562,
+            "street": "Penn Plaza"
+        }
+    ],
+    "costing": "multimodal",
+    "units": "miles"
+}
 ```
 
 A multimodal request departing on 2016-03-29 at 08:00:
 
 ```json
-{"locations":[{"lat":40.749706,"lon":-73.991562,"type":"break","street":"Penn Plaza"},{"lat":40.73093,"lon":-73.991379,"type":"break","street":"Wanamaker Place"}],"costing":"multimodal","date_time":{"type":1,"value":"2016-03-29T08:00"}}
+{
+    "locations": [
+        {
+            "lat": 40.749706,
+            "lon": -73.991562,
+            "type": "break",
+            "street": "Penn Plaza"
+        },
+        {
+            "lat": 40.73093,
+            "lon": -73.991379,
+            "type": "break",
+            "street": "Wanamaker Place"
+        }
+    ],
+    "costing": "multimodal",
+    "date_time": {
+        "type": 1,
+        "value": "2016-03-29T08:00"
+    }
+}
 ```
 
 A multimodal request for a route favoring buses and a person walking at a set speed of 4.1 km/h:
 
 ```json
-{"locations":[{"lat":40.749706,"lon":-73.991562,"type":"break","street":"Penn Plaza"},{"lat":40.73093,"lon":-73.991379,"type":"break","street":"Wanamaker Place"}],"costing":"multimodal","costing_options":{"transit":{"use_bus":"1.0","use_rail":"0.0","use_transfers":"0.3"},"pedestrian":{"walking_speed":"4.1"}}}
+{
+    "locations": [
+        {
+            "lat": 40.749706,
+            "lon": -73.991562,
+            "type": "break",
+            "street": "Penn Plaza"
+        },
+        {
+            "lat": 40.73093,
+            "lon": -73.991379,
+            "type": "break",
+            "street": "Wanamaker Place"
+        }
+    ],
+    "costing": "multimodal",
+    "costing_options": {
+        "transit": {
+            "use_bus": "1.0",
+            "use_rail": "0.0",
+            "use_transfers": "0.3"
+        },
+        "pedestrian": {
+            "walking_speed": "4.1"
+        }
+    }
+}
 ```
 
 A multimodal request with a filter for certain Onestop IDs:
 
 ```json
-{"locations":[{"lat":40.730930,"lon":-73.991379,"street":"Wanamaker Place"},{"lat":40.749706,"lon":-73.991562,"street":"Penn Plaza"}],"costing":"multimodal","costing_options":{"transit":{"filters":{"routes":{"ids":["NYC_AUR"],"action":"exclude"},"operators":{"ids":["paris_CFG","berlin_VBB"],"action":"include"}}}},"units":"miles"}
+{
+    "locations": [
+        {
+            "lat": 40.730930,
+            "lon": -73.991379,
+            "street": "Wanamaker Place"
+        },
+        {
+            "lat": 40.749706,
+            "lon": -73.991562,
+            "street": "Penn Plaza"
+        }
+    ],
+    "costing": "multimodal",
+    "costing_options": {
+        "transit": {
+            "filters": {
+                "routes": {
+                    "ids": [
+                        "NYC_AUR"
+                    ],
+                    "action": "exclude"
+                },
+                "operators": {
+                    "ids": [
+                        "paris_CFG",
+                        "berlin_VBB"
+                    ],
+                    "action": "include"
+                }
+            }
+        }
+    },
+    "units": "miles"
+}
 ```
 
 #### Directions options

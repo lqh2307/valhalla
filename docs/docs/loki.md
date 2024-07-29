@@ -1,22 +1,14 @@
 # Loki
 
-Loki can be used to associate location information to an underlying graph tile object for use in creating input to the [routing engine](thor.md). In keeping with the Norse mythological theme, the name [Loki](http://en.wikipedia.org/wiki/Loki) was chosen as a play on the word locate. Since loki deals mostly with correlating some input (minimally a lat,lon) to an object within a graph tile, this seemed like a fitting name!
-
 Loki is essentially a set of various data structures and algorithms which deal with things like: correlating an input location to the underlying graph, partial distance along an edge and filtering edges which shouldn't be considered for correlation.
-
-## Components ##
-
-What follows are some notable components of loki.
-
-### Search ###
 
 #### What's it do? ####
 
-The primary function of loki is to correlate the given input coordinate(s) to the underlying routing graph by searching over small portions of said graph near said input. The goal is to return information about the graph that can be used by a router to find a path in the graph from one point to another. Generally this is a set of candidate edges for each input coordinate. Additionally the actual correlated (snapped to route network geometry) coordinate is returned which can be useful for things like placing transit egress points on the route network or fun trivia stuff like dropping a point in the atlantic or a massive desert to find the closest signs of civilization to that point.
+The primary function of loki is to correlate the given input coordinate(s) to the underlying routing graph by searching over small portions of said graph near said input for use in creating input to the [routing engine](thor.md). The goal is to return information about the graph that can be used by a router to find a path in the graph from one point to another. Generally this is a set of candidate edges for each input coordinate. Additionally the actual correlated (snapped to route network geometry) coordinate is returned which can be useful for things like placing transit egress points on the route network or fun trivia stuff like dropping a point in the atlantic or a massive desert to find the closest signs of civilization to that point.
 
 #### How's it work? ####
 
-First, we exploit the fact that the graph is tiled and separated into levels of detail. See [Why Tiles?](mjolnir/why_tiles.md) for more detail. This is important because it lets us focus our search on specific partitions of the graph which are closest to the input coordinate. Also, note that loki is only interested in the most detailed level as it has all of the edges in the graph, even the lesser importance ones. You might be thinking ok so those tiles must be pretty darn small to make this reasonable (time/space complexity). Because the tiles are a regularly spaced grid, some will land on almost no routable edges and some will land on, well, Tokyo.
+The graph is tiled and separated into levels of detail. Loki is only interested in the most detailed level as it has all of the edges in the graph, even the lesser importance ones. You might be thinking ok so those tiles must be pretty darn small to make this reasonable (time/space complexity). Because the tiles are a regularly spaced grid, some will land on almost no routable edges and some will land on, well, Tokyo.
 
 This may not seem like much of a problem at first but closer inspection reveals its very important to strike a balance between tile size and complexity concerns. The heart of the problem is that we use these tiles for several different use-cases (algorithms) and each has different needs. Performing the actual graph traversal algorithm benefits from loading larger tiles into memory so the expansion of the graph doesn't hit (load more) new tiles so frequently. At the same time you want smaller tiles so that when you need to find just a couple edges nearest to a point you don't need to consider so many edges. There are more concerns but these illustrate the point well enough.
 
@@ -45,7 +37,3 @@ Another general problem is that of islands of connectivity. Without traversing t
 To tackle this issue we have a few options. We could at data creation time crawl the route network to find small islands of connectivity. We could mark the edges in these islands so that loki would know to only send them to the routing algorithm if both input coordinates were in the same island. Or we could use a multi-pass approach in which we have the routing algorithm detect when its search is trapped in an island of connectivity and send the list of edges with in back to loki as a set of edges excluded from the correlation process. That latter would seem like the best option at this point in time simply because the information needed to store and time to crawl the tiles to find these small islands of connectivity would be prohibitive.
 
 The final area for future work would be an elaboration to what was said earlier about wanting only to look a the highest detail level of route network data. One could conceive of a scenario in which a user has a route and they want to drag a portion of that route so as to force it toward a certain feature. If the route network is dense where that feature lives but the users map is zoomed out such that the user only sees certain route network edges loki should attempt to correlate to those rather than the possibly not visible edges in the area. Essentially when doing a correlation at a course zoom level we may want to exclude certain classes of edges that are unlikely to be visible to the user interacting with the map.
-
-### Benchmark ###
-
-TODO:
