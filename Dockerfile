@@ -52,3 +52,5 @@ WORKDIR /data
 VOLUME /data
 
 EXPOSE 8002
+
+CMD [ "valhalla_auto_run" ]

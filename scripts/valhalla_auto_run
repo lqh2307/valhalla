@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e  # Exit immediately if a command exits with a non-zero status
+
+INPUT_OSM_FILES=$(ls *.osm.pbf | tr '\n' ' ')
+ELEVATION_BOUNDING_BOX=96,4,120,28
+SERVICE_NUM_THREADS=1
+
+valhalla_build_config > valhalla/valhalla.json
+valhalla_build_timezones > valhalla/tz_world.sqlite
+valhalla_build_landmarks -c valhalla/valhalla.json $OSM_FILES
+valhalla_build_admins -c valhalla/valhalla.json $OSM_FILES
+valhalla_build_elevation -c valhalla/valhalla.json -b $BOUNDING_BOX
+valhalla_build_tiles -c valhalla/valhalla.json $OSM_FILES
+valhalla_build_extract -c valhalla/valhalla.json
+valhalla_service valhalla/valhalla.json $NUM_THREADS

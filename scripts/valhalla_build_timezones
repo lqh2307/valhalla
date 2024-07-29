@@ -11,7 +11,7 @@ if [ "$1" = "-f" ]; then
 
   echo 'Downloading timezone polygon file...' 1>&2
 
-  wget https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip -P ${timezones_folder}/${timezones_zip_file} 1>&2 || exit 1
+  wget -cO https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip > ${timezones_folder}/${timezones_zip_file} 1>&2 || exit 1
 else
   if [ ! -f "${timezones_folder}/${timezones_zip_file}" ]; then
     echo 'Timezone polygon file is not found' 1>&2
