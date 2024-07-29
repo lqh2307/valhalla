@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Script for shared dependencies
 
 set -x -o errexit -o pipefail -o nounset
 
@@ -53,7 +52,7 @@ DEBIAN_FRONTEND=noninteractive && \
 
 git submodule sync && git submodule update --init --recursive
 
-# build prime_server from source
+# Build prime_server from source
 cd third_party/prime_server
 ./autogen.sh && ./configure
 make -j${CONCURRENCY:-$(nproc)}

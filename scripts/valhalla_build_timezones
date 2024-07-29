@@ -2,8 +2,6 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-rm -rf ./combined-shapefile-with-oceans* ./alias_tz.csv
-
 if [ "$1" = "-f" ]; then
   rm -rf ./timezones-with-oceans.shapefile.zip
 
@@ -20,16 +18,16 @@ fi
 
 echo 'Unzip timezone polygon file "timezones-with-oceans.shapefile.zip"...' 1>&2
 
-unzip ./timezones-with-oceans.shapefile.zip 1>/dev/null || exit 1
+unzip -o ./timezones-with-oceans.shapefile.zip -d ./timezones-with-oceans 1>/dev/null || exit 1
 
 echo "Create spatial database..." 1>&2
 
 tz_file=$(mktemp)
-spatialite_tool -i -shp ./combined-shapefile-with-oceans -d ${tz_file} -t tz_world -s 4326 -g geom -c UTF-8 1>/dev/null || exit 1
+spatialite_tool -i -shp ./timezones-with-oceans/combined-shapefile-with-oceans -d ${tz_file} -t tz_world -s 4326 -g geom -c UTF-8 1>/dev/null || exit 1
 spatialite ${tz_file} "SELECT CreateSpatialIndex('tz_world', 'geom');" 1>&2 || exit 1
 spatialite ${tz_file} "VACUUM;" 1>/dev/null || exit 1
 spatialite ${tz_file} "ANALYZE;" 1>/dev/null || exit 1
 
-rm -rf ./combined-shapefile-with-oceans* ./alias_tz.csv
+rm -rf ./timezones-with-oceans
 
 cat ${tz_file}
