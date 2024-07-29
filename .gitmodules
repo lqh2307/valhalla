@@ -1,48 +1,48 @@
-[submodule "OSM-binary"]
+[submodule "third_party/OSM-binary"]
 	path = third_party/OSM-binary
-	url = https://github.com/scrosby/OSM-binary
-[submodule "rapidjson"]
+	url = https://github.com/scrosby/OSM-binary.git
+[submodule "third_party/rapidjson"]
 	path = third_party/rapidjson
-	url = https://github.com/miloyip/rapidjson
-[submodule "dirent"]
+	url = https://github.com/miloyip/rapidjson.git
+[submodule "third_party/dirent"]
 	path = third_party/dirent
-	url = https://github.com/tronkko/dirent
-[submodule "date"]
+	url = https://github.com/tronkko/dirent.git
+[submodule "third_party/date"]
 	path = third_party/date
-	url = https://github.com/HowardHinnant/date
-[submodule "googletest"]
+	url = https://github.com/HowardHinnant/date.git
+[submodule "third_party/googletest"]
 	path = third_party/googletest
-	url = https://github.com/google/googletest
-[submodule "libosmium"]
+	url = https://github.com/google/googletest.git
+[submodule "third_party/libosmium"]
 	path = third_party/libosmium
-	url = https://github.com/osmcode/libosmium
-[submodule "protozero"]
+	url = https://github.com/osmcode/libosmium.git
+[submodule "third_party/protozero"]
 	path = third_party/protozero
-	url = https://github.com/mapbox/protozero
-[submodule "microtar"]
+	url = https://github.com/mapbox/protozero.git
+[submodule "third_party/microtar"]
 	path = third_party/microtar
-	url = https://github.com/rxi/microtar
-[submodule "robin-hood-hashing"]
+	url = https://github.com/rxi/microtar.git
+[submodule "third_party/robin-hood-hashing"]
 	path = third_party/robin-hood-hashing
-	url = https://github.com/martinus/robin-hood-hashing
-[submodule "fastcov"]
+	url = https://github.com/martinus/robin-hood-hashing.git
+[submodule "third_party/fastcov"]
 	path = third_party/fastcov
-	url = https://github.com/RPGillespie6/fastcov
-[submodule "pybind11"]
+	url = https://github.com/RPGillespie6/fastcov.git
+[submodule "third_party/pybind11"]
 	path = third_party/pybind11
-	url = https://github.com/pybind/pybind11
-[submodule "cpp-statsd-client"]
+	url = https://github.com/pybind/pybind11.git
+[submodule "third_party/cpp-statsd-client"]
 	path = third_party/cpp-statsd-client
-	url = https://github.com/vthiery/cpp-statsd-client
-[submodule "cxxopts"]
+	url = https://github.com/vthiery/cpp-statsd-client.git
+[submodule "third_party/cxxopts"]
 	path = third_party/cxxopts
-	url = https://github.com/jarro2783/cxxopts
-[submodule "just_gtfs"]
+	url = https://github.com/jarro2783/cxxopts.git
+[submodule "third_party/just_gtfs"]
 	path = third_party/just_gtfs
-	url = https://github.com/valhalla/just_gtfs
-[submodule "tz"]
+	url = https://github.com/valhalla/just_gtfs.git
+[submodule "third_party/tz"]
 	path = third_party/tz
-	url = https://github.com/eggert/tz
-[submodule "prime_server"]
+	url = https://github.com/eggert/tz.git
+[submodule "third_party/prime_server"]
 	path = third_party/prime_server
-	url = https://github.com/kevinkreiser/prime_server
+	url = https://github.com/kevinkreiser/prime_server.git
