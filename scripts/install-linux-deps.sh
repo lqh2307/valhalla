@@ -3,13 +3,13 @@
 
 set -x -o errexit -o pipefail -o nounset
 
-http_proxy=http://10.55.123.98:3333
-https_proxy=http://10.55.123.98:3333
+# http_proxy=http://10.55.123.98:3333
+# https_proxy=http://10.55.123.98:3333
 
 # Install the build dependencies
 DEBIAN_FRONTEND=noninteractive && \
-  sudo apt-get update --assume-yes && \
-  sudo apt install --yes --quiet \
+  sudo apt-get update -y && \
+  sudo apt-get install -y --quiet \
     autoconf \
     automake \
     ccache \

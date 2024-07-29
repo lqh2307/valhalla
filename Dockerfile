@@ -5,15 +5,15 @@ ARG VERSION=1.0.0
 FROM $BUILDER_IMAGE as builder
 
 # set proxy
-ARG http_proxy=http://10.55.123.98:3333
-ARG https_proxy=http://10.55.123.98:3333
+# ARG http_proxy=http://10.55.123.98:3333
+# ARG https_proxy=http://10.55.123.98:3333
 
 ARG CONCURRENCY
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
+  apt-get update -y && \
   apt-get install -y sudo
 
 # install deps
@@ -39,8 +39,8 @@ RUN rm -rf valhalla
 FROM $TARGET_IMAGE as runner
 
 # set proxy
-ARG http_proxy=http://10.55.123.98:3333
-ARG https_proxy=http://10.55.123.98:3333
+# ARG http_proxy=http://10.55.123.98:3333
+# ARG https_proxy=http://10.55.123.98:3333
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
