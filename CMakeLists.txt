@@ -245,9 +245,6 @@ if(ENABLE_PYTHON_BINDINGS)
   find_package(Python COMPONENTS Development Interpreter)
   if (Python_FOUND)
     add_subdirectory(src/bindings/python)
-    install(FILES COPYING CHANGELOG.md
-      DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/python-valhalla"
-      COMPONENT python)
   else()
     set(ENABLE_PYTHON_BINDINGS OFF)
     message(WARNING "Python development version not found, skipping Python bindings...")
@@ -333,10 +330,6 @@ foreach(script valhalla_build_config valhalla_build_elevation
     )
 endforeach()
 
-install(FILES COPYING CHANGELOG.md
-  DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-  COMPONENT runtime)
-
 # install third_party
 install(DIRECTORY ${rapidjson_include_dir}/
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
@@ -379,21 +372,10 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${VALHALLA_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VALHALLA_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VALHALLA_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}${CPACK_PACKAGE_VERSION_SUFFIX}")
-set(CPACK_PACKAGE_CONTACT "Team Valhalla <valhalla@mapzen.com>")
-set(CPACK_RESOURCE_FILE_LICENSE "${VALHALLA_SOURCE_DIR}/LICENSE.md")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStreetMap Routing API
- A set of routing APIs designed around OSM map data using
- dynamic costing and a tiled data structure")
-  set(CPACK_COMPONENT_PYTHON_DESCRIPTION "OpenStreetMap Routing Python Bindings
- A set routing APIs designed around OSM map data using
- dynamic costing and a tiled data structure and
- accompanying tools and services used to analyse and
- compute routes using those APIs")
 set(CPACK_STRIP_FILES TRUE)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "libvalhalla")
 
 if(${CPACK_GENERATOR} MATCHES "^DEB$")
-  set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/valhalla/")
   set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
