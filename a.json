@@ -1,0 +1,47 @@
+cd tz/
+git checkout 380c07cef01c71c1f93e9709d9f8c79b91cff063
+
+cd ../date/
+git checkout a2fdba1adcb076bf9a8343c07524afdf09aa8dcc
+
+cd ../dirent/
+git checkout 287ba928bfe9d20796bf0428d449abc8d6f29d79
+
+cd ../cxxopts/
+git checkout eb787304d67ec22f7c3a184ee8b4c481d04357fd
+
+cd ../cpp-statsd-client/
+git checkout b60bc7bb930df664b4ab9573ad8bee80d29dc72d
+
+cd ../fastcov/
+git checkout 40dffe81d62c0d897afe4108f3b5489487ff3bce
+
+cd ../googletest/
+git checkout b796f7d44681514f58a683a3a71ff17c94edb0c1
+
+cd ../just_gtfs/
+git checkout 375be1cce2280baea3464019d3b19ddd4e3a4e5a
+
+cd ../libosmium/
+git checkout a44ae7be0fc161dc4b110c01fa176cfe5bf45503
+
+cd ../microtar/
+git checkout 27076e1b9290e9c7842bb7890a54fcf172406c84
+
+cd ../protozero/
+git checkout f379578a3f7c8162aac0ac31c2696de09a5b5f93
+
+cd ../pybind11/
+git checkout 8a099e44b3d5f85b20f05828d919d2332a8de841
+
+cd ../rapidjson/
+git checkout 083f359f5c36198accc2b9360ce1e32a333231d9
+
+cd ../robin-hood-hashing/
+git checkout 9145f963d80d6a02f0f96a47758050a89184a3ed
+
+cd ../OSM-binary/
+git checkout 4e32fa236e919be5bb8dbb323437f026f24e5853
+
+cd ../microtar/
+git checkout 27076e1b9290e9c7842bb7890a54fcf172406c84

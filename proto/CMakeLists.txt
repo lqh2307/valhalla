@@ -18,8 +18,8 @@ set(protobuf_descriptors
 if(ENABLE_DATA_TOOLS)
   # Only mjolnir needs the OSM PBF descriptors
   list(APPEND protobuf_descriptors
-    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/osmpbf/fileformat.proto
-    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/osmpbf/osmformat.proto)
+    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/src/fileformat.proto
+    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/src/osmformat.proto)
 endif()
 
 
