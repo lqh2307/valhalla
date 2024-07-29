@@ -7,19 +7,15 @@ FROM $BUILDER_IMAGE as builder
 ARG CONCURRENCY
 
 # set paths
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
+
 RUN export DEBIAN_FRONTEND=noninteractive && apt update && apt install -y sudo
 
 # install deps
 WORKDIR /usr/local/src/valhalla
-COPY ./scripts/install-linux-deps.sh /usr/local/src/valhalla/scripts/install-linux-deps.sh
+ADD . .
 RUN bash /usr/local/src/valhalla/scripts/install-linux-deps.sh
 RUN rm -rf /var/lib/apt/lists/*
-
-# get the code into the right place and prepare to build it
-ADD . .
-RUN git submodule sync && git submodule update --init --recursive
 
 # configure the build with symbols turned on so that crashes can be triaged
 WORKDIR /usr/local/src/valhalla/build
@@ -30,7 +26,7 @@ RUN make install
 
 # we wont leave the source around but we'll drop the commit hash we'll also keep the locales
 WORKDIR /usr/local/src
-RUN cd valhalla && echo $VERSION > ../valhalla_version
+RUN cd valhalla
 RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales
 RUN rm -rf valhalla
 
@@ -38,7 +34,6 @@ RUN rm -rf valhalla
 FROM $TARGET_IMAGE as runner
 
 # basic paths
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 # grab the builder stages artifacts
@@ -56,6 +51,3 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     spatialite-bin unzip wget && \
   rm -rf /var/lib/apt/lists/*
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
-
-# python smoke test
-RUN python3 -c "import valhalla,sys; print(sys.version, valhalla)"

@@ -60,7 +60,6 @@ CMakeLists.txt.user
 /CMakeSettings.json
 .idea
 /.tidytmp
-vcpkg*/
 *.log
 
 # python

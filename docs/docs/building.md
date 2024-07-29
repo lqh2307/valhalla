@@ -29,31 +29,6 @@ Important build options include:
 | `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`) | Whether to use internally vendored headers or find the equivalent external package (defaults to off).|
 | `-DENABLE_GDAL` (`ON` / `OFF`) | Whether to include GDAL as a dependency (used for GeoTIFF serialization of isochrone grid) (defaults to off).|
 
-### Building with `vcpkg` - any platform
-
-Instead of installing the dependencies system-wide, you can also opt to use [`vcpkg`](https://github.com/microsoft/vcpkg).
-
-The following commands should work on all platforms:
-
-```bash
-git clone --recurse-submodules https://github.com/valhalla/valhalla
-cd valhalla
-git clone https://github.com/microsoft/vcpkg && git -C vcpkg checkout <some-tag>
-./vcpkg/bootstrap-vcpkg.sh
-# windows: cmd.exe /c bootstrap-vcpkg.bat
-# only build Release versions of dependencies, not Debug
-echo "set(VCPKG_BUILD_TYPE release)" >> vcpkg/triplets/x64-linux.cmake
-# windows: echo.set(VCPKG_BUILD_TYPE release)>> .\vcpkg\triplets\x64-windows.cmake
-# osx: echo "set(VCPKG_BUILD_TYPE release)" >> vcpkg/triplets/arm64-osx.cmake
-
-# vcpkg will install everything during cmake configuration
-# if you want to ENABLE_SERVICES=ON, install https://github.com/kevinkreiser/prime_server#build-and-install (no Windows)
-cmake -B build -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake -DENABLE_SERVICE=OFF
-cmake --build build -- -j$(nproc)
-# windows: cmake --build build --config Release -- /clp:ErrorsOnly /p:BuildInParallel=true /m:4
-# osx: cmake --build build -- -j$(sysctl -n hw.physicalcpu)
-```
-
 ### Building from Source - Linux
 
 To install on a Debian or Ubuntu system you need to install its dependencies with:
@@ -70,64 +45,6 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 make -C build -j$(nproc)
 sudo make -C build install
 ```
-
-### Building from Source - macOS
-
-Both arm64 and x64 should build cleanly with the below commands.
-
-To install Valhalla on macOS, you need to install its dependencies with [Homebrew](http://brew.sh):
-
-```bash
-# install dependencies (automake & czmq are required by prime_server)
-brew install automake cmake libtool protobuf-c libspatialite pkg-config sqlite3 jq curl wget czmq lz4 spatialite-tools unzip luajit
-# following packages are needed for running Linux compatible scripts
-brew install bash coreutils binutils
-# Update your PATH env variable to include /usr/local/opt/binutils/bin:/usr/local/opt/coreutils/libexec/gnubin
-```
-
-Now, clone the Valhalla repository
-
-```bash
-git clone --recurse-submodules https://github.com/valhalla/valhalla.git
-```
-
-Then, build [`prime_server`](https://github.com/kevinkreiser/prime_server#build-and-install).
-
-After getting the dependencies install it with e.g.:
-
-```bash
-# will build to ./build
-cmake -B build -DCMAKE_BUILD_TYPE=Release
-make -C build -j$(sysctl -n hw.physicalcpu)
-sudo make -C build install
-```
-
-### Building from Source - Windows
-
-It's recommended to work with the following toolset:
-- Visual Studio with C++ support
-- Visual Studio Code (easier and lighter to handle)
-- [vcpkg](https://github.com/Microsoft/vcpkg) to install packages
-- [CMake](https://cmake.org/download/)
-
-1. Install the dependencies with `vcpkg`:
-```
-git -C C:\path\to\vcpkg checkout f330a32
-# only build release versions for vcpkg packages
-echo.set(VCPKG_BUILD_TYPE release)>> path\to\vcpkg\triplets\x64-windows.cmake
-cd C:\path\to\valhalla
-C:\path\to\vcpkg.exe install --triplet x64-windows
-```
-2. Let CMake configure the build with the required modules enabled. The final command for `x64` could look like
-```
-"C:\Program Files\CMake\bin\cmake.EXE" --no-warn-unused-cli -DENABLE_TOOLS=ON -DENABLE_DATA_TOOLS=ON -DENABLE_PYTHON_BINDINGS=ON -DENABLE_HTTP=ON -DENABLE_CCACHE=OFF -DENABLE_SERVICES=OFF -DENABLE_BENCHMARKS=OFF -DENABLE_TESTS=OFF -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE=path\to\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Hpath/to/valhalla -Bpath/to/valhalla/build -G "Visual Studio 16 2019" -T host=x64 -A x64
-```
-3. Run the build for all targets.
-```
-cmake -B build -S C:\path\to\valhalla --config Release -- /clp:ErrorsOnly /p:BuildInParallel=true /m:8
-```
-
-The artifacts will be built to `./build/Release`.
 
 #### Troubleshooting
 
