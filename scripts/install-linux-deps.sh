@@ -10,6 +10,8 @@ set -x -o errexit -o pipefail -o nounset
 DEBIAN_FRONTEND=noninteractive && \
   sudo apt-get update -y && \
   sudo apt-get install -y --quiet \
+    build-essential \
+    ca-certificates \
     autoconf \
     automake \
     ccache \
@@ -18,8 +20,6 @@ DEBIAN_FRONTEND=noninteractive && \
     coreutils \
     curl \
     cmake \
-    g++ \
-    gcc \
     git \
     jq \
     lcov \

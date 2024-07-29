@@ -1,26 +1,10 @@
-
-
-
-     ██▒   █▓ ▄▄▄       ██▓     ██░ ██  ▄▄▄       ██▓     ██▓    ▄▄▄
-    ▓██░   █▒▒████▄    ▓██▒    ▓██░ ██▒▒████▄    ▓██▒    ▓██▒   ▒████▄
-     ▓██  █▒░▒██  ▀█▄  ▒██░    ▒██▀▀██░▒██  ▀█▄  ▒██░    ▒██░   ▒██  ▀█▄
-      ▒██ █░░░██▄▄▄▄██ ▒██░    ░▓█ ░██ ░██▄▄▄▄██ ▒██░    ▒██░   ░██▄▄▄▄██
-       ▒▀█░   ▓█   ▓██▒░██████▒░▓█▒░██▓ ▓█   ▓██▒░██████▒░██████▒▓█   ▓██▒
-       ░ ▐░   ▒▒   ▓▒█░░ ▒░▓  ░ ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░▒▒   ▓▒█░
-       ░ ░░    ▒   ▒▒ ░░ ░ ▒  ░ ▒ ░▒░ ░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░ ▒   ▒▒ ░
-         ░░    ░   ▒     ░ ░    ░  ░░ ░  ░   ▒     ░ ░     ░ ░    ░   ▒
-          ░        ░  ░    ░  ░ ░  ░  ░      ░  ░    ░  ░    ░  ░     ░  ░
-         ░
-
-
-
 Valhalla is an open source routing engine and accompanying libraries for use with OpenStreetMap data. Valhalla also includes tools like time+distance matrix computation, isochrones, elevation sampling, map matching and tour optimization (Travelling Salesman).
 
 ## Overview
 
 There are several key features that we hope can differentiate the Valhalla project from other routing and network analysis engines. They are:
 
-- Open source software, on open source data with a very liberal license. Should allow for transparency in development, encourage contribution and community input, and foster use in other projects.
+- Open source software.
 - Tiled hierarchical data structure. Should allow users to have a small memory footprint on memory constrained devices, enable offline routing, provide a means for regional extracts and partial updates.
 - Dynamic, runtime costing of edges and vertices within the graph via a plugin architecture. Should allow for customization and alternate route generation.
 - C++ based API. Should allow for cross compilation of the various pieces to enable routing on offline portable devices.
@@ -29,21 +13,15 @@ There are several key features that we hope can differentiate the Valhalla proje
 
 ## Demo Server
 
-[FOSSGIS e.V.](https://fossgis.de) hosts a demo server which is open to the public and includes a full planet graph with an [open-source web app](https://github.com/gis-ops/valhalla-app) on https://valhalla.openstreetmap.de. The HTTP API is accessible on a slightly different subdomain, e.g. https://valhalla1.openstreetmap.de/isochrone. Usage of the demo server follows the usual fair-usage policy as OSRM & Nominatim demo servers (somewhat enforced by [rate limits](https://github.com/valhalla/valhalla/discussions/3373#discussioncomment-1644713)).
+Demo valhalla app on https://valhalla.openstreetmap.de.
 
 ## Platform Compatibility
 
 Valhalla is fully functional on many Linux and Mac OS distributions, and is also used on iOS and Android devices.
 
-For Windows, not all functionality is fully supported yet. Building the Valhalla library works flawlessly, as well as the following application modules:
-
-- `TOOLS`: utilities to query and benchmark various components
-- `DATA_TOOLS`: utilities to build input data and handle transit
-- `PYTHON_BINDINGS`: use all actions (route, isochrones, matrix etc) via the Valhalla Python library (needs a full (i.e. development) Python distribution in the `PATH`)
-
 ## Organization
 
-The Valhalla organization is comprised of several library modules each responsible for a different function. The layout of the various modules is as follows:
+The Valhalla organization is comprised of several library modules each responsible for a different function:
 
 - [Midgard](https://github.com/valhalla/valhalla/tree/master/valhalla/midgard) - Basic geographic and geometric algorithms for use in the various other projects.
 - [Baldr](https://github.com/valhalla/valhalla/tree/master/valhalla/baldr) - The base data structures for accessing and caching tiled route data.
@@ -62,60 +40,89 @@ The Valhalla organization is comprised of several library modules each responsib
 
 Documentation is stored in the `docs/` folder in this GitHub repository. It can be viewed at [valhalla.github.io/valhalla](https://valhalla.github.io/valhalla).
 
-## Installation
+## Build & Run
 
-To run Valhalla locally or your own server, we recommend using our Docker image. Checkout our docker image here: https://github.com/orgs/valhalla/packages. Also, there's a [community Docker image](https://github.com/gis-ops/docker-valhalla) with more "magic" than the native one.
+Valhalla uses CMake as build system. When compiling with `gcc` (GNU Compiler Collection), currently version 5 or newer is supported.
 
-If you want to build Valhalla from source, follow the [documentation](https://valhalla.github.io/valhalla/building/).
+Important build options include:
 
-For more information on binaries, see [Command Line Tools](#command-line-tools) section below and the [docs](https://valhalla.github.io/valhalla).
+| Option | Behavior |
+|--------|----------|
+| `-DENABLE_TOOLS` (`On`/`Off`) | Build `valhalla_service` and other utilities (defaults to on)|
+| `-DENABLE_DATA_TOOLS` (`On`/`Off`) | Build the data preprocessing tools (defaults to on)|
+| `-DENABLE_HTTP` (`On`/`Off`) | Build with `curl` support (defaults to on)|
+| `-DENABLE_PYTHON_BINDINGS` (`On`/`Off`) | Build the python bindings (defaults to on)|
+| `-DENABLE_SERVICES` (`On` / `Off`) | Build the HTTP service (defaults to on)|
+| `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)|
+| `-DENABLE_CCACHE` (`On` / `Off`) | Speed up incremental rebuilds via ccache (defaults to on)|
+| `-DENABLE_BENCHMARKS` (`On` / `Off`) | Enable microbenchmarking (defaults to on)|
+| `-DENABLE_TESTS` (`On` / `Off`) | Enable Valhalla tests (defaults to on)|
+| `-DENABLE_COVERAGE` (`On` / `Off`) | Build with coverage instrumentalisation (defaults to off)|
+| `-DBUILD_SHARED_LIBS` (`On` / `Off`) | Build static or shared libraries (defaults to off)|
+| `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`) | If ON builds Valhalla modules as STATIC library targets (defaults to off)|
+| `-DENABLE_COMPILER_WARNINGS` (`ON` / `OFF`) | Build with common compiler warnings (defaults to off)|
+| `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`) | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)|
+| `-DENABLE_WERROR` (`ON` / `OFF`) | Treat compiler warnings as errors  (defaults to off). Requires `-DENABLE_COMPILER_WARNINGS=ON` to take effect.|
+| `-DENABLE_SANITIZERS` (`ON` / `OFF`) | Build with all the integrated sanitizers (defaults to off).|
+| `-DENABLE_ADDRESS_SANITIZER` (`ON` / `OFF`) | Build with address sanitizer (defaults to off).|
+| `-DENABLE_UNDEFINED_SANITIZER` (`ON` / `OFF`) | Build with undefined behavior sanitizer (defaults to off).|
+| `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`) | Whether to use internally vendored headers or find the equivalent external package (defaults to off).|
+| `-DENABLE_GDAL` (`ON` / `OFF`) | Whether to include GDAL as a dependency (used for GeoTIFF serialization of isochrone grid) (defaults to off).|
 
-## Contributing
+Clone source:
 
-We :heart: contributions to Valhalla. They could be non-technical, e.g. translations into other languages via [Transifex](https://www.transifex.com/valhalla/valhalla-phrases/locales-en-us-json--transifex/) or documentation improvements, or technical ones like bug fixes or feature implementations. It's important to open an issue before setting out to work on a PR.
+	git clone --recurse-submodules https://github.com/lqh2307/valhalla.git
 
-Ideally, get familiar with our [Contribution guidelines](https://github.com/valhalla/valhalla/blob/master/CONTRIBUTING.md) first.
+Seitch to dev branch:
 
-## Benchmarks
+	git checkout dev
 
-Valhalla includes several microbenchmarks which you can build and run using:
+Build image:
 
-    make benchmarks
-    make run-benchmarks
+  docker build -t quanghuy2307/valhalla:1.0.0 .
 
-They are enabled by the `-DENABLE_BENCHMARKS=On` CMake flag and are currently only available for
-Linux and MacOS.
+Create folders and go to it:
 
-## Command Line Tools
+	mkdir -p \
+		/home/vht/data \
+		/home/vht/data/valhalla \
+		/home/vht/data/valhalla/transit \
+		/home/vht/data/valhalla/elevation_tiles \
+		&& cd /home/vht/data
 
-### `valhalla_service` aka one-shot mode
+Download OSM data:
 
-If you can't (e.g. Windows Server) or don't want to have the full-fledged HTTP API running, you can have the (almost) exact same behavior with the 'valhalla_service' executable in so-called "one-shot" mode. It's simple, just pass the config file, the action (route, isochrone, matrix etc) and the stringified JSON request (or alternatively a file containing the request to circumvent shell command length issues):
+	wget http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
 
-```
-valhalla_service valhalla.json isochrone '{"locations":[{"lat":42.552448,"lon":1.564865}],"costing":"auto","contours":[{"time":10,"color":"ff0000"}], "show_locations":true}'
-# Alternatively you can pass a file with the same contents
-valhalla_service valhalla.json isochrone isochrone_request.txt
-```
+Download timezone:
 
-It's important to note that all Valhalla logs for one-shot mode are piped to `stderr` while the actual JSON response will be in `stdout`. To completely silence the logs, pass `type: ""` to `midgard.logging` in the config file.
+	wget https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip
 
+Download elevation data (Replace {tile-name}):
 
-### Batch Script Tool
+	wget -P /home/vht/data/valhalla/elevation_tiles wget https://dwtkns.com/srtm30m/{tile-name}
 
-- [Batch Run_Route](https://github.com/valhalla/valhalla/blob/master/run_route_scripts/README.md)
+Run docker container:
 
-## Related projects
+  docker run --rm -it --name valhalla -p 8002:8002 -v /home/vht/data/:/data quanghuy2307/valhalla:1.0.0
 
-The following projects are open-source and built with the intention to make it easier to use Valhalla and its features:
+Run command in container:
 
-- [**OpenStreetMapSpeeds**](https://github.com/OpenStreetMapSpeeds/): A project conflating open GPS data to improve Valhalla's speed classification. The current JSON is from early 2022 and can be downloaded [here](https://raw.githubusercontent.com/OpenStreetMapSpeeds/schema/master/default_speeds.json) and used by setting the path in the `mjolnir.default_speeds_config` config option.
-- [**docker-valhalla**](https://github.com/gis-ops/docker-valhalla): An easy-to-use, relatively magical Docker image for Valhalla, which only requires setting a few environment variables in `docker-compose.yml` to get a full-featured Valhalla instance.
-- [**valhalla-operator**](https://github.com/itayankri/valhalla-operator): A k8s operator to deploy and manage Valhalla.
-- [**valhalla-app**](https://github.com/gis-ops/valhalla-app): A React based web app for Valhalla, powering https://valhalla.openstreetmap.de/.
-- [**valhalla-qgis-plugin**](https://github.com/gis-ops/valhalla-qgis-plugin): A QGIS plugin for Valhalla, also available in the [official QGIS plugin store](https://plugins.qgis.org/plugins/valhalla/). **Note**, it's almost deprecated and will be replaced with a much superior alternative.
-- [**routingpy**](https://github.com/gis-ops/routingpy): A Python client for most open-source routing engines, including Valhalla, with a common interface for all engines. Available on [PyPI](https://pypi.org/project/routingpy/).
-- [**routingjs**](https://github.com/gis-ops/routingjs): A TypeScript client for most open-source routing engines, including Valhalla, with a common interface for all engines. Available as engine-specific packages on [npm](https://www.npmjs.com/package/@routingjs/valhalla).
-- [**pyvalhalla**](https://github.com/gis-ops/pyvalhalla): Python bindings for Valhalla, so its APIs can be used from within Python without a HTTP service. Available on [PyPI](https://pypi.org/project/pyvalhalla/).
-- [**Valhalla_jll.jl**](https://github.com/JuliaBinaryWrappers/Valhalla_jll.jl): Valhalla binaries shipped for Julia.
-- [**valhalla-go**](https://github.com/pufferffish/valhalla-go): Valhalla Golang bindings via cgo
+  valhalla_build_config \
+      --mjolnir-tile-dir ${PWD}/valhalla/tiles \
+      --mjolnir-transit-dir ${PWD}/valhalla/transit \
+      --additional-data-elevation ${PWD}/valhalla/elevation_tiles \
+      --mjolnir-tile-extract ${PWD}/valhalla/tiles.tar \
+      --mjolnir-traffic-extract ${PWD}/valhalla/traffic.tar \
+      --mjolnir-timezone ${PWD}/valhalla/tz_world.sqlite \
+      --mjolnir-admin ${PWD}/valhalla/admin.sqlite \
+      --mjolnir-landmarks ${PWD}/valhalla/landmarks.sqlite \
+      > valhalla/valhalla.json
+  valhalla_build_timezones -f > valhalla/tz_world.sqlite
+  valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf
+  valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf
+  valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf
+  valhalla_build_elevation -t -f -c valhalla/valhalla.json
+  valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf
+  valhalla_build_extract -c valhalla/valhalla.json
+  valhalla_service valhalla/valhalla.json 1
