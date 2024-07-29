@@ -3,7 +3,7 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 timezones_folder=./timezones
-timezones_zip_file=timezones-with-oceans.shapefile.zip
+timezones_zip_file=tz_world.zip
 timezones_file_name=combined-shapefile-with-oceans
 
 if [ "$1" = "-f" ]; then
@@ -11,7 +11,7 @@ if [ "$1" = "-f" ]; then
 
   echo 'Downloading timezone polygon file...' 1>&2
 
-  wget --quiet https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/${timezones_zip_file} -P ${timezones_folder} 1>&2 || exit 1
+  wget https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip -P ${timezones_folder}/${timezones_zip_file} 1>&2 || exit 1
 else
   if [ ! -f "${timezones_folder}/${timezones_zip_file}" ]; then
     echo 'Timezone polygon file is not found' 1>&2
@@ -22,12 +22,12 @@ fi
 
 echo 'Unzip timezone polygon file...' 1>&2
 
-unzip -o ${timezones_folder}/${timezones_zip_file} 1>/dev/null || exit 1
+unzip -o ${timezones_folder}/${timezones_zip_file} -d ${timezones_folder} 1>&2 || exit 1
 
 echo "Create spatial database..." 1>&2
 
 tz_file=$(mktemp)
-spatialite_tool -i -shp ${timezones_folder}/${timezones_zip_file}/${timezones_file_name} -d ${tz_file} -t tz_world -s 4326 -g geom -c UTF-8 1>/dev/null || exit 1
+spatialite_tool -i -shp ${timezones_folder}/${timezones_file_name} -d ${tz_file} -t tz_world -s 4326 -g geom -c UTF-8 1>/dev/null || exit 1
 spatialite ${tz_file} "SELECT CreateSpatialIndex('tz_world', 'geom');" 1>&2 || exit 1
 spatialite ${tz_file} "VACUUM;" 1>/dev/null || exit 1
 spatialite ${tz_file} "ANALYZE;" 1>/dev/null || exit 1
