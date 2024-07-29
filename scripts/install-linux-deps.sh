@@ -40,7 +40,6 @@ DEBIAN_FRONTEND=noninteractive && \
     lld \
     locales \
     luajit \
-    make \
     osmium-tool \
     parallel \
     pkgconf \
