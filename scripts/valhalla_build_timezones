@@ -41,7 +41,6 @@ LOGGER.setLevel(logging.INFO)
 timezones = "timezones"
 timezones_zip_file = f"{timezones}/{timezones}.zip"
 timezones_unzip_folder = f"{timezones}/{timezones}"
-timezones_sqlite_file = f"{timezones}/{timezones}.sqlite"
 
 def download_file(url, dest):
   LOGGER.info(f"Downloading {url} to {dest}...")
