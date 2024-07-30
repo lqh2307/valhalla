@@ -73,9 +73,13 @@ Clone source:
 
 	git clone --recurse-submodules https://github.com/lqh2307/valhalla.git
 
-Seitch to dev branch:
+Switch to dev branch:
 
 	git checkout dev
+
+Clone newest submodules:
+
+  git submodule sync && git submodule update --init --recursive
 
 ### Build from source
 
@@ -97,35 +101,38 @@ Create folders and go to it:
 
 	mkdir -p \
 		/home/vht/data \
+    /home/vht/data/osm \
+    /home/vht/data/timezones \
 		/home/vht/data/valhalla \
 		/home/vht/data/valhalla/transit \
 		/home/vht/data/valhalla/elevation_tiles \
-		&& cd /home/vht/data
+	&& cd /home/vht/data
 
 Download OSM data:
 
-	wget http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+	wget -c -P ./osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
 
 Download timezone:
 
-	wget https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip
+	wget -cO - https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip > ./timezones/tz_world.zip
 
 Download elevation data (Replace {tile-name}):
 
-	wget -P /home/vht/data/valhalla/elevation_tiles wget https://dwtkns.com/srtm30m/{tile-name}
+	wget -c -P ./valhalla/elevation_tiles wget https://dwtkns.com/srtm30m/{tile-name}
 
-Run docker container:
+Run docker container (auto run):
 
   docker run --rm -it --name valhalla -p 8002:8002 -v /home/vht/data/:/data quanghuy2307/valhalla:1.0.0
 
-Run command in container:
+Run docker container (normal run):
+
+  docker run --rm -it --name valhalla -p 8002:8002 -v /home/vht/data/:/data quanghuy2307/valhalla:1.0.0 bash
 
   valhalla_build_config > valhalla/valhalla.json
   valhalla_build_timezones -f > valhalla/tz_world.sqlite
   valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf
   valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf
-  valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf
-  valhalla_build_elevation -t -f -c valhalla/valhalla.json
+  valhalla_build_elevation -f -c valhalla/valhalla.json -b 96,4,120,28
   valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf
   valhalla_build_extract -c valhalla/valhalla.json
   valhalla_service valhalla/valhalla.json 1
