@@ -53,8 +53,8 @@ DEBIAN_FRONTEND=noninteractive && \
   sudo apt-get clean && \
   sudo rm -rf /var/lib/apt/lists/*
 
-git submodule sync
-git submodule update --init --recursive
+# Clone newest submodules
+git submodule sync && git submodule update --init --recursive
 
 # Build prime_server from source
 cd third_party/prime_server

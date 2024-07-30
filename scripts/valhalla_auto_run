@@ -2,10 +2,12 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-INPUT_OSM_FILES=$(ls osm/*.osm.pbf | tr '\n' ' ')
-ELEVATION_BOUNDING_BOX=96,4,120,28
-SERVICE_NUM_THREADS=1
+# Init ENVs
+input_osm_files=${VALHALLA_INPUT_OSM_FILES:-$(ls osm/*.osm.pbf | tr '\n' ' ')}
+elevation_bounding_box=${VALHALLA_ELEVATION_BOUNDING_BOX:-"96,4,120,28"}
+service_num_threads=${VALHALLA_SERVICE_NUM_THREADS:-"1"}
 
+# Auto run
 echo "[1/8] ==========> Building config..."
 valhalla_build_config > valhalla/valhalla.json
 
@@ -13,19 +15,19 @@ echo "[2/8] ==========> Building timezones..."
 valhalla_build_timezones > valhalla/tz_world.sqlite
 
 echo "[3/8] ==========> Building landmarks..."
-valhalla_build_landmarks -c valhalla/valhalla.json $INPUT_OSM_FILES
+valhalla_build_landmarks -c valhalla/valhalla.json $input_osm_files
 
 echo "[4/8] ==========> Building admins..."
-valhalla_build_admins -c valhalla/valhalla.json $INPUT_OSM_FILES
+valhalla_build_admins -c valhalla/valhalla.json $input_osm_files
 
 echo "[5/8] ==========> Building elevation..."
-valhalla_build_elevation -c valhalla/valhalla.json -b $ELEVATION_BOUNDING_BOX
+valhalla_build_elevation -c valhalla/valhalla.json -b $elevation_bounding_box
 
 echo "[6/8] ==========> Building tiles..."
-valhalla_build_tiles -c valhalla/valhalla.json $INPUT_OSM_FILES
+valhalla_build_tiles -c valhalla/valhalla.json $input_osm_files
 
 echo "[7/8] ==========> Building extract..."
 valhalla_build_extract -c valhalla/valhalla.json
 
 echo "[8/8] ==========> Starting service..."
-valhalla_service valhalla/valhalla.json $SERVICE_NUM_THREADS
+valhalla_service valhalla/valhalla.json $service_num_threads
