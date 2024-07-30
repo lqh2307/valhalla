@@ -75,7 +75,7 @@ Clone source:
 
 Jump to source:
 
-  cd valhalla
+	cd valhalla
 
 Switch to dev branch:
 
@@ -83,21 +83,21 @@ Switch to dev branch:
 
 Clone newest submodules:
 
-  git submodule sync && git submodule update --init --recursive
+	git submodule sync && git submodule update --init --recursive
 
 ### Build from source
 
 Install dependencies:
 
-  ./scripts/install_deps.sh
+	./scripts/install_deps.sh
 
 Build (will build to ./build):
 
-  ./scripts/build_and_install.sh
+	./scripts/build_and_install.sh
 
 ### Build docker image
 
-  docker build -t quanghuy2307/valhalla:1.0.0 .
+	docker build -t quanghuy2307/valhalla:1.0.0 .
 
 ### Run
 
@@ -105,10 +105,10 @@ Create folders and go to it:
 
 	mkdir -p \
 		~/data \
-    ~/data/osm \
-    ~/data/timezones \
+		~/data/osm \
+		~/data/timezones \
 		~/data/valhalla \
-    ~/data/valhalla/tiles \
+		~/data/valhalla/tiles \
 		~/data/valhalla/transit \
 		~/data/valhalla/elevation_tiles \
 	&& cd ~/data
@@ -116,6 +116,8 @@ Create folders and go to it:
 Download OSM data:
 
 	wget -c -P ./osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+ 	wget -c -P ./osm http://download.geofabrik.de/asia/laos-latest.osm.pbf
+ 	wget -c -P ./osm http://download.geofabrik.de/asia/cambodia-latest.osm.pbf
 
 Download timezone:
 
@@ -127,17 +129,17 @@ Download elevation data (Replace {tile-name}):
 
 Run docker container (auto run):
 
-  docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0
+	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0
 
 Run docker container (normal run):
 
-  docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0 bash
+	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-  valhalla_build_config > valhalla/valhalla.json
-  valhalla_build_timezones -f > valhalla/tz_world.sqlite
-  valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf
-  valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf
-  valhalla_build_elevation -f -c valhalla/valhalla.json -b 96,4,120,28
-  valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf
-  valhalla_build_extract -c valhalla/valhalla.json
-  valhalla_service valhalla/valhalla.json 1
+	valhalla_build_config > valhalla/valhalla.json
+	valhalla_build_timezones -f > valhalla/tz_world.sqlite
+	valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_elevation -f -c valhalla/valhalla.json -b 96,4,120,28
+	valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_extract -c valhalla/valhalla.json
+	valhalla_service valhalla/valhalla.json 1
