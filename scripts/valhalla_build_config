@@ -30,7 +30,7 @@ config = {
     'tile_url': Optional(str),
     'tile_url_gz': Optional(bool),
     'concurrency': Optional(int),
-    'tile_dir': '/data/valhalla',
+    'tile_dir': '/data/valhalla/tiles',
     'tile_extract': '/data/valhalla/tiles.tar',
     'traffic_extract': '/data/valhalla/traffic.tar',
     'incident_dir': Optional(str),

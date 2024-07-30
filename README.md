@@ -104,6 +104,7 @@ Create folders and go to it:
     /home/vht/data/osm \
     /home/vht/data/timezones \
 		/home/vht/data/valhalla \
+    /home/vht/data/valhalla/tiles \
 		/home/vht/data/valhalla/transit \
 		/home/vht/data/valhalla/elevation_tiles \
 	&& cd /home/vht/data
