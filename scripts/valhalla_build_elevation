@@ -68,6 +68,7 @@ method.add_argument(
   "--from-tiles",
   help="Only download tiles covered by the Valhalla graph.",
   action="store_true",
+  default=False,
 )
 
 parser.add_argument(
@@ -81,6 +82,7 @@ parser.add_argument(
   "--force",
   help="Remove all existing elevation tiles before download new ones.",
   action="store_true",
+  default=False,
 )
 parser.add_argument(
   "-p",
@@ -287,8 +289,7 @@ if __name__ == "__main__":
     sys.exit(1)
 
   if args.force:
-    os.system(f'rm -rf {elevation_fp}')
-    os.makedirs(elevation_fp)
+    os.system(f'rm -rf {elevation_fp}/*')
   else:
     if os.listdir(elevation_fp):
       LOGGER.info(f"Elevation tiles directory {elevation_fp} is not empty. Skipping download.")

@@ -33,7 +33,7 @@ Timezones are used if you want to set your departure or arrival date and time.
 If you would like timezone information within the route graph, please follow the following steps:
 
 1. If needed, update the timezone value under mjolnir in your valhalla.json config.  Default filename and directory is `/data/valhalla/tz_world.sqlite`.
-2. Run `valhalla_build_timezones > /path_to/tz_world.sqlite`
+2. Run `valhalla_build_timezones -f -c valhalla/valhalla.json`
 3. The next time you run `valhalla_build_tiles`, timezone information will be added to the route graph.
 
 ### Elevation

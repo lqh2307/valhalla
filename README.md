@@ -136,7 +136,7 @@ Run docker container (normal run):
 	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0 bash
 
 	valhalla_build_config > valhalla/valhalla.json
-	valhalla_build_timezones -f > valhalla/tz_world.sqlite
+	valhalla_build_timezones -f -c valhalla/valhalla.json
 	valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
 	valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
 	valhalla_build_elevation -f -c valhalla/valhalla.json -b 96,4,120,28

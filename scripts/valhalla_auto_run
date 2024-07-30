@@ -12,7 +12,7 @@ echo "[1/8] ==========> Building config..."
 valhalla_build_config > valhalla/valhalla.json
 
 echo "[2/8] ==========> Building timezones..."
-valhalla_build_timezones > valhalla/tz_world.sqlite
+valhalla_build_timezones -c valhalla/valhalla.json
 
 echo "[3/8] ==========> Building landmarks..."
 valhalla_build_landmarks -c valhalla/valhalla.json $input_osm_files
