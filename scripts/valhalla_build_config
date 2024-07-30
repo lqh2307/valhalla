@@ -38,7 +38,7 @@ config = {
     'shortcut_caching': Optional(bool),
     'admin': '/data/valhalla/admin.sqlite',
     'landmarks': '/data/valhalla/landmarks.sqlite',
-    'timezone': './timezones.sqlite',
+    'timezone': '/data/valhalla/timezones.sqlite',
     'transit_dir': '/data/valhalla/transit',
     'transit_feeds_dir': '/data/valhalla/transit_feeds',
     'transit_bounding_box': Optional(str),
