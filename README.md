@@ -119,14 +119,6 @@ Download OSM data:
  	wget -c -P ./osm http://download.geofabrik.de/asia/laos-latest.osm.pbf
  	wget -c -P ./osm http://download.geofabrik.de/asia/cambodia-latest.osm.pbf
 
-Download timezone:
-
-	wget -cO - https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip > ./timezones/tz_world.zip
-
-Download elevation data (Replace {tile-name}):
-
-	wget -c -P ./valhalla/elevation_tiles wget https://dwtkns.com/srtm30m/{tile-name}
-
 Run docker container (auto run):
 
 	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0
