@@ -73,6 +73,9 @@ Clone source:
 
 	git clone --recurse-submodules https://github.com/lqh2307/valhalla.git
 
+Jump to source:
+  cd valhalla
+
 Switch to dev branch:
 
 	git checkout dev
