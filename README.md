@@ -104,14 +104,14 @@ Build (will build to ./build):
 Create folders and go to it:
 
 	mkdir -p \
-		/home/vht/data \
-    /home/vht/data/osm \
-    /home/vht/data/timezones \
-		/home/vht/data/valhalla \
-    /home/vht/data/valhalla/tiles \
-		/home/vht/data/valhalla/transit \
-		/home/vht/data/valhalla/elevation_tiles \
-	&& cd /home/vht/data
+		~/data \
+    ~/data/osm \
+    ~/data/timezones \
+		~/data/valhalla \
+    ~/data/valhalla/tiles \
+		~/data/valhalla/transit \
+		~/data/valhalla/elevation_tiles \
+	&& cd ~/data
 
 Download OSM data:
 
@@ -127,11 +127,11 @@ Download elevation data (Replace {tile-name}):
 
 Run docker container (auto run):
 
-  docker run --rm -it --name valhalla -p 8002:8002 -v /home/vht/data/:/data quanghuy2307/valhalla:1.0.0
+  docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0
 
 Run docker container (normal run):
 
-  docker run --rm -it --name valhalla -p 8002:8002 -v /home/vht/data/:/data quanghuy2307/valhalla:1.0.0 bash
+  docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0 bash
 
   valhalla_build_config > valhalla/valhalla.json
   valhalla_build_timezones -f > valhalla/tz_world.sqlite
