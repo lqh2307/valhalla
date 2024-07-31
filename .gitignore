@@ -69,3 +69,6 @@ site/
 *.gph
 
 .DS_Store
+
+CHANGELOG.md
+NEWS
