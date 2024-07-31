@@ -135,6 +135,8 @@ def grid_from_bounds(bounds: List[float]) -> List[List[int]]:
       yield [x, y, x + 1, y + 1]
 
 def get_tiles_with_geojson(input_dir: Path) -> Set[Tile]:
+  LOGGER.info(f"Get elevation tiles with GeoJSON directory: {input_dir}")
+
   try:
     from shapely.geometry import Polygon, box
   except ImportError:
@@ -150,8 +152,6 @@ def get_tiles_with_geojson(input_dir: Path) -> Set[Tile]:
     )
 
     sys.exit(1)
-
-  LOGGER.info(f"Get elevation tiles with GeoJSON directory: {input_dir}")
 
   def get_outer_rings(input_dir: Path) -> Iterable[Polygon]:
     for file in input_dir.glob("*.geojson"):
@@ -174,6 +174,8 @@ def get_tiles_with_geojson(input_dir: Path) -> Set[Tile]:
   return tile_infos
 
 def get_tiles_with_bbox(bbox_str: str) -> Set[Tile]:
+  LOGGER.info(f"Get elevation tiles with BBox: {bbox}")
+
   # parse bbox
   try:
     bbox = min_x, min_y, max_x, max_y = [float(x) for x in bbox_str.split(",")]
@@ -184,11 +186,9 @@ def get_tiles_with_bbox(bbox_str: str) -> Set[Tile]:
 
   # validate bbox
   if min_x > max_x or min_x < -180 or max_x > 180 or min_y > max_y or min_y < -90 or max_y > 90:
-    LOGGER.critical(f"BBox invalid: {bbox}")
+    LOGGER.critical(f"BBox is invalid: {bbox}")
 
     sys.exit(1)
-
-  LOGGER.info(f"Get elevation tiles with BBox: {bbox}")
 
   tile_infos = set()
   for grid in grid_from_bounds(bbox):
@@ -198,12 +198,12 @@ def get_tiles_with_bbox(bbox_str: str) -> Set[Tile]:
   return tile_infos
 
 def get_tiles_with_graph(graph_dir: Path) -> Set[Tile]:
+  LOGGER.info(f"Get elevation tiles with Graph directory: {graph_dir}")
+
   if not graph_dir.is_dir():
     LOGGER.critical(f"Graph directory {graph_dir.resolve()} does not exist.")
 
     sys.exit(1)
-
-  LOGGER.info(f"Get elevation tiles with Graph directory: {graph_dir}")
 
   tile_infos = set()
   local_dir = graph_dir.joinpath('2')

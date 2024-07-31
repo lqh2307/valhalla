@@ -1,6 +1,8 @@
 # editor temporary / backup files
 *~
 
+data
+
 # built objects
 valhalla_run_map_match
 valhalla_meili_worker
