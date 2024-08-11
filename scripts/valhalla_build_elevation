@@ -120,16 +120,12 @@ def get_tiles_with_geojson(geojson_dir: Path) -> Set[Tile]:
   try:
     from shapely.geometry import Polygon, box
   except ImportError:
-    LOGGER.error(
-      "Could not import shapely. Please install shapely or use another download method instead."
-    )
+    LOGGER.error("Could not import shapely. Please install shapely or use another download method instead.")
 
     sys.exit(1)
 
   if not geojson_dir.is_dir() or not len(list(geojson_dir.glob('*.geojson'))) > 0:
-    LOGGER.error(
-      f"Geojson directory does not exist or contains no GeoJSON files: {geojson_dir.resolve()}"
-    )
+    LOGGER.error(f"Geojson directory does not exist or contains no GeoJSON files: {geojson_dir.resolve()}")
 
     sys.exit(1)
 
@@ -191,13 +187,10 @@ def get_tiles_with_graph(graph_dir: Path) -> Set[Tile]:
 
   for tile_fp in local_dir.rglob('*.gph'):
     # turn the path into a tile ID
-    tile_id = int(
-      str(tile_fp.parent.relative_to(local_dir).joinpath(tile_fp.stem)).replace(os.sep, '')
-    )
+    tile_id = int(str(tile_fp.parent.relative_to(local_dir).joinpath(tile_fp.stem)).replace(os.sep, ''))
 
-    tile_x, tile_y = floor(int(tile_id % tile_width) * LOCAL_SIZE - 180), floor(
-      int(tile_id / tile_width) * LOCAL_SIZE - 90
-    )
+    tile_x = floor(int(tile_id % tile_width) * LOCAL_SIZE - 180)
+    tile_y = floor(int(tile_id / tile_width) * LOCAL_SIZE - 90)
 
     tile_infos.add(get_tile_info(tile_x, tile_y))
 
@@ -283,10 +276,7 @@ if __name__ == "__main__":
       sys.exit(1) 
   else:
     results = ThreadPool(args.parallelism).imap_unordered(
-      partial(
-        download_tile,
-        output_dir=Path(elevation_fp),
-      ),
+      partial(download_tile, output_dir=Path(elevation_fp)),
       tiles,
     )
 
