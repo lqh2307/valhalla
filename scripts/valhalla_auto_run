@@ -1,34 +1,73 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-set -e  # Exit immediately if a command exits with a non-zero status
+import subprocess
+import logging
+import sys
+import os
 
-# Init ENVs
-input_osm_files=${VALHALLA_INPUT_OSM_FILES:-$(ls data/osm/*.osm.pbf | tr '\n' ' ')}
-elevation_bounding_box=${VALHALLA_ELEVATION_BOUNDING_BOX:-"96,4,120,28"}
-service_num_threads=${VALHALLA_SERVICE_NUM_THREADS:-$(nproc)}
-config_file=${VALHALLA_CONFIG_FILE:-"data/valhalla/valhalla.json"}
+LOGGER = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
+LOGGER.addHandler(handler)
+LOGGER.setLevel(logging.INFO)
 
-# Auto run
-echo "[1/8] ==========> Building config..."
-valhalla_build_config > $config_file
+def set_default_env_var(var_name, default_value):
+  if var_name not in os.environ:
+    os.environ[var_name] = default_value
 
-echo "[2/8] ==========> Building timezones..."
-valhalla_build_timezones -c $config_file
+def run_command(command):
+  LOGGER.info(f"Running {command}...")
 
-echo "[3/8] ==========> Building landmarks..."
-valhalla_build_landmarks -c $config_file $input_osm_files
+  try:
+    subprocess.run(command, check=True, shell=True)
+  except Exception as e:
+    LOGGER.error(f"Failed to run command {command}: {e}.")
 
-echo "[4/8] ==========> Building admins..."
-valhalla_build_admins -c $config_file $input_osm_files
+    return False
 
-echo "[5/8] ==========> Building elevation..."
-valhalla_build_elevation -c $config_file -b $elevation_bounding_box
+  return True
 
-echo "[6/8] ==========> Building tiles..."
-valhalla_build_tiles -c $config_file $input_osm_files
+if __name__ == "__main__":
+  # Init ENVs with defaults if not set
+  set_default_env_var('VALHALLA_INPUT_OSM_FILES', ' '.join([os.path.join('data/osm/', file) for file in os.listdir('data/osm/')]))
+  set_default_env_var('VALHALLA_ELEVATION_BOUNDING_BOX', "96,4,120,28")
+  set_default_env_var('VALHALLA_SERVICE_NUM_THREADS', str(os.cpu_count()))
+  set_default_env_var('VALHALLA_CONFIG_FILE', 'data/valhalla/valhalla.json')
 
-echo "[7/8] ==========> Building extract..."
-valhalla_build_extract -c $config_file
+  input_osm_files = os.environ['VALHALLA_INPUT_OSM_FILES']
+  elevation_bounding_box = os.environ['VALHALLA_ELEVATION_BOUNDING_BOX']
+  service_num_threads = os.environ['VALHALLA_SERVICE_NUM_THREADS']
+  config_file = os.environ['VALHALLA_CONFIG_FILE']
 
-echo "[8/8] ==========> Starting service..."
-valhalla_service $config_file $service_num_threads
+  # Auto run
+  LOGGER.info(f"[1/8] ==========> Building config...")
+  res = run_command(f"valhalla_build_config > {config_file}")
+  if not res:
+    sys.exit(1)
+
+  LOGGER.info(f"[2/8] ==========> Building timezones...")
+  run_command(f"valhalla_build_timezones -c {config_file}")
+
+  LOGGER.info(f"[3/8] ==========> Building landmarks using {input_osm_files}...")
+  run_command(f"valhalla_build_landmarks -c {config_file} {input_osm_files}")
+
+  LOGGER.info(f"[4/8] ==========> Building admins using {input_osm_files}...")
+  run_command(f"valhalla_build_admins -c {config_file} {input_osm_files}")
+
+  LOGGER.info(f"[5/8] ==========> Building elevation with bounding box {elevation_bounding_box}...")
+  run_command(f"valhalla_build_elevation -c {config_file} -b {elevation_bounding_box}")
+
+  LOGGER.info(f"[6/8] ==========> Building tiles using {input_osm_files}...")
+  res = run_command(f"valhalla_build_tiles -c {config_file} {input_osm_files}")
+  if not res:
+    sys.exit(1)
+
+  LOGGER.info(f"[7/8] ==========> Building extract...")
+  res = run_command(f"valhalla_build_extract -c {config_file}")
+  if not res:
+    sys.exit(1)
+
+  LOGGER.info(f"[8/8] ==========> Starting service with {service_num_threads} threads...")
+  res = run_command(f"valhalla_service {config_file} {service_num_threads}")
+  if not res:
+    sys.exit(1)
