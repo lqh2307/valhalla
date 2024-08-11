@@ -57,4 +57,4 @@ VOLUME /data
 
 EXPOSE 8002
 
-CMD [ "valhalla_auto_run" ]
+CMD [ "./auto_run.sh" ]
