@@ -3,7 +3,7 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 # Init ENVs
-input_osm_files=${VALHALLA_INPUT_OSM_FILES:-$(ls osm/*.osm.pbf | tr '\n' ' ')}
+input_osm_files=${VALHALLA_INPUT_OSM_FILES:-$(ls data/osm/*.osm.pbf | tr '\n' ' ')}
 elevation_bounding_box=${VALHALLA_ELEVATION_BOUNDING_BOX:-"96,4,120,28"}
 service_num_threads=${VALHALLA_SERVICE_NUM_THREADS:-$(nproc)}
 config_file=${VALHALLA_CONFIG_FILE:-"data/valhalla/valhalla.json"}
