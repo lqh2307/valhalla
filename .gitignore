@@ -45,8 +45,6 @@ __pycache__
 .libs/
 libvalhalla.la
 date_time_zonespec.csv
-mason/
-mason_packages/
 
 # tools
 .cproject

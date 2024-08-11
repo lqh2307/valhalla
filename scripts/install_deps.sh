@@ -14,8 +14,6 @@ DEBIAN_FRONTEND=noninteractive && \
     autoconf \
     automake \
     ccache \
-    clang \
-    clang-tidy \
     coreutils \
     curl \
     cmake \
