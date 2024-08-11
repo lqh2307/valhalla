@@ -6,7 +6,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 input_osm_files=${VALHALLA_INPUT_OSM_FILES:-$(ls osm/*.osm.pbf | tr '\n' ' ')}
 elevation_bounding_box=${VALHALLA_ELEVATION_BOUNDING_BOX:-"96,4,120,28"}
 service_num_threads=${VALHALLA_SERVICE_NUM_THREADS:-$(nproc)}
-config_file=${VALHALLA_CONFIG_FILE:-"valhalla/valhalla.json"}
+config_file=${VALHALLA_CONFIG_FILE:-"data/valhalla/valhalla.json"}
 
 # Auto run
 echo "[1/8] ==========> Building config..."

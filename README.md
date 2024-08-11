@@ -104,34 +104,33 @@ Build (will build to ./build):
 Create folders and go to it:
 
 	mkdir -p \
-		~/data \
-		~/data/osm \
-		~/data/timezones \
-		~/data/valhalla \
-		~/data/valhalla/tiles \
-		~/data/valhalla/transit \
-		~/data/valhalla/elevation_tiles \
-	&& cd ~/data
+		data \
+		data/osm \
+		data/timezones \
+		data/valhalla \
+		data/valhalla/tiles \
+		data/valhalla/transit \
+		data/valhalla/elevation_tiles
 
 Download OSM data:
 
-	wget -c -P ./osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
- 	wget -c -P ./osm http://download.geofabrik.de/asia/laos-latest.osm.pbf
- 	wget -c -P ./osm http://download.geofabrik.de/asia/cambodia-latest.osm.pbf
+	wget -c -P .data/osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+ 	wget -c -P .data/osm http://download.geofabrik.de/asia/laos-latest.osm.pbf
+ 	wget -c -P .data/osm http://download.geofabrik.de/asia/cambodia-latest.osm.pbf
 
 Run docker container (auto run):
 
-	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0
+	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0
 
 Run docker container (normal run):
 
-	docker run --rm -it --name valhalla -p 8002:8002 -v ~/data/:/data quanghuy2307/valhalla:1.0.0 bash
+	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-	valhalla_build_config > valhalla/valhalla.json
-	valhalla_build_timezones -f -c valhalla/valhalla.json
-	valhalla_build_landmarks -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
-	valhalla_build_admins -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
-	valhalla_build_elevation -f -c valhalla/valhalla.json -b 96,4,120,28
-	valhalla_build_tiles -c valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
-	valhalla_build_extract -c valhalla/valhalla.json
-	valhalla_service valhalla/valhalla.json 1
+	valhalla_build_config > data/valhalla/valhalla.json
+	valhalla_build_timezones -f -c data/valhalla/valhalla.json
+	valhalla_build_landmarks -c data/valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_admins -c data/valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28
+	valhalla_build_tiles -c data/valhalla/valhalla.json vietnam-latest.osm.pbf laos-latest.osm.pbf cambodia-latest.osm.pbf
+	valhalla_build_extract -c data/valhalla/valhalla.json
+	valhalla_service data/valhalla/valhalla.json 1

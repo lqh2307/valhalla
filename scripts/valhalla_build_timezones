@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
 import subprocess
 import requests
 import argparse
@@ -8,14 +9,13 @@ import zipfile
 import shutil
 import json
 import sys
-from pathlib import Path
 
 parser = argparse.ArgumentParser(description="""Script to download and process timezone polygon file.""")
 parser.add_argument(
   "-f",
   "--force",
   action="store_true",
-  help="Delete existing files and redownload.",
+  help="Force delete existing files and redownload.",
   default=False,
 )
 parser.add_argument(
@@ -38,22 +38,21 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"
 LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
-timezones = "timezones"
-timezones_zip_file = Path(f"{timezones}/{timezones}.zip")
-timezones_unzip_folder = Path(f"{timezones}/{timezones}")
+timezones_zip_file = Path(f"data/timezones/timezones.zip")
+timezones_unzip_folder = Path(f"data/timezones/timezones")
 
-def download_file(url, dest):
-  LOGGER.info(f"Downloading from {url} to {dest}...")
+def download_file(url, dest_path):
+  LOGGER.info(f"Downloading from {url} to {dest_path}...")
 
   try:
     with requests.get(url, stream=True) as r:
       r.raise_for_status()
 
-      with open(dest, 'wb') as f:
+      with open(dest_path, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1*1024*1024):
           f.write(chunk)
   except Exception as e:
-    LOGGER.error(f"Failed to download from {url}: {e}.")
+    LOGGER.error(f"Failed to download from {url} to {dest_path}: {e}.")
 
     return False
 
@@ -72,31 +71,27 @@ def unzip_file(zip_path, extract_to):
 
   return True  
 
-def find_shapefile(directory):
-  for file in directory.glob("*.shp"):
-    return file.stem
-
-  return None
-
-def create_spatial_database(src, dest):
-  LOGGER.info(f"Creating spatial database from {src}...")
+def create_spatial_database(zip_shapefile_path, sqlite_path):
+  LOGGER.info(f"Creating spatial database from {zip_shapefile_path}...")
 
   try:
-    shapefile_file_name = find_shapefile(src)
+    shapefile_file_name = None
+    for file in zip_shapefile_path.glob("*.shp"):
+      shapefile_file_name = file.stem
+
     if shapefile_file_name is None:
-      raise ValueError(f"No shapefile found in {src}.")
+      raise ValueError(f"No shapefile found in {zip_shapefile_path}.")
 
-    dest = str(dest)
-    shapefile = f"{src}/{shapefile_file_name}"
+    sqlite_path = str(sqlite_path)
 
-    subprocess.run(["spatialite_tool", "-i", "-shp", shapefile, "-d", dest, "-t", timezones, "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
-    subprocess.run(["spatialite", dest, f"SELECT CreateSpatialIndex('{timezones}', 'geom');"], check=True)
-    subprocess.run(["spatialite", dest, "VACUUM;"], check=True)
-    subprocess.run(["spatialite", dest, "ANALYZE;"], check=True)
+    subprocess.run(["spatialite_tool", "-i", "-shp", f"{zip_shapefile_path}/{shapefile_file_name}", "-d", sqlite_path, "-t", "timezones", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
+    subprocess.run(["spatialite", sqlite_path, f"SELECT CreateSpatialIndex('timezones', 'geom');"], check=True)
+    subprocess.run(["spatialite", sqlite_path, "VACUUM;"], check=True)
+    subprocess.run(["spatialite", sqlite_path, "ANALYZE;"], check=True)
 
-    shutil.rmtree(src)
+    shutil.rmtree(zip_shapefile_path)
   except Exception as e:
-    LOGGER.error(f"Failed to create spatial database from {src}: {e}.")
+    LOGGER.error(f"Failed to create spatial database from {zip_shapefile_path}: {e}.")
 
     return False
 

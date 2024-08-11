@@ -37,11 +37,11 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y \
-    ca-certificates \
-    libcurl4 libczmq4 libluajit-5.1-2 libgdal32 \
-    libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
-    curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
-    spatialite-bin unzip wget && \
+  ca-certificates \
+  libcurl4 libczmq4 libluajit-5.1-2 libgdal32 \
+  libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
+  curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
+  spatialite-bin unzip wget && \
   apt-get -y --purge autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
@@ -51,7 +51,7 @@ COPY --from=builder /usr/lib/python3/dist-packages/valhalla/* /usr/lib/python3/d
 
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
-WORKDIR /data
+WORKDIR /
 
 VOLUME /data
 
