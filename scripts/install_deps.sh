@@ -36,12 +36,14 @@ DEBIAN_FRONTEND=noninteractive && \
     lld \
     locales \
     luajit \
+    make \
     osmium-tool \
     parallel \
     pkgconf \
     protobuf-compiler \
     python3-all-dev \
     python3-shapely \
+    python3-requests \
     python3-pip \
     spatialite-bin \
     unzip \
@@ -57,5 +59,3 @@ cd third_party/prime_server
 make -j${CONCURRENCY:-$(nproc)}
 sudo make install
 cd -
-
-sudo PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --upgrade requests shapely

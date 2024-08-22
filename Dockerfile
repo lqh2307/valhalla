@@ -1,5 +1,5 @@
-ARG BUILDER_IMAGE=ubuntu:23.04
-ARG TARGET_IMAGE=ubuntu:23.04
+ARG BUILDER_IMAGE=ubuntu:24.04
+ARG TARGET_IMAGE=ubuntu:24.04
 
 FROM $BUILDER_IMAGE AS builder
 
@@ -10,6 +10,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 # ARG https_proxy=http://10.55.123.98:3333
 
 ARG CONCURRENCY
+ARG ADDITIONAL_TARGETS
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
@@ -17,6 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 
 WORKDIR /usr/local/src/valhalla
 ADD . .
+
 RUN ./scripts/install_deps.sh
 RUN ./scripts/build_and_install.sh
 
@@ -37,17 +39,33 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y \
-  ca-certificates \
-  libcurl4 libczmq4 libluajit-5.1-2 libgdal32 \
-  libprotobuf-lite32 libsqlite3-0 libsqlite3-mod-spatialite libzmq5 zlib1g \
-  curl gdb locales parallel python3-minimal python3-distutils python-is-python3 \
-  spatialite-bin unzip wget && \
+    ca-certificates \
+    libcurl4 \
+    libczmq4 \
+    libluajit-5.1-2 \
+    libgdal34 \
+    libprotobuf-lite32 \
+    libsqlite3-0 \
+    libsqlite3-mod-spatialite \
+    libzmq5 \
+    zlib1g \
+    curl \
+    gdb \
+    locales \
+    parallel \
+    python3-minimal \
+    python-is-python3 \
+    python3-shapely \
+    python3-requests \
+    spatialite-bin \
+    unzip \
+    wget && \
   apt-get -y --purge autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local
-COPY --from=builder /usr/lib/python3/dist-packages/valhalla/* /usr/lib/python3/dist-packages/valhalla/
+COPY --from=builder /usr/local/lib/python3.12/dist-packages/valhalla/* /usr/local/lib/python3.12/dist-packages/valhalla/
 
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
