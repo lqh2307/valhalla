@@ -20,7 +20,6 @@ RUN ./scripts/install_deps.sh
 RUN ./scripts/build_and_install.sh
 
 WORKDIR /usr/local/src
-RUN cd valhalla
 RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales
 RUN rm -rf valhalla
 

@@ -44,7 +44,6 @@ DEBIAN_FRONTEND=noninteractive && \
     lld \
     locales \
     luajit \
-    make \
     osmium-tool \
     parallel \
     pkgconf \
@@ -62,8 +61,7 @@ DEBIAN_FRONTEND=noninteractive && \
 
 # Build prime_server from source
 cd third_party/prime_server
-./autogen.sh
-./configure
+./autogen.sh && ./configure
 make -j${CONCURRENCY:-$(nproc)}
 $SUDO_CMD make install
 cd -
