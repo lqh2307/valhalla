@@ -17,7 +17,6 @@ fi
 DEBIAN_FRONTEND=noninteractive && \
   $SUDO_CMD apt-get -y update && \
   $SUDO_CMD apt-get --no-install-recommends -y install \
-    build-essential \
     ca-certificates \
     autoconf \
     automake \
@@ -25,6 +24,9 @@ DEBIAN_FRONTEND=noninteractive && \
     coreutils \
     curl \
     cmake \
+    g++ \
+    gcc \
+    make \
     jq \
     lcov \
     libboost-all-dev \
@@ -58,10 +60,3 @@ DEBIAN_FRONTEND=noninteractive && \
   $SUDO_CMD apt-get -y --purge autoremove && \
   $SUDO_CMD apt-get clean && \
   $SUDO_CMD rm -rf /var/lib/apt/lists/*
-
-# Build prime_server from source
-cd third_party/prime_server
-./autogen.sh && ./configure
-make -j${CONCURRENCY:-$(nproc)}
-$SUDO_CMD make install
-cd -
