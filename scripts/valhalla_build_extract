@@ -253,6 +253,7 @@ def write_index_to_tar(tar_fp_: Path):
 def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolver, extract_fp: Path):
   """Actually creates the tar ball. Break out of main function for testability."""
   tiles_count = len(tile_resolver_.matched_paths)
+
   if not tiles_count:
     LOGGER.critical(f"Couldn't find usable tiles in {tile_resolver_.path}")
 
@@ -281,6 +282,7 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
     sys.exit(0)
 
   LOGGER.info("Start creating traffic extract...")
+
   traffic_fp: Path = Path(
     config_["mjolnir"].get("traffic_extract") or extract_fp.parent.joinpath("traffic.tar")
   )

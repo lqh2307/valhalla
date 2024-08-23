@@ -75,7 +75,7 @@ config = {
     },
   },
   'additional_data': {
-    'elevation': 'data/valhalla/elevation_tiles/',
+    'elevation': 'data/valhalla/elevation_tiles',
     'elevation_url': Optional(str),
   },
   'loki': {
@@ -610,7 +610,7 @@ def add_leaf_args(
   help: dict,
 ):
   """
-  returns a list of leaves of the tree, `\0` separated, stops at non dicts
+  Returns a list of leaves of the tree, `\0` separated, stops at non dicts
   while doing so it also adds arguments to the parser
   """
   # if we are at a dict go deeper

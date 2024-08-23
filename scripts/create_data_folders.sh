@@ -9,4 +9,5 @@ mkdir -p \
   data/valhalla \
   data/valhalla/tiles \
   data/valhalla/transit \
+  data/valhalla/transit_feeds \
   data/valhalla/elevation_tiles
