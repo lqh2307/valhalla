@@ -6,10 +6,17 @@ set -e  # Exit immediately if a command exits with a non-zero status
 # http_proxy=http://10.55.123.98:3333
 # https_proxy=http://10.55.123.98:3333
 
+# Decide whether to use sudo
+SUDO_CMD="sudo"
+
+if [ "$NO_USE_SUDO" = "true" ]; then
+  SUDO_CMD=""
+fi
+
 # Install the build dependencies
 DEBIAN_FRONTEND=noninteractive && \
-  sudo apt-get update -y && \
-  sudo apt-get install -y --quiet \
+  $SUDO_CMD apt-get -y update && \
+  $SUDO_CMD apt-get --no-install-recommends -y install \
     build-essential \
     ca-certificates \
     autoconf \
@@ -49,14 +56,14 @@ DEBIAN_FRONTEND=noninteractive && \
     spatialite-bin \
     unzip \
     zlib1g-dev && \
-  sudo apt-get -y --purge autoremove && \
-  sudo apt-get clean && \
-  sudo rm -rf /var/lib/apt/lists/*
+  $SUDO_CMD apt-get -y --purge autoremove && \
+  $SUDO_CMD apt-get clean && \
+  $SUDO_CMD rm -rf /var/lib/apt/lists/*
 
 # Build prime_server from source
 cd third_party/prime_server
 ./autogen.sh
 ./configure
 make -j${CONCURRENCY:-$(nproc)}
-sudo make install
+$SUDO_CMD make install
 cd -

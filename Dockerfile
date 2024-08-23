@@ -9,12 +9,9 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 # ARG http_proxy=http://10.55.123.98:3333
 # ARG https_proxy=http://10.55.123.98:3333
 
+ARG NO_USE_SUDO=true
 ARG CONCURRENCY
 ARG ADDITIONAL_TARGETS
-
-RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update -y && \
-  apt-get install -y sudo
 
 WORKDIR /usr/local/src/valhalla
 ADD . .
@@ -36,9 +33,11 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 # ARG http_proxy=http://10.55.123.98:3333
 # ARG https_proxy=http://10.55.123.98:3333
 
-RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get install -y \
+RUN \
+  set -ex && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  apt-get -y update && \
+  apt-get -y --no-install-recommends install \
     ca-certificates \
     libcurl4 \
     libczmq4 \
