@@ -22,7 +22,6 @@ option(ENABLE_TOOLS "Enable Valhalla tools" ON)
 option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" ON)
 option(ENABLE_SERVICES "Enable Valhalla services" ON)
 option(ENABLE_HTTP "Enable the use of CURL" ON)
-option(ENABLE_PYTHON_BINDINGS "Enable Python bindings" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
 option(ENABLE_COMPILER_WARNINGS "Build with compiler warnings" OFF)
@@ -194,16 +193,6 @@ endif()
 # unless you said you didnt want gdal we try to turn it on, if we cant we tell you
 # we don't need it to build tiles (yet)
 set(GDAL_TARGET "")
-if (ENABLE_GDAL AND (ENABLE_SERVICES OR ENABLE_TOOLS OR ENABLE_PYTHON_BINDINGS))
-  find_package(GDAL QUIET)
-  if (GDAL_FOUND)
-    set(GDAL_TARGET GDAL::GDAL)
-    add_compile_definitions(ENABLE_GDAL)
-    message(STATUS "Gdal support is enabled")
-  else()
-    message(WARNING "Unable to enable gdal support")
-  endif()
-endif()
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
 
@@ -238,18 +227,6 @@ endif ()
 
 ## libvalhalla
 add_subdirectory(src)
-
-## Python bindings
-if(ENABLE_PYTHON_BINDINGS)
-  # python is fine for cmake as well
-  find_package(Python COMPONENTS Development Interpreter)
-  if (Python_FOUND)
-    add_subdirectory(src/bindings/python)
-  else()
-    set(ENABLE_PYTHON_BINDINGS OFF)
-    message(WARNING "Python development version not found, skipping Python bindings...")
-  endif()
-endif()
 
 ## Executable targets
 
@@ -388,10 +365,6 @@ if(${CPACK_GENERATOR} MATCHES "^DEB$")
   set(CPACK_DEBIAN_RUNTIME_PACKAGE_SECTION "contrib/misc")
   set(CPACK_DEBIAN_RUNTIME_PACKAGE_DEPENDS "libvalhalla0 (= ${CPACK_PACKAGE_VERSION})")
 
-  set(CPACK_DEBIAN_PYTHON_PACKAGE_NAME "python-valhalla")
-  set(CPACK_DEBIAN_PYTHON_PACKAGE_SECTION "python")
-  set(CPACK_DEBIAN_PYTHON_PACKAGE_DEPENDS "libvalhalla0 (= ${CPACK_PACKAGE_VERSION})")
-
   if("${CMAKE_CXX_LIBRARY_ARCHITECTURE}" MATCHES "arm-linux-gnueabihf")
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE armhf)
   endif()
@@ -399,11 +372,7 @@ if(${CPACK_GENERATOR} MATCHES "^DEB$")
   message(STATUS "Configured deb packages of ${CMAKE_CXX_LIBRARY_ARCHITECTURE} build for ${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CPACK_COMPONENTS_ALL "shared;runtime;python")
-else()
-  set(CPACK_COMPONENTS_ALL "development")
-endif()
+set(CPACK_COMPONENTS_ALL "development")
 
 set(CPACK_PROJECT_CONFIG_FILE ${VALHALLA_SOURCE_DIR}/cmake/CPackConfig.cmake)
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)

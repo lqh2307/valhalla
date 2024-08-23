@@ -89,10 +89,6 @@ function(valhalla_module)
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/${MODULE_NAME}"
     COMPONENT development)
 
-  if(BUILD_SHARED_LIBS OR ENABLE_PYTHON_BINDINGS)
-    set_property(TARGET ${library} PROPERTY POSITION_INDEPENDENT_CODE ON)
-  endif()
-
   ## Save properties of external dependencies and target objects to propagate to valhalla target
   string(REGEX REPLACE "(valhalla::[^;]+)" "" external_module_depends "${MODULE_DEPENDS}")
   string(REGEX REPLACE "([^;]+)" "$<TARGET_PROPERTY:\\1,INTERFACE_COMPILE_DEFINITIONS>" external_compile_definitions "${external_module_depends}")
@@ -216,24 +212,9 @@ if(PKG_CONFIG_FOUND)
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 endif()
 
-
 install(TARGETS valhalla
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shared NAMELINK_SKIP
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT development)
-
-if(BUILD_SHARED_LIBS)
-  set(LIBVALHALLA_SO_LINK ${CMAKE_SHARED_LIBRARY_PREFIX}valhalla${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIBVALHALLA_SO_LINK}
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    COMPONENT development)
-
-  if(UNIX)
-    add_custom_target(${LIBVALHALLA_SO_LINK} ALL
-      COMMAND ${CMAKE_COMMAND} -E create_symlink "${LIBVALHALLA_SO_LINK}.${VALHALLA_VERSION_MAJOR}" ${LIBVALHALLA_SO_LINK})
-    set_target_properties(${LIBVALHALLA_SO_LINK} PROPERTIES FOLDER "Library")
-  endif()
-endif()
 
 install(FILES ${valhalla_hdrs}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla"

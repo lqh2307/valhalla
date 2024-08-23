@@ -65,7 +65,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local
-COPY --from=builder /usr/local/lib/python3.12/dist-packages/valhalla/* /usr/local/lib/python3.12/dist-packages/valhalla/
 
 RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 

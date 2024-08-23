@@ -33,5 +33,4 @@ As with the request/input, the response/output will again be the `Api` message b
 
 There are a few more things we should do before we can remove the beta label from this feature:
 
-* **Add Native PBF Support to Python Bindings**: We can support, in addition to JSON strings, the ability for python to work directly with protobuf objects (those generated with protoc) across the python/c++ barrier. This would be a very natural way for python users to interact with Valhalla.
 * **Support for All APIs**: As mentioned above we only support a certain subset Valhalla's APIs, over time we can add the rest of the APIs to the `Api` message.
