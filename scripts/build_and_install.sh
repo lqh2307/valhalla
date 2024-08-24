@@ -2,7 +2,7 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-# Decide whether to use sudo
+# Decide whether to use sudo?
 SUDO_CMD="sudo"
 
 if [ "$NO_USE_SUDO" = "true" ]; then

@@ -6,7 +6,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 # http_proxy=http://10.55.123.98:3333
 # https_proxy=http://10.55.123.98:3333
 
-# Decide whether to use sudo
+# Decide whether to use sudo?
 SUDO_CMD="sudo"
 
 if [ "$NO_USE_SUDO" = "true" ]; then
@@ -18,20 +18,22 @@ DEBIAN_FRONTEND=noninteractive && \
   $SUDO_CMD apt-get -y update && \
   $SUDO_CMD apt-get --no-install-recommends -y install \
     ca-certificates \
+    build-essential \
+    pkgconf \
     autoconf \
     automake \
     ccache \
+    cmake \
     coreutils \
     curl \
-    cmake \
-    g++ \
-    gcc \
-    make \
     jq \
     lcov \
+    clang \
+    clang-tidy \
     libboost-all-dev \
     libcurl4-openssl-dev \
     libczmq-dev \
+    libzmq3-dev \
     libgdal-dev \
     libgeos++-dev \
     libgeos-dev \
@@ -42,19 +44,17 @@ DEBIAN_FRONTEND=noninteractive && \
     libsqlite3-dev \
     libsqlite3-mod-spatialite \
     libtool \
-    libzmq3-dev \
     lld \
     locales \
     luajit \
+    spatialite-bin \
     osmium-tool \
     parallel \
-    pkgconf \
     protobuf-compiler \
     python3-all-dev \
     python3-shapely \
     python3-requests \
     python3-pip \
-    spatialite-bin \
     unzip \
     zlib1g-dev && \
   $SUDO_CMD apt-get -y --purge autoremove && \
