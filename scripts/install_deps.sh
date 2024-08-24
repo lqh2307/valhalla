@@ -26,6 +26,7 @@ DEBIAN_FRONTEND=noninteractive && \
     cmake \
     coreutils \
     curl \
+    wget \
     jq \
     lcov \
     clang \
