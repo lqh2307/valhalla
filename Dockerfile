@@ -17,6 +17,7 @@ WORKDIR /usr/local/src/valhalla
 ADD . .
 
 RUN ./scripts/install_deps.sh
+RUN ./scripts/install_prime_server.sh
 RUN ./scripts/build_and_install.sh
 
 WORKDIR /usr/local/src
