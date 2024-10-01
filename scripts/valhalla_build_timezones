@@ -34,64 +34,6 @@ LOGGER.setLevel(logging.INFO)
 timezones_zip_file = Path(f"data/timezones/timezones.zip")
 timezones_unzip_folder = Path(f"data/timezones/timezones")
 
-def download_tz_file(dest_path):
-  url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
-
-  LOGGER.info(f"Downloading tz from {url} to {dest_path}...")
-
-  try:
-    with requests.get(url, stream=True) as r:
-      r.raise_for_status()
-
-      with open(dest_path, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1*1024*1024):
-          f.write(chunk)
-  except Exception as e:
-    LOGGER.error(f"Failed to download tz from {url} to {dest_path}: {e}.")
-
-    return False
-
-  return True
-
-def unzip_file(zip_path, extract_to):
-  LOGGER.info(f"Unzipping {zip_path} to {extract_to}...")
-
-  try:
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-      zip_ref.extractall(extract_to)
-  except Exception as e:
-    LOGGER.error(f"Failed to unzip {zip_path} to {extract_to}: {e}.")
-
-    return False
-
-  return True  
-
-def create_spatial_database(zip_shapefile_path, sqlite_path):
-  LOGGER.info(f"Creating spatial database from {zip_shapefile_path}...")
-
-  try:
-    shapefile_file_name = None
-    for file in zip_shapefile_path.glob("*.shp"):
-      shapefile_file_name = file.stem
-
-    if shapefile_file_name is None:
-      raise ValueError(f"No shapefile found in {zip_shapefile_path}.")
-
-    sqlite_path = str(sqlite_path)
-
-    subprocess.run(["spatialite_tool", "-i", "-shp", f"{zip_shapefile_path}/{shapefile_file_name}", "-d", sqlite_path, "-t", "timezones", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
-    subprocess.run(["spatialite", sqlite_path, f"SELECT CreateSpatialIndex('timezones', 'geom');"], check=True)
-    subprocess.run(["spatialite", sqlite_path, "VACUUM;"], check=True)
-    subprocess.run(["spatialite", sqlite_path, "ANALYZE;"], check=True)
-
-    shutil.rmtree(zip_shapefile_path)
-  except Exception as e:
-    LOGGER.error(f"Failed to create spatial database from {zip_shapefile_path}: {e}.")
-
-    return False
-
-  return True
-
 if __name__ == "__main__":
   args = parser.parse_args()
 
@@ -109,23 +51,67 @@ if __name__ == "__main__":
     LOGGER.critical(f"'Can't find valid path for 'mjolnir.timezone' in {args.config}.")
 
     sys.exit(1)
+  else:
+    timezones_sqlite_file = Path(timezones_sqlite_file)
 
   if not args.force:
     if not timezones_zip_file.exists():
-      LOGGER.error(f"Missing timezone polygon file: {timezones_zip_file}.")
+      LOGGER.error(f"Missing timezone polygon file {timezones_zip_file}.")
 
       sys.exit(1) 
 
-    LOGGER.info(f"Found timezone polygon file: {timezones_zip_file}.")
+    LOGGER.info(f"Found timezone polygon file {timezones_zip_file}.")
   else:
-    res = download_tz_file(args.url, timezones_zip_file)
-    if not res:
+    url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
+
+    LOGGER.info(f"Downloading timezone polygon file from {url} to {timezones_zip_file}...")
+
+    try:
+      with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+
+        with open(timezones_zip_file, 'wb') as f:
+          for chunk in r.iter_content(chunk_size=1*1024*1024):
+            f.write(chunk)
+    except Exception as e:
+      LOGGER.error(f"Failed to download timezone polygon file from {url} to {timezones_zip_file}: {e}.")
+
       sys.exit(1)
 
-  res = unzip_file(timezones_zip_file, timezones_unzip_folder)
-  if not res:
+  LOGGER.info(f"Unzipping timezone polygon file {timezones_zip_file} to {timezones_unzip_folder}...")
+
+  try:
+    with zipfile.ZipFile(timezones_zip_file, 'r') as zip_ref:
+      zip_ref.extractall(timezones_unzip_folder)
+  except Exception as e:
+    LOGGER.error(f"Failed to unzipping timezone polygon file {timezones_zip_file} to {timezones_unzip_folder}: {e}.")
+
     sys.exit(1)
 
-  res = create_spatial_database(timezones_unzip_folder, timezones_sqlite_file)
-  if not res:
+  LOGGER.info(f"Creating spatial database file from {timezones_unzip_folder}...")
+
+  try:
+    if timezones_sqlite_file.exists():
+      LOGGER.info(f"Deleting existing spatial database file {timezones_sqlite_file}...")
+
+      timezones_sqlite_file.unlink()
+
+    shapefile_file_name = None
+    for file in timezones_unzip_folder.glob("*.shp"):
+      shapefile_file_name = file.stem
+
+    if shapefile_file_name is None:
+      raise ValueError(f"No shapefile found in {timezones_unzip_folder}.")
+
+    timezones_sqlite_file = str(timezones_sqlite_file)
+
+    subprocess.run(["spatialite_tool", "-i", "-shp", f"{timezones_unzip_folder}/{shapefile_file_name}", "-d", timezones_sqlite_file, "-t", "timezones", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
+    subprocess.run(["spatialite", timezones_sqlite_file, f"SELECT CreateSpatialIndex('timezones', 'geom');"], check=True)
+    subprocess.run(["spatialite", timezones_sqlite_file, "VACUUM;"], check=True)
+    subprocess.run(["spatialite", timezones_sqlite_file, "ANALYZE;"], check=True)
+
+    shutil.rmtree(timezones_unzip_folder)
+  except Exception as e:
+    LOGGER.error(f"Failed to create spatial database file from {timezones_unzip_folder}: {e}.")
+
     sys.exit(1)
