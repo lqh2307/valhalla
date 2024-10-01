@@ -100,7 +100,7 @@ Build (will build to ./build):
 
 Download OSM data:
 
-	wget -c -P data/osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+	wget -c -P data/valhalla/osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
 
 Run docker container (auto run):
 
@@ -112,10 +112,10 @@ Run docker container (normal run):
 
 	valhalla_build_config > data/valhalla/valhalla.json \
 	&& valhalla_build_timezones -f -c data/valhalla/valhalla.json \
-	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_admins -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_admins -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
 	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
-	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
 	&& valhalla_build_extract -c data/valhalla/valhalla.json \
 	&& valhalla_service data/valhalla/valhalla.json 1
 
@@ -123,9 +123,9 @@ Normal run:
 
 	valhalla_build_config > data/valhalla/valhalla.json \
 	&& valhalla_build_timezones -f -c data/valhalla/valhalla.json \
-	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_admins -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_admins -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
 	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
-	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
 	&& valhalla_build_extract -c data/valhalla/valhalla.json \
 	&& valhalla_service data/valhalla/valhalla.json 1

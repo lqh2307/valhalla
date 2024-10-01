@@ -31,8 +31,8 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"
 LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
-timezones_zip_file = Path(f"data/timezones/timezones.zip")
-timezones_unzip_folder = Path(f"data/timezones/timezones")
+zip_file = Path(f"data/timezones/timezones.zip")
+unzip_folder = Path(f"data/timezones/timezones")
 
 if __name__ == "__main__":
   args = parser.parse_args()
@@ -55,40 +55,40 @@ if __name__ == "__main__":
     timezones_sqlite_file = Path(timezones_sqlite_file)
 
   if not args.force:
-    if not timezones_zip_file.exists():
-      LOGGER.error(f"Missing timezone polygon file {timezones_zip_file}.")
+    if not zip_file.exists():
+      LOGGER.error(f"Missing timezone polygon file {zip_file}.")
 
       sys.exit(1) 
 
-    LOGGER.info(f"Found timezone polygon file {timezones_zip_file}.")
+    LOGGER.info(f"Found timezone polygon file {zip_file}.")
   else:
     url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
 
-    LOGGER.info(f"Downloading timezone polygon file from {url} to {timezones_zip_file}...")
+    LOGGER.info(f"Downloading timezone polygon file from {url} to {zip_file}...")
 
     try:
       with requests.get(url, stream=True) as r:
         r.raise_for_status()
 
-        with open(timezones_zip_file, 'wb') as f:
+        with open(zip_file, 'wb') as f:
           for chunk in r.iter_content(chunk_size=1*1024*1024):
             f.write(chunk)
     except Exception as e:
-      LOGGER.error(f"Failed to download timezone polygon file from {url} to {timezones_zip_file}: {e}.")
+      LOGGER.error(f"Failed to download timezone polygon file from {url} to {zip_file}: {e}.")
 
       sys.exit(1)
 
-  LOGGER.info(f"Unzipping timezone polygon file {timezones_zip_file} to {timezones_unzip_folder}...")
+  LOGGER.info(f"Unzipping timezone polygon file {zip_file} to {unzip_folder}...")
 
   try:
-    with zipfile.ZipFile(timezones_zip_file, 'r') as zip_ref:
-      zip_ref.extractall(timezones_unzip_folder)
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+      zip_ref.extractall(unzip_folder)
   except Exception as e:
-    LOGGER.error(f"Failed to unzipping timezone polygon file {timezones_zip_file} to {timezones_unzip_folder}: {e}.")
+    LOGGER.error(f"Failed to unzipping timezone polygon file {zip_file} to {unzip_folder}: {e}.")
 
     sys.exit(1)
 
-  LOGGER.info(f"Creating spatial database file from {timezones_unzip_folder}...")
+  LOGGER.info(f"Creating spatial database file from {unzip_folder}...")
 
   try:
     if timezones_sqlite_file.exists():
@@ -97,21 +97,21 @@ if __name__ == "__main__":
       timezones_sqlite_file.unlink()
 
     shapefile_file_name = None
-    for file in timezones_unzip_folder.glob("*.shp"):
+    for file in unzip_folder.glob("*.shp"):
       shapefile_file_name = file.stem
 
     if shapefile_file_name is None:
-      raise ValueError(f"No shapefile found in {timezones_unzip_folder}.")
+      raise ValueError(f"No shapefile found in {unzip_folder}.")
 
     timezones_sqlite_file = str(timezones_sqlite_file)
 
-    subprocess.run(["spatialite_tool", "-i", "-shp", f"{timezones_unzip_folder}/{shapefile_file_name}", "-d", timezones_sqlite_file, "-t", "timezones", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
+    subprocess.run(["spatialite_tool", "-i", "-shp", f"{unzip_folder}/{shapefile_file_name}", "-d", timezones_sqlite_file, "-t", "timezones", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
     subprocess.run(["spatialite", timezones_sqlite_file, f"SELECT CreateSpatialIndex('timezones', 'geom');"], check=True)
     subprocess.run(["spatialite", timezones_sqlite_file, "VACUUM;"], check=True)
     subprocess.run(["spatialite", timezones_sqlite_file, "ANALYZE;"], check=True)
 
-    shutil.rmtree(timezones_unzip_folder)
+    shutil.rmtree(unzip_folder)
   except Exception as e:
-    LOGGER.error(f"Failed to create spatial database file from {timezones_unzip_folder}: {e}.")
+    LOGGER.error(f"Failed to create spatial database file from {unzip_folder}: {e}.")
 
     sys.exit(1)
