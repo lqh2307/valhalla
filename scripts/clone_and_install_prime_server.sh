@@ -6,9 +6,14 @@ set -e  # Exit immediately if a command exits with a non-zero status
 http_proxy=http://10.55.123.98:3333
 https_proxy=http://10.55.123.98:3333
 
-# Build prime_server from source
-cd third_party/prime_server
+git clone --recurse-submodules --single-branch -b master https://github.com/kevinkreiser/prime_server.git
+
+cd prime_server
+
+git submodule sync && git submodule update --init --recursive
+
 ./autogen.sh && ./configure
 make -j$(nproc)
-sudo make install
-cd -
+make install
+
+cd ..

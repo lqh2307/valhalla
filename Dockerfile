@@ -9,7 +9,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 ARG http_proxy=http://10.55.123.98:3333
 ARG https_proxy=http://10.55.123.98:3333
 
-WORKDIR /usr/local/src/valhalla
+WORKDIR /usr/local/src
 
 ADD . .
 
@@ -28,6 +28,7 @@ RUN \
     cmake \
     coreutils \
     curl \
+    git \
     wget \
     jq \
     lcov \
@@ -66,23 +67,26 @@ RUN \
 
 # Build prime_server
 RUN \
-  cd third_party/prime_server \
+  git clone --recurse-submodules --single-branch -b master https://github.com/kevinkreiser/prime_server.git \
+  && cd prime_server \
+  && git submodule sync && git submodule update --init --recursive \
   && ./autogen.sh && ./configure \
   && make -j$(nproc) \
   && make install \
-  && cd ..
+  && cd .. \
+  && rm -rf prime_server
 
 # Build valhalla
 RUN \
-  # switch back to -DCMAKE_BUILD_TYPE=RelWithDebInfo if you want debug symbols
-  cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off \
+  git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git \
+  && cd valhalla \
+  && git submodule sync && git submodule update --init --recursive \
+  # && switch back to -DCMAKE_BUILD_TYPE=RelWithDebInfo if you want debug symbols \
+  && cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off \
   && make -C build -j$(nproc) \
-  && make -C build install
-
-WORKDIR /usr/local/src
-
-RUN \
-  for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales \
+  && make -C build install \
+  && cd .. \
+  && for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales \
   && rm -rf valhalla
 
 

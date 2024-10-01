@@ -16,9 +16,9 @@ fi
 if [ "$DEPENDENCY" = "build" ]; then
   # Install the build dependencies
   export DEBIAN_FRONTEND=noninteractive \
-    && sudo apt-get -y update \
-    && sudo apt-get -y upgrade \
-    && sudo apt-get -y install \
+    && apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install \
       ca-certificates \
       build-essential \
       pkgconf \
@@ -28,6 +28,7 @@ if [ "$DEPENDENCY" = "build" ]; then
       cmake \
       coreutils \
       curl \
+      git \
       wget \
       jq \
       lcov \
@@ -60,15 +61,15 @@ if [ "$DEPENDENCY" = "build" ]; then
       python3-pip \
       unzip \
       zlib1g-dev \
-    && sudo apt-get -y --purge autoremove \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/*;
+    && apt-get -y --purge autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*;
 elif [ "$DEPENDENCY" = "runtime" ]; then
   # Install the runtime dependencies
   export DEBIAN_FRONTEND=noninteractive \
-    && sudo apt-get -y update \
-    && sudo apt-get -y upgrade \
-    && sudo apt-get -y install \
+    && apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install \
       ca-certificates \
       libcurl4 \
       libczmq4 \
@@ -89,7 +90,7 @@ elif [ "$DEPENDENCY" = "runtime" ]; then
       spatialite-bin \
       unzip \
       wget \
-    && sudo apt-get -y --purge autoremove \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/*;
+    && apt-get -y --purge autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*;
 fi
