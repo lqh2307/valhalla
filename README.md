@@ -83,7 +83,7 @@ Clone newest submodules:
 
 Install dependencies:
 
-	DEPENDENCY="build" ./scripts/install_deps.sh
+	./scripts/install_deps.sh
 
 Build prime_servce:
 
