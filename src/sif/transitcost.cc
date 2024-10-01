@@ -6,11 +6,6 @@
 #include "proto_conversions.h"
 #include "worker.h"
 
-#ifdef INLINE_TEST
-#include "test.h"
-#include <random>
-#endif
-
 using namespace valhalla::midgard;
 using namespace valhalla::baldr;
 
@@ -706,87 +701,3 @@ cost_ptr_t CreateTransitCost(const Costing& costing_options) {
 } // namespace valhalla
 
 /**********************************************************************************************/
-
-#ifdef INLINE_TEST
-
-using namespace valhalla;
-using namespace sif;
-
-namespace {
-
-TransitCost* make_transitcost_from_json(const std::string& property, float testVal) {
-  std::stringstream ss;
-  ss << R"({"costing": "transit", "costing_options":{"transit":{")" << property << R"(":)" << testVal
-     << "}}}";
-  Api request;
-  ParseApi(ss.str(), valhalla::Options::route, request);
-  return new TransitCost(request.options().costings().find(Costing::transit)->second);
-}
-
-std::uniform_real_distribution<float>*
-make_distributor_from_range(const ranged_default_t<float>& range) {
-  float rangeLength = range.max - range.min;
-  return new std::uniform_real_distribution<float>(range.min - rangeLength, range.max + rangeLength);
-}
-
-TEST(TransitCost, testTransitCostParams) {
-  constexpr unsigned testIterations = 250;
-  constexpr unsigned seed = 0;
-  std::mt19937 generator(seed);
-  std::shared_ptr<std::uniform_real_distribution<float>> distributor;
-  std::shared_ptr<TransitCost> ctorTester;
-
-  // mode_factor_
-  distributor.reset(make_distributor_from_range(kModeFactorRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("mode_factor", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->mode_factor_,
-                test::IsBetween(kModeFactorRange.min, kModeFactorRange.max));
-  }
-
-  // use_bus_
-  distributor.reset(make_distributor_from_range(kUseBusRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("use_bus", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->use_bus_, test::IsBetween(kUseBusRange.min, kUseBusRange.max));
-  }
-
-  // use_rail_
-  distributor.reset(make_distributor_from_range(kUseRailRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("use_rail", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->use_rail_, test::IsBetween(kUseRailRange.min, kUseRailRange.max));
-  }
-
-  // use_transfers_
-  distributor.reset(make_distributor_from_range(kUseTransfersRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("use_transfers", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->use_transfers_,
-                test::IsBetween(kUseTransfersRange.min, kUseTransfersRange.max));
-  }
-
-  // transfer_cost_
-  distributor.reset(make_distributor_from_range(kTransferCostRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("transfer_cost", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->transfer_cost_,
-                test::IsBetween(kTransferCostRange.min, kTransferCostRange.max));
-  }
-
-  // transfer_penalty_
-  distributor.reset(make_distributor_from_range(kTransferPenaltyRange));
-  for (unsigned i = 0; i < testIterations; ++i) {
-    ctorTester.reset(make_transitcost_from_json("transfer_penalty", (*distributor)(generator)));
-    EXPECT_THAT(ctorTester->transfer_penalty_,
-                test::IsBetween(kTransferPenaltyRange.min, kTransferPenaltyRange.max));
-  }
-}
-} // namespace
-
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-
-#endif

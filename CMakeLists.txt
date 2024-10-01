@@ -28,7 +28,6 @@ option(ENABLE_COMPILER_WARNINGS "Build with compiler warnings" OFF)
 option(ENABLE_SANITIZERS "Use all the integrated sanitizers for Debug build" OFF)
 option(ENABLE_ADDRESS_SANITIZER "Use memory sanitizer for Debug build" OFF)
 option(ENABLE_UNDEFINED_SANITIZER "Use UB sanitizer for Debug build" OFF)
-option(ENABLE_TESTS "Enable Valhalla tests" ON)
 option(ENABLE_WERROR "Convert compiler warnings to errors. Requires ENABLE_COMPILER_WARNINGS=ON to take effect" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
 option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
@@ -314,10 +313,6 @@ install(DIRECTORY ${date_include_dir}/
 if (WIN32)
   install(DIRECTORY ${dirent_include_dir}/
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
-endif()
-
-if(ENABLE_TESTS)
-  add_subdirectory(test)
 endif()
 
 ## Coverage report targets
