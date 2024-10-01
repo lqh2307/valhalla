@@ -99,10 +99,6 @@ Build (will build to ./build):
 
 ### Run
 
-Create folders:
-
-	./scripts/create_data_folders.sh
-
 Download OSM data:
 
 	wget -c -P data/osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf

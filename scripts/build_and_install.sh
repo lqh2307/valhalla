@@ -9,4 +9,14 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE
 make -C build -j$(nproc)
 make -C build install
 
+mkdir -p \
+  data \
+  data/osm \
+  data/timezones \
+  data/valhalla \
+  data/valhalla/tiles \
+  data/valhalla/transit \
+  data/valhalla/transit_feeds \
+  data/valhalla/elevation_tiles
+
 ldconfig
