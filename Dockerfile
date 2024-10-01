@@ -133,9 +133,9 @@ RUN \
 RUN \
   mkdir -p \
     data \
-    data/osm \
     data/timezones \
     data/valhalla \
+    data/valhalla/osm \
     data/valhalla/tiles \
     data/valhalla/transit \
     data/valhalla/transit_feeds \
