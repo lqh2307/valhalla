@@ -13,5 +13,5 @@ rm -rf build
 
 # switch back to -DCMAKE_BUILD_TYPE=RelWithDebInfo if you want debug symbols
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off
-make -C build ${ADDITIONAL_TARGETS} -j${CONCURRENCY:-$(nproc)}
+make -C build -j$(nproc)
 $SUDO_CMD make -C build install

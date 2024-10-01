@@ -1,7 +1,7 @@
 ARG BUILDER_IMAGE=ubuntu:24.04
 ARG TARGET_IMAGE=ubuntu:24.04
 
-FROM $BUILDER_IMAGE AS builder
+FROM ${BUILDER_IMAGE} AS builder
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
@@ -10,22 +10,24 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 # ARG https_proxy=http://10.55.123.98:3333
 
 ARG NO_USE_SUDO=true
-ARG CONCURRENCY
-ARG ADDITIONAL_TARGETS
 
 WORKDIR /usr/local/src/valhalla
+
 ADD . .
 
-RUN ./scripts/install_deps.sh
-RUN ./scripts/install_prime_server.sh
-RUN ./scripts/build_and_install.sh
+RUN \
+  DEPENDENCY="build" ./scripts/install_deps.sh \
+  && ./scripts/install_prime_server.sh \
+  && ./scripts/build_and_install.sh
 
 WORKDIR /usr/local/src
-RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales
-RUN rm -rf valhalla
+
+RUN \
+  for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; import json; print(json.load(sys.stdin)["posix_locale"])'; done > valhalla_locales \
+  && rm -rf valhalla
 
 
-FROM $TARGET_IMAGE AS runner
+FROM ${TARGET_IMAGE} AS runner
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
@@ -33,39 +35,14 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 # ARG http_proxy=http://10.55.123.98:3333
 # ARG https_proxy=http://10.55.123.98:3333
 
-RUN \
-  set -ex && \
-  export DEBIAN_FRONTEND=noninteractive && \
-  apt-get -y update && \
-  apt-get -y --no-install-recommends install \
-    ca-certificates \
-    libcurl4 \
-    libczmq4 \
-    libluajit-5.1-2 \
-    libgdal34 \
-    libprotobuf-lite32 \
-    libsqlite3-0 \
-    libsqlite3-mod-spatialite \
-    libzmq5 \
-    zlib1g \
-    curl \
-    gdb \
-    locales \
-    parallel \
-    python3-minimal \
-    python-is-python3 \
-    python3-shapely \
-    python3-requests \
-    spatialite-bin \
-    unzip \
-    wget && \
-  apt-get -y --purge autoremove && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
+COPY ./scripts/install_deps.sh /tmp/install_deps.sh
 COPY --from=builder /usr/local /usr/local
 
-RUN cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
+RUN \
+  DEPENDENCY="build" /tmp/install_deps.sh
+
+RUN \
+  cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
 WORKDIR /
 
