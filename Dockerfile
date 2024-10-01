@@ -6,8 +6,8 @@ FROM ${BUILDER_IMAGE} AS builder
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 # set proxy
-# ARG http_proxy=http://10.55.123.98:3333
-# ARG https_proxy=http://10.55.123.98:3333
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
 
 ARG NO_USE_SUDO=true
 
@@ -16,9 +16,13 @@ WORKDIR /usr/local/src/valhalla
 ADD . .
 
 RUN \
-  DEPENDENCY="build" ./scripts/install_deps.sh \
-  && ./scripts/install_prime_server.sh \
-  && ./scripts/build_and_install.sh
+  DEPENDENCY="build" ./scripts/install_deps.sh
+
+RUN \
+  ./scripts/install_prime_server.sh
+
+RUN \
+  ./scripts/build_and_install.sh
 
 WORKDIR /usr/local/src
 
@@ -32,8 +36,10 @@ FROM ${TARGET_IMAGE} AS runner
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 # set proxy
-# ARG http_proxy=http://10.55.123.98:3333
-# ARG https_proxy=http://10.55.123.98:3333
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
+
+ARG NO_USE_SUDO=true
 
 COPY ./scripts/install_deps.sh /tmp/install_deps.sh
 COPY --from=builder /usr/local /usr/local
