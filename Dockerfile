@@ -9,7 +9,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 ARG http_proxy=http://10.55.123.98:3333
 ARG https_proxy=http://10.55.123.98:3333
 
-ARG NO_USE_SUDO=true
+ARG NO_USE_SUDO="true"
 
 WORKDIR /usr/local/src/valhalla
 
@@ -39,7 +39,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 ARG http_proxy=http://10.55.123.98:3333
 ARG https_proxy=http://10.55.123.98:3333
 
-ARG NO_USE_SUDO=true
+ARG NO_USE_SUDO="true"
 
 COPY ./scripts/install_deps.sh /tmp/install_deps.sh
 COPY --from=builder /usr/local /usr/local
