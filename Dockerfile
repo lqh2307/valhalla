@@ -3,8 +3,6 @@ ARG TARGET_IMAGE=ubuntu:24.04
 
 FROM ${BUILDER_IMAGE} AS builder
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
 # set proxy
 ARG http_proxy=http://10.55.123.98:3333
 ARG https_proxy=http://10.55.123.98:3333
@@ -90,8 +88,6 @@ RUN \
 
 FROM ${TARGET_IMAGE} AS runner
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
 # set proxy
 ARG http_proxy=http://10.55.123.98:3333
 ARG https_proxy=http://10.55.123.98:3333
@@ -127,6 +123,9 @@ RUN \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local
+
+RUN \
+  ldconfig
 
 RUN \
   cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
