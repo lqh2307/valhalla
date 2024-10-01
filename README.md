@@ -69,15 +69,11 @@ Important build options include:
 
 Clone source:
 
-	git clone --recurse-submodules https://github.com/lqh2307/valhalla.git
+	git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git
 
 Jump to source:
 
 	cd valhalla
-
-Switch to dev branch:
-
-	git checkout dev
 
 Clone newest submodules:
 
@@ -87,7 +83,11 @@ Clone newest submodules:
 
 Install dependencies:
 
-	./scripts/install_deps.sh
+	DEPENDENCY="build" ./scripts/install_deps.sh
+
+Build prime_servce:
+
+	./scripts/install_prime_server.sh
 
 Build (will build to ./build):
 
@@ -99,17 +99,9 @@ Build (will build to ./build):
 
 ### Run
 
-Create folders and go to it:
+Create folders:
 
-	mkdir -p \
-		data \
-		data/osm \
-		data/timezones \
-		data/valhalla \
-		data/valhalla/tiles \
-		data/valhalla/transit \
-		data/valhalla/transit_feeds \
-		data/valhalla/elevation_tiles
+	./scripts/create_data_folders.sh
 
 Download OSM data:
 
