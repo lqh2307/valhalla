@@ -11,8 +11,6 @@ ARG https_proxy=http://10.55.123.98:3333
 
 WORKDIR /usr/local/src
 
-ADD . .
-
 # Install the build dependencies
 RUN \
   export DEBIAN_FRONTEND=noninteractive \
