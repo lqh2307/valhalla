@@ -19,13 +19,6 @@ parser.add_argument(
   default=False,
 )
 parser.add_argument(
-  "-u",
-  "--url",
-  type=str,
-  help="URL of the timezone polygon file to download.",
-  default="https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip",
-)
-parser.add_argument(
   "-c",
   "--config",
   help="Absolute or relative path to the Valhalla config JSON.",
@@ -41,8 +34,10 @@ LOGGER.setLevel(logging.INFO)
 timezones_zip_file = Path(f"data/timezones/timezones.zip")
 timezones_unzip_folder = Path(f"data/timezones/timezones")
 
-def download_file(url, dest_path):
-  LOGGER.info(f"Downloading from {url} to {dest_path}...")
+def download_tz_file(dest_path):
+  url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
+
+  LOGGER.info(f"Downloading tz from {url} to {dest_path}...")
 
   try:
     with requests.get(url, stream=True) as r:
@@ -52,7 +47,7 @@ def download_file(url, dest_path):
         for chunk in r.iter_content(chunk_size=1*1024*1024):
           f.write(chunk)
   except Exception as e:
-    LOGGER.error(f"Failed to download from {url} to {dest_path}: {e}.")
+    LOGGER.error(f"Failed to download tz from {url} to {dest_path}: {e}.")
 
     return False
 
@@ -123,7 +118,7 @@ if __name__ == "__main__":
 
     LOGGER.info(f"Found timezone polygon file: {timezones_zip_file}.")
   else:
-    res = download_file(args.url, timezones_zip_file)
+    res = download_tz_file(args.url, timezones_zip_file)
     if not res:
       sys.exit(1)
 

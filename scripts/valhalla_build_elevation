@@ -34,13 +34,6 @@ parser = argparse.ArgumentParser(description="""Download elevation tiles.""")
 
 method = parser.add_mutually_exclusive_group()
 method.add_argument(
-  "-g",
-  "--from-geojson",
-  help="Absolute or relative path to directory with .geojson files used "
-  "as input to tile intersection. Requires shapely.",
-  type=Path,
-)
-method.add_argument(
   "-b",
   "--from-bbox",
   help="Bounding box coordinates in the format 'minX,minY,maxX,maxY'.",
@@ -67,27 +60,6 @@ parser.add_argument(
   action="store_true",
   default=False,
 )
-parser.add_argument(
-  "-p",
-  "--parallelism",
-  help="Number of processing units to use.",
-  type=int,
-  default=cpu_count(),
-)
-
-group = parser.add_mutually_exclusive_group()
-group.add_argument(
-  "-d",
-  "--decompress",
-  help="If set, downloaded files will be decompressed (default: gzip).",
-  action="store_true",
-)
-group.add_argument(
-  "-z",
-  "--lz4",
-  help="If set, downloaded files will be recompressed with LZ4 (requires ~12% more disk space vs gzip). Requires lz4.",
-  action="store_true",
-)
 
 Tile = namedtuple("Tile", ["name", "dir"])
 LOCAL_SIZE = 0.25
@@ -104,52 +76,17 @@ def get_tile_info(x: int, y: int) -> Tile:
 
   return Tile(tile_name, dir_name)
 
-def grid_from_bounds(bounds: List[float]) -> List[List[int]]:
-  """Creates a regular grid of size 1x1 within specified bounds"""
-  # expand bbox by snapping to a 1 x 1 degree grid
-  # loop through x and y range and create the grid
-  min_x, min_y = [floor(x) for x in bounds[:2]]
-  max_x, max_y = [ceil(x) for x in bounds[-2:]]
-  for x in range(min_x, max_x):
-    for y in range(min_y, max_y):
-      yield [x, y, x + 1, y + 1]
-
-def get_tiles_with_geojson(geojson_dir: Path) -> Set[Tile]:
-  LOGGER.info(f"Get elevation tiles with GeoJSON directory: {geojson_dir}")
-
-  try:
-    from shapely.geometry import Polygon, box
-  except ImportError:
-    LOGGER.error("Could not import shapely. Please install shapely or use another download method instead.")
-
-    sys.exit(1)
-
-  if not geojson_dir.is_dir() or not len(list(geojson_dir.glob('*.geojson'))) > 0:
-    LOGGER.error(f"Geojson directory does not exist or contains no GeoJSON files: {geojson_dir.resolve()}")
-
-    sys.exit(1)
-
-  def get_outer_rings(geojson_dir: Path) -> Iterable[Polygon]:
-    for file in geojson_dir.glob("*.geojson"):
-      with open(file) as f:
-        geojson = json.load(f)
-      for feature in geojson["features"]:
-        if feature["geometry"]["type"] == "Polygon":
-          yield Polygon(feature["geometry"]["coordinates"][0])
-        if feature["geometry"]["type"] == "MultiPolygon":
-          for single_polygon in feature["geometry"]["coordinates"]:
-            yield Polygon(single_polygon[0])
-
-  tile_infos = set()
-  for poly in get_outer_rings(geojson_dir):
-    for rect in grid_from_bounds(poly.bounds):
-      if poly.intersects(box(*rect)):
-        tile_x, tile_y, *_ = rect
-        tile_infos.add(get_tile_info(tile_x, tile_y))
-
-  return tile_infos
-
 def get_tiles_with_bbox(bbox_str: str) -> Set[Tile]:
+  def grid_from_bounds(bounds: List[float]) -> List[List[int]]:
+    """Creates a regular grid of size 1x1 within specified bounds"""
+    # expand bbox by snapping to a 1 x 1 degree grid
+    # loop through x and y range and create the grid
+    min_x, min_y = [floor(x) for x in bounds[:2]]
+    max_x, max_y = [ceil(x) for x in bounds[-2:]]
+    for x in range(min_x, max_x):
+      for y in range(min_y, max_y):
+        yield [x, y, x + 1, y + 1]
+
   LOGGER.info(f"Get elevation tiles with BBox: {bbox_str}")
 
   # parse bbox
@@ -251,9 +188,7 @@ if __name__ == "__main__":
 
     sys.exit(1)
 
-  if args.from_geojson:
-    tiles = get_tiles_with_geojson(args.from_geojson)
-  elif args.from_bbox:
+  if args.from_bbox:
     tiles = get_tiles_with_bbox(args.from_bbox)
   elif args.from_tiles:
     tiles = get_tiles_with_graph(Path(config["mjolnir"]["tile_dir"]))
@@ -275,7 +210,7 @@ if __name__ == "__main__":
 
       sys.exit(1) 
   else:
-    results = ThreadPool(args.parallelism).imap_unordered(
+    results = ThreadPool(cpu_count()).imap_unordered(
       partial(download_tile, output_dir=Path(elevation_fp)),
       tiles,
     )
