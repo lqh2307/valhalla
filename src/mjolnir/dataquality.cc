@@ -83,7 +83,7 @@ void DataQuality::LogIssues() const {
   // Sort by edgecount and write to separate file
   std::ofstream dupfile;
   std::sort(dups.begin(), dups.end());
-  dupfile.open("duplicateways.txt", std::ofstream::out | std::ofstream::app);
+  dupfile.open("data/duplicateways.txt", std::ofstream::out | std::ofstream::app);
   dupfile << "WayID1   WayID2    DuplicateEdges" << std::endl;
   for (const auto& dupway : dups) {
     dupfile << dupway.wayid1 << "," << dupway.wayid2 << "," << dupway.edgecount << std::endl;

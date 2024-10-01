@@ -115,14 +115,14 @@ Run docker container (normal run):
 
 	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-	valhalla_build_config > data/valhalla/valhalla.json
-	valhalla_build_timezones -f -c data/valhalla/valhalla.json
-	valhalla_build_landmarks -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_admins -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28
-	valhalla_build_tiles -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_extract -c data/valhalla/valhalla.json
-	valhalla_service data/valhalla/valhalla.json 1
+	valhalla_build_config > data/valhalla/valhalla.json \
+	&& valhalla_build_timezones -f -c data/valhalla/valhalla.json \
+	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_admins -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
+	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_extract -c data/valhalla/valhalla.json \
+	&& valhalla_service data/valhalla/valhalla.json 1
 
 Normal run:
 
@@ -132,4 +132,5 @@ Normal run:
 	&& valhalla_build_admins -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
 	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
 	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/osm/vietnam-latest.osm.pbf \
+	&& valhalla_build_extract -c data/valhalla/valhalla.json \
 	&& valhalla_service data/valhalla/valhalla.json 1
