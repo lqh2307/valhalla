@@ -109,6 +109,13 @@ parser.add_argument(
   action="store_true",
   default=False,
 )
+parser.add_argument(
+  "-d",
+  "--delete-tiles",
+  help="Delete all tiles after tar file created",
+  action="store_true",
+  default=False,
+)
 
 geom_type = parser.add_mutually_exclusive_group()
 geom_type.add_argument(
@@ -335,6 +342,20 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
 
   LOGGER.info(f"Finished creating the traffic extract at {traffic_fp}")
 
+def delete_all_tiles(directory: Path):
+  try:
+    if directory.exists():
+      shutil.rmtree(directory)
+
+    directory.mkdir(parents=True, exist_ok=True)
+
+    return True
+
+  except Exception as e:
+      LOGGER.error(f"Error while deleting or recreating directory {directory}: {e}")
+
+  return False
+
 if __name__ == '__main__':
   args = parser.parse_args()
 
@@ -356,8 +377,6 @@ if __name__ == '__main__':
   tiles_dir: Path = Path(config["mjolnir"].get("tile_dir", '/dev/null'))
   if tiles_dir.is_dir():
     tile_resolver = TileResolver(tiles_dir)
-
-    LOGGER.info("Using graph dir to extract tiles")
   else:
     LOGGER.critical(f"'Can't find valid path for 'mjolnir.tile_dir' in {args.config}")
 
@@ -372,3 +391,6 @@ if __name__ == '__main__':
     tile_resolver.matched_paths = tile_resolver.normalized_tile_paths
 
   create_extracts(config, args.with_traffic, tile_resolver, Path(tiles_extract_out))
+
+  if args.delete_tiles:
+    delete_all_tiles(tiles_dir)
