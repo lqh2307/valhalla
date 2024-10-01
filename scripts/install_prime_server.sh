@@ -17,3 +17,5 @@ make -j$(nproc)
 make install
 
 cd ..
+
+rm -rf prime_server
