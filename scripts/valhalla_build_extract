@@ -112,8 +112,8 @@ parser.add_argument(
 )
 parser.add_argument(
   "-d",
-  "--delete-tiles",
-  help="Delete all tiles after tar file created",
+  "--delete-graph-tiles",
+  help="Delete all graph tiles after tar file created",
   action="store_true",
   default=False,
 )
@@ -145,7 +145,7 @@ def get_tile_bbox(tile_path_id: str) -> Tuple[float, float, float, float]:
   try:
     level, tile_idx = [int(x.replace("/", "")) for x in get_tile_level_id(tile_path_id)]
   except ValueError:
-    LOGGER.critical(f"Couldn't get level and tile ID for tile {tile_path_id}")
+    LOGGER.error(f"Couldn't get level and tile ID for tile {tile_path_id}")
 
     sys.exit(1)
 
@@ -163,12 +163,12 @@ def get_tiles_with_geojson(tile_resolver_: TileResolver, geojson_dir: Path):
   try:
     from shapely.geometry import Polygon, box
   except ImportError:
-    LOGGER.critical("Could not import shapely. Please install shapely or use another download method instead.")
+    LOGGER.error("Could not import shapely. Please install shapely or use another download method instead.")
 
     sys.exit(1)
 
   if not geojson_dir.is_dir() or not len(list(geojson_dir.glob('*.geojson'))) > 0:
-    LOGGER.critical(f"Geojson directory does not exist or contains no GeoJSON files: {geojson_dir.resolve()}")
+    LOGGER.error(f"Geojson directory does not exist or contains no GeoJSON files: {geojson_dir.resolve()}")
 
     sys.exit(1)
 
@@ -198,7 +198,7 @@ def get_tiles_with_bbox(tile_resolver_: TileResolver, bbox_str: str):
   try:
     bbox = Bbox(*[float(x) for x in bbox_str.split(",")])
   except ValueError:
-    LOGGER.critical(f"BBox {bbox_str} is not a comma-separated string of coordinates.")
+    LOGGER.error(f"BBox {bbox_str} is not a comma-separated string of coordinates.")
 
     sys.exit(1)
 
@@ -206,7 +206,7 @@ def get_tiles_with_bbox(tile_resolver_: TileResolver, bbox_str: str):
   if (bbox.min_x >= bbox.max_x or bbox.min_x < -180 or bbox.max_x > 180) or (
     bbox.min_y >= bbox.max_y or bbox.min_y < -90 or bbox.max_y > 90
   ):
-    LOGGER.critical(f"BBox invalid: {list(bbox)}")
+    LOGGER.error(f"BBox invalid: {list(bbox)}")
 
     sys.exit(1)
 
@@ -258,12 +258,12 @@ def write_index_to_tar(tar_fp_: Path):
     for entry in index:
       tar.write(struct.pack(INDEX_BIN_FORMAT, *entry))
 
-def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolver, extract_fp: Path):
+def create_extracts(config_: dict, do_traffic: bool, delete_graph_tiles: bool, tile_resolver_: TileResolver, extract_fp: Path):
   """Actually creates the tar ball. Break out of main function for testability."""
   tiles_count = len(tile_resolver_.matched_paths)
 
   if not tiles_count:
-    LOGGER.critical(f"Couldn't find usable tiles in {tile_resolver_.path}")
+    LOGGER.error(f"Couldn't find usable tiles in {tile_resolver_.path}")
 
     sys.exit(1)
 
@@ -282,6 +282,11 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
   write_index_to_tar(extract_fp)
 
   LOGGER.info(f"Finished tarring {tiles_count} tiles to {extract_fp}")
+
+  if delete_graph_tiles:
+    LOGGER.info(f"Delete all graph tiles at {tile_resolver_.path}")
+
+    delete_dir_and_recreate(tile_resolver_.path)
 
   # exit if no traffic extract wanted
   if not do_traffic:
@@ -343,7 +348,7 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
 
   LOGGER.info(f"Finished creating the traffic extract at {traffic_fp}")
 
-def delete_all_tiles(directory: Path):
+def delete_dir_and_recreate(directory: Path):
   try:
     if directory.exists():
       shutil.rmtree(directory)
@@ -361,7 +366,7 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   if not args.config:
-    LOGGER.critical("No valid config file used.")
+    LOGGER.error("No valid config file used.")
 
     sys.exit(1)
 
@@ -371,7 +376,7 @@ if __name__ == '__main__':
 
   tiles_extract_out = config["mjolnir"].get("tile_extract")
   if not tiles_extract_out:
-    LOGGER.critical("No output file path specified in 'mjolnir.tile_extract'.")
+    LOGGER.error("No output file path specified in 'mjolnir.tile_extract'.")
 
     sys.exit(1)
 
@@ -379,7 +384,7 @@ if __name__ == '__main__':
   if tiles_dir.is_dir():
     tile_resolver = TileResolver(tiles_dir)
   else:
-    LOGGER.critical(f"'Can't find valid path for 'mjolnir.tile_dir' in {args.config}")
+    LOGGER.error(f"'Can't find valid path for 'mjolnir.tile_dir' in {args.config}")
 
     sys.exit(1)
 
@@ -391,7 +396,4 @@ if __name__ == '__main__':
   else:
     tile_resolver.matched_paths = tile_resolver.normalized_tile_paths
 
-  create_extracts(config, args.with_traffic, tile_resolver, Path(tiles_extract_out))
-
-  if args.delete_tiles:
-    delete_all_tiles(tiles_dir)
+  create_extracts(config, args.with_traffic, args.delete_graph_tiles, tile_resolver, Path(tiles_extract_out))

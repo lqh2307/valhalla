@@ -38,7 +38,7 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   if not args.config:
-    LOGGER.critical("No valid config file used.")
+    LOGGER.error("No valid config file used.")
 
     sys.exit(1)
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
   timezones_sqlite_file = config["mjolnir"].get("timezone")
   if not timezones_sqlite_file:
-    LOGGER.critical(f"'Can't find valid path for 'mjolnir.timezone' in {args.config}.")
+    LOGGER.error(f"'Can't find valid path for 'mjolnir.timezone' in {args.config}.")
 
     sys.exit(1)
   else:
