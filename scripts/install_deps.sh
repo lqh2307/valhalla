@@ -6,13 +6,6 @@ set -e  # Exit immediately if a command exits with a non-zero status
 http_proxy=http://10.55.123.98:3333
 https_proxy=http://10.55.123.98:3333
 
-# Decide whether to use sudo?
-SUDO_CMD="sudo"
-
-if [ "$NO_USE_SUDO" = "true" ]; then
-  SUDO_CMD=""
-fi
-
 # Decide dependency to use?
 DEPENDENCY="build"
 
@@ -21,11 +14,11 @@ if [ "$DEPENDENCY" = "runtime" ]; then
 fi
 
 if [ "$DEPENDENCY" = "build" ]; then
-# Install the build dependencies
+  # Install the build dependencies
   export DEBIAN_FRONTEND=noninteractive \
-    && $SUDO_CMD apt-get -y update \
-    && $SUDO_CMD apt-get -y upgrade \
-    && $SUDO_CMD apt-get -y install \
+    && sudo apt-get -y update \
+    && sudo apt-get -y upgrade \
+    && sudo apt-get -y install \
       ca-certificates \
       build-essential \
       pkgconf \
@@ -37,7 +30,6 @@ if [ "$DEPENDENCY" = "build" ]; then
       curl \
       wget \
       jq \
-      gdb \
       lcov \
       clang \
       clang-tidy \
@@ -68,15 +60,15 @@ if [ "$DEPENDENCY" = "build" ]; then
       python3-pip \
       unzip \
       zlib1g-dev \
-    && $SUDO_CMD apt-get -y --purge autoremove \
-    && $SUDO_CMD apt-get clean \
-    && $SUDO_CMD rm -rf /var/lib/apt/lists/*;
+    && sudo apt-get -y --purge autoremove \
+    && sudo apt-get clean \
+    && sudo rm -rf /var/lib/apt/lists/*;
 elif [ "$DEPENDENCY" = "runtime" ]; then
   # Install the runtime dependencies
   export DEBIAN_FRONTEND=noninteractive \
-    && $SUDO_CMD apt-get -y update \
-    && $SUDO_CMD apt-get -y upgrade \
-    && $SUDO_CMD apt-get -y install \
+    && sudo apt-get -y update \
+    && sudo apt-get -y upgrade \
+    && sudo apt-get -y install \
       ca-certificates \
       libcurl4 \
       libczmq4 \
@@ -97,7 +89,7 @@ elif [ "$DEPENDENCY" = "runtime" ]; then
       spatialite-bin \
       unzip \
       wget \
-    && $SUDO_CMD apt-get -y --purge autoremove \
-    && $SUDO_CMD apt-get clean \
-    && $SUDO_CMD rm -rf /var/lib/apt/lists/*;
+    && sudo apt-get -y --purge autoremove \
+    && sudo apt-get clean \
+    && sudo rm -rf /var/lib/apt/lists/*;
 fi
