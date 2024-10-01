@@ -8,3 +8,5 @@ rm -rf build
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off
 make -C build -j$(nproc)
 make -C build install
+
+ldconfig
