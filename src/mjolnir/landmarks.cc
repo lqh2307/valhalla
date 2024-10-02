@@ -13,6 +13,8 @@
 #include "mjolnir/graphtilebuilder.h"
 #include "sif/nocost.h"
 
+#include <boost/algorithm/string.hpp>
+
 #include <future>
 #include <thread>
 #include <tuple>
