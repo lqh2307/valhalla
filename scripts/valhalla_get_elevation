@@ -30,20 +30,22 @@ LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
 # Config args
-parser = argparse.ArgumentParser(description="""Script to download elevation tiles.""")
+parser = argparse.ArgumentParser(
+  description="""Script to download elevation tiles""",
+)
 
 method = parser.add_mutually_exclusive_group()
 
 method.add_argument(
   "-b",
   "--from-bbox",
-  help="Only download tiles covered by bounding box coordinates in the format 'minX,minY,maxX,maxY'.",
+  help="Only download tiles covered by bounding box coordinates in the format 'minX,minY,maxX,maxY'",
   type=str,
 )
 method.add_argument(
   "-t",
   "--from-tiles",
-  help="Only download tiles covered by the Valhalla graph.",
+  help="Only download tiles covered by the Valhalla graph",
   action="store_true",
   default=False,
 )
@@ -51,14 +53,14 @@ method.add_argument(
 parser.add_argument(
   "-p",
   "--prefix",
-  help="Prefix of path to the data folders.",
+  help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
 parser.add_argument(
   "-f",
   "--force",
-  help="Force delete existing elevation tiles and redownload.",
+  help="Force delete existing elevation tiles and redownload",
   action="store_true",
   default=False,
 )

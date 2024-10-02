@@ -103,12 +103,14 @@ LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
 # Config args
-parser = argparse.ArgumentParser(description="""Builds a tar extract from the tiles.""")
+parser = argparse.ArgumentParser(
+  description="""Builds a tar extract from the tiles""",
+)
 
 parser.add_argument(
   "-p",
   "--prefix",
-  help="Prefix of path to the data folders.",
+  help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
@@ -120,9 +122,16 @@ parser.add_argument(
   default=False,
 )
 parser.add_argument(
+  "-d",
+  "--delete-tiles",
+  help="Delete all graph tiles",
+  action="store_true",
+  default=False,
+)
+parser.add_argument(
   "-b",
   "--bbox",
-  help="If specified, will only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'.",
+  help="If specified, will only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'",
   type=str,
 )
 
@@ -209,7 +218,7 @@ def write_index_to_tar(tar_fp_: Path):
     for entry in index:
       tar.write(struct.pack(INDEX_BIN_FORMAT, *entry))
 
-def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolver, extract_fp: Path):
+def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_resolver_: TileResolver, delete_tiles: bool):
   """Actually creates the tar ball. Break out of main function for testability."""
   tiles_count = len(tile_resolver_.matched_paths)
 
@@ -223,16 +232,28 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
   index_fd = BytesIO(b'0' * index_size)
   index_fd.seek(0)
 
+  tiles_extract_file_path = Path(f"{tile_resolver_.path}/tiles.tar")
+
   # first add the index file, then the sorted tiles to the tarfile
   # TODO: come up with a smarter strategy to cluster the tiles in the tar
-  extract_fp.parent.mkdir(parents=True, exist_ok=True)
-  with tarfile.open(extract_fp, 'w') as tar:
+  with tarfile.open(tiles_extract_file_path, 'w') as tar:
     tar.addfile(get_tar_info(INDEX_FILE, index_size), index_fd)
     tile_resolver_.add_to_tar(tar)
 
-  write_index_to_tar(extract_fp)
+  write_index_to_tar(tiles_extract_file_path)
 
-  LOGGER.info(f"Finished tarring {tiles_count} tiles to {extract_fp}")
+  if delete_tiles:
+    if tile_resolver_.path.is_dir():
+      for item in tile_resolver_.path.iterdir():
+        if item.is_dir():
+          shutil.rmtree(item)
+        else:
+          if item.name == "tiles.tar":
+            continue
+          else:
+            item.unlink()
+
+  LOGGER.info(f"Finished tarring {tiles_count} tiles to {tiles_extract_file_path}")
 
   # exit if no traffic extract wanted
   if not do_traffic:
@@ -240,11 +261,11 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
 
     sys.exit(0)
 
-  LOGGER.info("Start creating traffic extract...")
+  LOGGER.info(f"Start creating traffic extract {traffic_extract_file_path}...")
 
   # we already have the right size of the index file, simply reset it
   index_fd.seek(0)
-  with tarfile.open(extract_fp) as tar_in, tarfile.open(traffic_extract_file_path, 'w') as tar_traffic:
+  with tarfile.open(tiles_extract_file_path) as tar_in, tarfile.open(traffic_extract_file_path, 'w') as tar_traffic:
     # this will let us do seeks
     in_fileobj = tar_in.fileobj
 
@@ -288,21 +309,22 @@ def create_extracts(config_: dict, do_traffic: bool, tile_resolver_: TileResolve
 
   write_index_to_tar(traffic_extract_file_path)
 
-  LOGGER.info(f"Finished creating the traffic extract at {traffic_extract_file_path}")
+  LOGGER.info(f"Finished creating the traffic extract {traffic_extract_file_path}")
 
 
 if __name__ == '__main__':
   args = parser.parse_args()
 
-  tiles_extract_file_path: Path = Path(f"{args.prefix}/tiles/tiles.tar")
-  traffic_extract_file_path: Path = Path(f"{args.prefix}/traffic/traffic.tar")
-  tiles_dir_path: Path = Path(f"{args.prefix}/tiles")
-
-  tile_resolver = TileResolver(tiles_dir_path)
+  tile_resolver = TileResolver(Path(f"{args.prefix}/tiles"))
 
   if args.bbox:
     get_tiles_with_bbox(tile_resolver, args.bbox)
   else:
     tile_resolver.matched_paths = tile_resolver.normalized_tile_paths
 
-  create_extracts(traffic_extract_file_path, args.with_traffic, tile_resolver, tiles_extract_file_path)
+  create_extracts(
+    Path(f"{args.prefix}/traffic/traffic.tar"),
+    args.with_traffic,
+    tile_resolver,
+    args.delete_tiles,
+  )

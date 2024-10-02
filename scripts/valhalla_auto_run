@@ -15,12 +15,15 @@ LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
 # Config args
-parser = argparse.ArgumentParser(description="""Script to auto run valhalla.""")
+parser = argparse.ArgumentParser(
+  description="""Script to auto run valhalla"""
+)
 
 parser.add_argument(
   "-u",
   "--url",
-  help="OSM osm.pbf file URL.",
+  help="OSM osm.pbf file URL",
+  type=str,
 )
 parser.add_argument(
   "-i",
@@ -38,12 +41,12 @@ parser.add_argument(
 parser.add_argument(
   "-p",
   "--prefix",
-  help="Prefix of path to the data folders.",
+  help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
 
-def run_command(command):
+def run_command(command: str):
   LOGGER.info(f"Running command: {command}...")
 
   try:
@@ -76,27 +79,27 @@ if __name__ == "__main__":
     if not res:
       sys.exit(1)
 
-  inputOSMPBFFilePath = ""
+  input_osm_file_path = None
   if args.input_osm_files:
-    inputOSMPBFFilePath = args.input_osm_files
+    input_osm_file_path = args.input_osm_files
   else:
-    inputOSMPBFFilePath = " ".join([str(Path(f"{args.prefix}/osm/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
+    input_osm_file_path = " ".join([str(Path(f"{args.prefix}/osm/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
 
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
-  LOGGER.info(f"==========> Building landmarks using {inputOSMPBFFilePath}... <==========")
-  run_command(f"valhalla_build_landmarks -c {config_file_path} {inputOSMPBFFilePath}")
+  LOGGER.info(f"==========> Building landmarks using {input_osm_file_path}... <==========")
+  run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}")
 
-  LOGGER.info(f"==========> Building admins using {inputOSMPBFFilePath}... <==========")
-  run_command(f"valhalla_build_admins -c {config_file_path} {inputOSMPBFFilePath}")
+  LOGGER.info(f"==========> Building admins using {input_osm_file_path}... <==========")
+  run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}")
 
-  LOGGER.info(f"==========> Building tiles using {inputOSMPBFFilePath}... <==========")
-  res = run_command(f"valhalla_build_tiles -c {config_file_path} {inputOSMPBFFilePath}")
+  LOGGER.info(f"==========> Building tiles using {input_osm_file_path}... <==========")
+  res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}")
   if not res:
     sys.exit(1)
 
   LOGGER.info(f"==========> Building extract... <==========")
-  res = run_command(f"valhalla_build_extract -p {args.prefix}")
+  res = run_command(f"valhalla_build_extract -p {args.prefix} -d")
   if not res:
     sys.exit(1)
 

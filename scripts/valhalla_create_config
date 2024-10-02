@@ -14,12 +14,14 @@ LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
 # Config args
-parser = argparse.ArgumentParser(description="""Script to create config file.""")
+parser = argparse.ArgumentParser(
+  description="""Script to create config file""",
+)
 
 parser.add_argument(
   "-p",
   "--prefix",
-  help="Prefix of path to the data folders.",
+  help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
@@ -71,7 +73,7 @@ if __name__ == '__main__':
       'logging': {
         'type': 'std_out',
         'color': True,
-        'file_name': 'path_to_some_file.log',
+        'file_name': f"{args.prefix}/logs/mjolnir_log.txt",
       },
     },
     'additional_data': {
@@ -105,7 +107,7 @@ if __name__ == '__main__':
       'logging': {
         'type': 'std_out',
         'color': True,
-        'file_name': 'path_to_some_file.log',
+        'file_name': f"{args.prefix}/logs/loki_log.txt",
         'long_request': 100.0,
       },
       'service': {
@@ -116,7 +118,7 @@ if __name__ == '__main__':
       'logging': {
         'type': 'std_out',
         'color': True,
-        'file_name': 'path_to_some_file.log',
+        'file_name': f"{args.prefix}/logs/thor_log.txt",
         'long_request': 110.0,
       },
       'source_to_target_algorithm': 'select_optimal',
@@ -137,7 +139,7 @@ if __name__ == '__main__':
       'logging': {
         'type': 'std_out',
         'color': True,
-        'file_name': 'path_to_some_file.log',
+        'file_name': f"{args.prefix}/logs/odin_log.txt",
       },
       'service': {
         'proxy': 'ipc:///tmp/odin',
@@ -192,7 +194,7 @@ if __name__ == '__main__':
       'logging': {
         'type': 'std_out',
         'color': True,
-        'file_name': 'path_to_some_file.log',
+        'file_name': f"{args.prefix}/logs/meili_log.txt",
       },
       'service': {
         'proxy': 'ipc:///tmp/meili',

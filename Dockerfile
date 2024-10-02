@@ -50,7 +50,6 @@ RUN \
     parallel \
     protobuf-compiler \
     python3-all-dev \
-    python3-shapely \
     python3-requests \
     python3-pip \
     zlib1g-dev \
@@ -110,7 +109,6 @@ RUN \
     parallel \
     python3-minimal \
     python-is-python3 \
-    python3-shapely \
     python3-requests \
     spatialite-bin \
   && apt-get -y --purge autoremove \

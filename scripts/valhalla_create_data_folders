@@ -14,19 +14,21 @@ LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
 # Config args
-parser = argparse.ArgumentParser(description="""Script to create data folders.""")
+parser = argparse.ArgumentParser(
+  description="""Script to create data folders""",
+)
 
 parser.add_argument(
   "-f",
   "--force",
   action="store_true",
-  help="Force delete existing data folders and recreate.",
+  help="Force delete all existing data folders and recreate",
   default=False,
 )
 parser.add_argument(
   "-p",
   "--prefix",
-  help="Prefix of path to the data folders.",
+  help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
@@ -37,13 +39,11 @@ if __name__ == "__main__":
 
   try:
     if args.force:
-      LOGGER.info(f"Deleting existing data folders at {args.prefix}...")
-
       shutil.rmtree(args.prefix)
 
     LOGGER.info(f"Creating data folders at {args.prefix}...")
 
-    for dir in ["osm", "tiles", "transit", "traffic", "landmarks", "admin", "timezone", "transit_feeds", "elevation_tiles"]:
+    for dir in ["osm", "tiles", "transit", "traffic", "landmarks", "admin", "timezone", "transit_feeds", "elevation_tiles", "logs"]:
       Path(f"{args.prefix}/{dir}").mkdir(parents=True, exist_ok=True)
 
   except Exception as e:
