@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-import json
 from typing import List, Union
+import json
 
 def strtobool(value):
   lower = str(value).lower()
@@ -30,17 +30,17 @@ config = {
     'tile_url': Optional(str),
     'tile_url_gz': Optional(bool),
     'concurrency': Optional(int),
-    'tile_dir': 'data/valhalla/tiles',
-    'tile_extract': 'data/valhalla/tiles.tar',
-    'traffic_extract': 'data/valhalla/traffic.tar',
+    'tile_dir': 'data/tiles',
+    'tile_extract': 'data/tiles.tar',
+    'traffic_extract': 'data/traffic.tar',
     'incident_dir': Optional(str),
     'incident_log': Optional(str),
     'shortcut_caching': Optional(bool),
-    'admin': 'data/valhalla/admin.sqlite',
-    'landmarks': 'data/valhalla/landmarks.sqlite',
-    'timezone': 'data/valhalla/timezones.sqlite',
-    'transit_dir': 'data/valhalla/transit',
-    'transit_feeds_dir': 'data/valhalla/transit_feeds',
+    'admin': 'data/admin.sqlite',
+    'landmarks': 'data/landmarks.sqlite',
+    'timezone': 'data/timezone.sqlite',
+    'transit_dir': 'data/transit',
+    'transit_feeds_dir': 'data/transit_feeds',
     'transit_bounding_box': Optional(str),
     'transit_pbf_limit': 20000,
     'hierarchy': True,
@@ -75,7 +75,7 @@ config = {
     },
   },
   'additional_data': {
-    'elevation': 'data/valhalla/elevation_tiles',
+    'elevation': 'data/elevation_tiles',
     'elevation_url': Optional(str),
   },
   'loki': {
@@ -345,7 +345,7 @@ help_text = {
     'shortcut_caching': 'Precaches the superseded edges of all shortcuts in the graph. Defaults to false',
     'admin': 'Location of sqlite file holding admin polygons created with valhalla_build_admins',
     'landmarks': 'Location of sqlite file holding landmark POI created with valhalla_build_landmarks',
-    'timezone': 'Location of sqlite file holding timezone information created with valhalla_build_timezones',
+    'timezone': 'Location of sqlite file holding timezone information created with valhalla_build_timezone',
     'transit_dir': 'Location of intermediate transit tiles created with valhalla_build_transit',
     'transit_feeds_dir': 'Location of all GTFS transit feeds, needs to contain one subdirectory per feed',
     'transit_bounding_box': 'Add comma separated bounding box values to only download transit data inside the given bounding box',

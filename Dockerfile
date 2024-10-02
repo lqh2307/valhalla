@@ -131,15 +131,7 @@ RUN \
   cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
 RUN \
-  mkdir -p \
-    data \
-    data/timezones \
-    data/valhalla \
-    data/valhalla/osm \
-    data/valhalla/tiles \
-    data/valhalla/transit \
-    data/valhalla/transit_feeds \
-    data/valhalla/elevation_tiles
+  valhalla_create_data_folders
 
 WORKDIR /
 

@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+import subprocess
+import requests
+import argparse
+import logging
+import zipfile
+import shutil
+import sys
+
+# Config args
+parser = argparse.ArgumentParser(description="""Script to download timezone polygon zip file and build timezone polygon database file.""")
+
+parser.add_argument(
+  "-f",
+  "--force",
+  action="store_true",
+  help="Force delete existing timezone polygon zip file and redownload.",
+  default=False,
+)
+parser.add_argument(
+  "-p",
+  "--prefix",
+  help="Prefix of path to the data folders.",
+  type=Path,
+  default="data",
+)
+
+# Config logs
+LOGGER = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
+LOGGER.addHandler(handler)
+LOGGER.setLevel(logging.INFO)
+
+
+if __name__ == "__main__":
+  args = parser.parse_args()
+
+  tz_polygon_db_file_path = Path(f"{args.prefix}/timezone/timezone.sqlite")
+  tz_polygon_zip_file_path = Path(f"{args.prefix}/timezone/timezone.zip")
+  tz_polygon_unzip_dir_path = Path(f"{args.prefix}/timezone/timezone")
+
+  if not args.force:
+    if not tz_polygon_zip_file_path.exists():
+      LOGGER.error(f"Missing timezone polygon zip file {tz_polygon_zip_file_path}.")
+
+      sys.exit(1)
+    else:
+      LOGGER.info(f"Found timezone polygon zip file {tz_polygon_zip_file_path}.")
+  else:
+    try:
+      LOGGER.info(f"Downloading timezone polygon zip file from {tzPolygonFileURL} to {tz_polygon_zip_file_path}...")
+
+      tzPolygonFileURL = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
+
+      with requests.get(tzPolygonFileURL) as r:
+        r.raise_for_status()
+
+        with open(tz_polygon_zip_file_path, 'wb') as f:
+          f.write(r.content)
+    except Exception as e:
+      LOGGER.error(f"Failed to download timezone polygon zip file from {tzPolygonFileURL} to {tz_polygon_zip_file_path}: {e}.")
+
+      sys.exit(1)
+
+  try:
+    LOGGER.info(f"Unzipping timezone polygon zip file {tz_polygon_zip_file_path} to {tz_polygon_unzip_dir_path}...")
+
+    with zipfile.ZipFile(tz_polygon_zip_file_path, "r") as z:
+      z.extractall(tz_polygon_unzip_dir_path)
+  except Exception as e:
+    LOGGER.error(f"Failed to unzipping timezone polygon zip file {tz_polygon_zip_file_path} to {tz_polygon_unzip_dir_path}: {e}.")
+
+    sys.exit(1)
+
+  try:
+    LOGGER.info(f"Creating timezone polygon database file from {tz_polygon_unzip_dir_path}...")
+
+    if tz_polygon_db_file_path.exists():
+      tz_polygon_db_file_path.unlink()
+
+    tz_polygon_shp_file = None
+    for file in tz_polygon_unzip_dir_path.glob("*.shp"):
+      tz_polygon_shp_file = file.stem
+
+    if tz_polygon_shp_file is None:
+      LOGGER.error(f"No timezone polygon shapefile found in {tz_polygon_unzip_dir_path}.")
+
+      sys.exit(1)
+
+    subprocess.run(["spatialite_tool", "-i", "-shp", f"{tz_polygon_unzip_dir_path}/{tz_polygon_shp_file}", "-d", 
+      str(tz_polygon_db_file_path), "-t", "timezone", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
+    subprocess.run(["spatialite", str(tz_polygon_db_file_path), f"SELECT CreateSpatialIndex('timezone', 'geom');"], check=True)
+    subprocess.run(["spatialite", str(tz_polygon_db_file_path), "VACUUM;"], check=True)
+    subprocess.run(["spatialite", str(tz_polygon_db_file_path), "ANALYZE;"], check=True)
+
+    shutil.rmtree(tz_polygon_unzip_dir_path)
+  except Exception as e:
+    LOGGER.error(f"Failed to creating timezone polygon database file from {tz_polygon_unzip_dir_path}: {e}.")
+
+    sys.exit(1)

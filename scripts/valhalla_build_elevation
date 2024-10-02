@@ -3,7 +3,6 @@
 import argparse
 import logging
 import gzip
-import json
 import sys
 import os
 from collections import namedtuple
@@ -23,20 +22,22 @@ for i, arg in enumerate(sys.argv):
   if (arg[0] == '-') and arg[1].isdigit():
     sys.argv[i] = ' ' + arg
 
-# set up the logger basics
+# Config logs
 LOGGER = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
 LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
-parser = argparse.ArgumentParser(description="""Download elevation tiles.""")
+# Config args
+parser = argparse.ArgumentParser(description="""Script to download elevation tiles.""")
 
 method = parser.add_mutually_exclusive_group()
+
 method.add_argument(
   "-b",
   "--from-bbox",
-  help="Bounding box coordinates in the format 'minX,minY,maxX,maxY'.",
+  help="Only download tiles covered by bounding box coordinates in the format 'minX,minY,maxX,maxY'.",
   type=str,
 )
 method.add_argument(
@@ -48,15 +49,16 @@ method.add_argument(
 )
 
 parser.add_argument(
-  "-c",
-  "--config",
-  help="Path to the Valhalla config JSON file.",
+  "-p",
+  "--prefix",
+  help="Prefix of path to the data folders.",
   type=Path,
+  default="data",
 )
 parser.add_argument(
   "-f",
   "--force",
-  help="Remove all existing elevation tiles before download new ones.",
+  help="Force delete existing elevation tiles and redownload.",
   action="store_true",
   default=False,
 )
@@ -133,16 +135,15 @@ def get_tiles_with_graph(graph_dir: Path) -> Set[Tile]:
 
   return tile_infos
 
-def download_tile(tile: Tile, output_dir) -> bool:
-  os.makedirs(f'{output_dir}/{tile.dir}', exist_ok=True)
-  
-  filepath = Path(f"{output_dir}/{tile.dir}/{tile.name}")
-  url = f"https://elevation-tiles-prod.s3.us-east-1.amazonaws.com/skadi/{tile.dir}/{tile.name}.gz"
-
+def download_tile(tile: Tile, output_dir: Path) -> bool:
   try:
     LOGGER.info(f"Downloading elevation tile from {url}...")
 
-    with request.urlopen(url) as res, open(filepath, "wb") as f:
+    Path(f"{output_dir}/{tile.dir}").mkdir(parents=True, exist_ok=True)
+
+    url = f"https://elevation-tiles-prod.s3.us-east-1.amazonaws.com/skadi/{tile.dir}/{tile.name}.gz"
+
+    with request.urlopen(url) as res, open(Path(f"{output_dir}/{tile.dir}/{tile.name}"), "wb") as f:
       with gzip.GzipFile(fileobj=res, mode="rb") as gz:
         try:
           uncompressed = gz.read()
@@ -170,28 +171,16 @@ def list_tiles(tiles_dir: Path) -> Set[Tile]:
   
   return tiles
 
+
 if __name__ == "__main__":
   args = parser.parse_args()
 
-  if not args.config:
-    LOGGER.error("No valid config file used.")
-
-    sys.exit(1)
-
-  config = None
-  with open(args.config) as f:
-    config = json.load(f)
-
-  elevation_fp = config["additional_data"].get("elevation")
-  if not elevation_fp:
-    LOGGER.error("'Can't find valid path for 'additional_data.elevation' in {args.config}.")
-
-    sys.exit(1)
+  elevation_tiles_dir_path = Path(f"{args.prefix}/elevation_tiles")
 
   if args.from_bbox:
     tiles = get_tiles_with_bbox(args.from_bbox)
   elif args.from_tiles:
-    tiles = get_tiles_with_graph(Path(config["mjolnir"]["tile_dir"]))
+    tiles = get_tiles_with_graph(Path(f"{args.prefix}/tiles"))
   else:
     LOGGER.error("No download method specified.")
 
@@ -200,21 +189,21 @@ if __name__ == "__main__":
   LOGGER.info(f"Found {len(tiles)} matching tiles: {tiles}.")
 
   if not args.force:
-    existing_tiles = list_tiles(Path(elevation_fp))
-    other_tiles = [tile for tile in tiles if tile not in existing_tiles]
+    existing_tiles = list_tiles(elevation_tiles_dir_path)
 
     LOGGER.info(f"Found {len(existing_tiles)} existing tiles: {existing_tiles}.")
 
+    other_tiles = [tile for tile in tiles if tile not in existing_tiles]
     if len(other_tiles):
       LOGGER.error(f"Missing {len(other_tiles)} elevation tiles: {other_tiles}.")
 
       sys.exit(1) 
   else:
     results = ThreadPool(cpu_count()).imap_unordered(
-      partial(download_tile, output_dir=Path(elevation_fp)),
+      partial(download_tile, output_dir=elevation_tiles_dir_path),
       tiles,
     )
 
     downloaded = list(filter(lambda res: res is True, results))
-    
+
     LOGGER.info(f"Downloaded {len(downloaded)} elevation tiles.")

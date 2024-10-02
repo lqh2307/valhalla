@@ -1,5 +1,4 @@
 #include "mjolnir/dataquality.h"
-#include <fstream>
 #include <vector>
 
 using namespace valhalla::midgard;
@@ -79,16 +78,6 @@ void DataQuality::LogIssues() const {
     LOG_WARN("Duplicate ways " + std::to_string(duplicateways_.size()) +
              " duplicate edges = " + std::to_string(duplicates));
   }
-
-  // Sort by edgecount and write to separate file
-  std::ofstream dupfile;
-  std::sort(dups.begin(), dups.end());
-  dupfile.open("data/duplicateways.txt", std::ofstream::out | std::ofstream::app);
-  dupfile << "WayID1   WayID2    DuplicateEdges" << std::endl;
-  for (const auto& dupway : dups) {
-    dupfile << dupway.wayid1 << "," << dupway.wayid2 << "," << dupway.edgecount << std::endl;
-  }
-  dupfile.close();
 
   // Log the unconnected link edges
   if (unconnectedlinks_.size() > 0) {

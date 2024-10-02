@@ -18,7 +18,7 @@ DST changes are the most important reason to update regularly.
     ```
     git -C third_party/tz checkout <release_tag>
     ```
-2. Update `scripts/valhalla_build_timezones` to download the latest release
+2. Update `scripts/valhalla_build_timezone` to download the latest release
 3. Run `datetime` test. If any timezones were merged/renamed, it'll fail with a pretty-print of new/old elements for copy/pasting convenience. However, if entirely new timezones were added, there's more manual work:
 - identify which timezone the new one is carved out of (look into the submoduled `tz` repo's NEWS)
 - if the parent timezone has an ID < 387, it just needs a bit shift of the parent timezone
