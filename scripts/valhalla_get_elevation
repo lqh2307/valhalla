@@ -11,7 +11,7 @@ from math import ceil, floor
 from multiprocessing import cpu_count
 from multiprocessing.dummy import Pool as ThreadPool
 from pathlib import Path
-from typing import List, Iterable, Set
+from typing import List, Set
 from urllib import request
 
 # hack so ArgumentParser can accept negative numbers
@@ -154,7 +154,7 @@ def download_tile(tile: Tile, output_dir: Path) -> bool:
         else:
           f.write(uncompressed)
   except Exception as e:
-    LOGGER.error(f"Failed to download elevation tile {tile.dir}/{tile.name}: {e}.")
+    LOGGER.error(f"Failed to downloading elevation tile {tile.dir}/{tile.name}: {e}.")
 
     return False
 

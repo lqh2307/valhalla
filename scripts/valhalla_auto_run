@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import subprocess
+import argparse
 import logging
 import sys
 import os
@@ -12,12 +13,40 @@ handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"
 LOGGER.addHandler(handler)
 LOGGER.setLevel(logging.INFO)
 
-def set_default_env_var(var_name, default_value):
-  if var_name not in os.environ:
-    os.environ[var_name] = default_value
+# Config args
+parser = argparse.ArgumentParser(description="""Script to auto run valhalla.""")
+
+parser.add_argument(
+  "-i",
+  "--input_osm_files",
+  type=str,
+  required=True,
+  help="Input OSM osm.pbf file paths, separated by space"
+)
+parser.add_argument(
+  "-e",
+  "--elevation_bounding_box",
+  type=str,
+  default="96,4,120,28",
+  help="Bounding box for elevation data (format: min_lon,min_lat,max_lon,max_lat)"
+)
+parser.add_argument(
+  "-n",
+  "--service_num_processes",
+  type=int,
+  default=1,
+  help="Number of processes for the Valhalla service"
+)
+parser.add_argument(
+  "-p",
+  "--prefix",
+  help="Prefix of path to the data folders.",
+  type=Path,
+  default="data",
+)
 
 def run_command(command):
-  LOGGER.info(f"Running {command}...")
+  LOGGER.info(f"Running command {command}...")
 
   try:
     subprocess.run(command, check=True, shell=True)
@@ -29,46 +58,39 @@ def run_command(command):
   return True
 
 if __name__ == "__main__":
-  # Init ENVs with defaults if not set
-  set_default_env_var('VALHALLA_INPUT_OSM_FILES', ' '.join([os.path.join('data/osm/', file) for file in os.listdir('data/osm/')]))
-  set_default_env_var('VALHALLA_ELEVATION_BOUNDING_BOX', "96,4,120,28")
-  set_default_env_var('VALHALLA_SERVICE_NUM_PROCESSES', str(os.cpu_count()))
-  set_default_env_var('VALHALLA_CONFIG_FILE_PATH', 'data/valhalla/valhalla.json')
+  args = parser.parse_args()
 
-  input_osm_files = os.environ['VALHALLA_INPUT_OSM_FILES']
-  elevation_bounding_box = os.environ['VALHALLA_ELEVATION_BOUNDING_BOX']
-  service_num_processes = os.environ['VALHALLA_SERVICE_NUM_PROCESSES']
-  config_file_path = os.environ['VALHALLA_CONFIG_FILE_PATH']
+  inputOSMPBFFilePath = " ".join([Path(f"{args.prefix}/osm/{file_name}") for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
+  config_file_path = Path(f"{args.prefix}/valhalla.json")
 
   # Auto run
-  LOGGER.info(f"[1/8] ==========> Building config...")
-  res = run_command(f"valhalla_build_config > {config_file_path}")
+  LOGGER.info(f"[1/7] ==========> Creating data folder...")
+  res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[2/8] ==========> Building timezone...")
-  run_command(f"valhalla_build_timezone -c {config_file_path}")
-
-  LOGGER.info(f"[3/8] ==========> Building landmarks using {input_osm_files}...")
-  run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_files}")
-
-  LOGGER.info(f"[4/8] ==========> Building admins using {input_osm_files}...")
-  run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_files}")
-
-  LOGGER.info(f"[5/8] ==========> Building elevation with bounding box {elevation_bounding_box}...")
-  run_command(f"valhalla_build_elevation -c {config_file_path} -b {elevation_bounding_box}")
-
-  LOGGER.info(f"[6/8] ==========> Building tiles using {input_osm_files}...")
-  res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_files}")
+  LOGGER.info(f"[2/7] ==========> Creating config file...")
+  res = run_command(f"valhalla_create_config -p {args.prefix}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[7/8] ==========> Building extract...")
-  res = run_command(f"valhalla_build_extract -c {config_file_path}")
+  LOGGER.info(f"[3/7] ==========> Building landmarks using {inputOSMPBFFilePath}...")
+  run_command(f"valhalla_build_landmarks -c {config_file_path} {inputOSMPBFFilePath}")
+
+  LOGGER.info(f"[4/7] ==========> Building admins using {inputOSMPBFFilePath}...")
+  run_command(f"valhalla_build_admins -c {config_file_path} {inputOSMPBFFilePath}")
+
+  LOGGER.info(f"[5/7] ==========> Building tiles using {inputOSMPBFFilePath}...")
+  res = run_command(f"valhalla_build_tiles -c {config_file_path} {inputOSMPBFFilePath}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[8/8] ==========> Starting service with {service_num_processes} processes...")
-  res = run_command(f"valhalla_service {config_file_path} {service_num_processes}")
+  LOGGER.info(f"[6/7] ==========> Building extract...")
+  res = run_command(f"valhalla_build_extract -p {args.prefix}")
+  if not res:
+    sys.exit(1)
+
+  LOGGER.info(f"[7/7] ==========> Starting service with {args.service_num_processes} processes...")
+  res = run_command(f"valhalla_service {config_file_path} {args.service_num_processes}")
   if not res:
     sys.exit(1)

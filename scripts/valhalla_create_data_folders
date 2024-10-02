@@ -6,6 +6,13 @@ import logging
 import shutil
 import sys
 
+# Config logs
+LOGGER = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
+LOGGER.addHandler(handler)
+LOGGER.setLevel(logging.INFO)
+
 # Config args
 parser = argparse.ArgumentParser(description="""Script to create data folders.""")
 
@@ -24,24 +31,17 @@ parser.add_argument(
   default="data",
 )
 
-# Config logs
-LOGGER = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
-LOGGER.addHandler(handler)
-LOGGER.setLevel(logging.INFO)
-
 
 if __name__ == "__main__":
   args = parser.parse_args()
 
   try:
-    LOGGER.info(f"Creating data folders at {args.prefix}...")
-
     if args.force:
       LOGGER.info(f"Deleting existing data folders at {args.prefix}...")
 
       shutil.rmtree(args.prefix)
+
+    LOGGER.info(f"Creating data folders at {args.prefix}...")
 
     for dir in ["osm", "tiles", "transit", "traffic", "landmarks", "admin", "timezone", "transit_feeds", "elevation_tiles"]:
       Path(f"{args.prefix}/{dir}").mkdir(parents=True, exist_ok=True)

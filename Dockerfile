@@ -130,9 +130,6 @@ RUN \
 RUN \
   cat /usr/local/src/valhalla_locales | xargs -d '\n' -n1 locale-gen
 
-RUN \
-  valhalla_create_data_folders
-
 WORKDIR /
 
 VOLUME /data

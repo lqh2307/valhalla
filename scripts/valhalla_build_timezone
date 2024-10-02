@@ -9,6 +9,13 @@ import zipfile
 import shutil
 import sys
 
+# Config logs
+LOGGER = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
+LOGGER.addHandler(handler)
+LOGGER.setLevel(logging.INFO)
+
 # Config args
 parser = argparse.ArgumentParser(description="""Script to download timezone polygon zip file and build timezone polygon database file.""")
 
@@ -26,13 +33,6 @@ parser.add_argument(
   type=Path,
   default="data",
 )
-
-# Config logs
-LOGGER = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
-LOGGER.addHandler(handler)
-LOGGER.setLevel(logging.INFO)
 
 
 if __name__ == "__main__":

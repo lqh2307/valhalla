@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+import requests
+import argparse
+import logging
+import shutil
+import sys
+
+# Config logs
+LOGGER = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)5s: %(message)s"))
+LOGGER.addHandler(handler)
+LOGGER.setLevel(logging.INFO)
+
+# Config args
+parser = argparse.ArgumentParser(description="""Script to download OSM osm.pbf file.""")
+
+parser.add_argument(
+  "-u",
+  "--url",
+  help="OSM osm.pbf file URL.",
+)
+parser.add_argument(
+  "-f",
+  "--force",
+  action="store_true",
+  help="Force delete all existing OSM osm.pbf files and redownload.",
+  default=False,
+)
+parser.add_argument(
+  "-p",
+  "--prefix",
+  help="Prefix of path to the data folders.",
+  type=Path,
+  default="data",
+)
+
+
+if __name__ == "__main__":
+  args = parser.parse_args()
+
+  if not args.url:
+    LOGGER.error("No OSM osm.pbf file URL specified.")
+
+    sys.exit(1)
+  else:
+    try:
+      osmDirPath = Path(f"{args.prefix}/osm")
+      osmPBFFilePath = Path(f"{args.prefix}/osm/{Path(args.url).name}")
+
+      if args.force:
+        LOGGER.info(f"Deleting all existing OSM osm.pbf files at {osmDirPath}...")
+
+        shutil.rmtree(osmDirPath)
+        osmDirPath.mkdir(parents=True, exist_ok=True)
+
+      LOGGER.info(f"Downloading OSM osm.pbf file from {args.url} to {osmPBFFilePath}...")
+
+      with requests.get(args.url) as r:
+        r.raise_for_status()
+
+        with open(osmPBFFilePath, 'wb') as f:
+          f.write(r.content)
+    except Exception as e:
+      LOGGER.error(f"Failed to downloading OSM osm.pbf file from {args.url} to {osmPBFFilePath}: {e}.")
+
+      sys.exit(1)

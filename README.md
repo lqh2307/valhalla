@@ -98,10 +98,6 @@ Build (will build to ./build):
 
 ### Run
 
-Download OSM data:
-
-	wget -c -P data/valhalla/osm http://download.geofabrik.de/asia/vietnam-latest.osm.pbf
-
 Run docker container (auto run):
 
 	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0
@@ -110,22 +106,26 @@ Run docker container (normal run):
 
 	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-	valhalla_build_config > data/valhalla/valhalla.json \
-	&& valhalla_build_timezone -f -c data/valhalla/valhalla.json \
-	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_admins -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
-	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_extract -c data/valhalla/valhalla.json \
-	&& valhalla_service data/valhalla/valhalla.json 1
+	valhalla_create_data_folders
+	valhalla_create_config -p data
+	valhalla_get_elevation -f -p data -b 96,4,120,28
+	valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+	valhalla_build_timezone -f -p data
+	valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_extract -p data
+	valhalla_service data/valhalla.json 1
 
 Normal run:
 
-	valhalla_build_config > data/valhalla/valhalla.json \
-	&& valhalla_build_timezone -f -c data/valhalla/valhalla.json \
-	&& valhalla_build_landmarks -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_admins -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_elevation -f -c data/valhalla/valhalla.json -b 96,4,120,28 \
-	&& valhalla_build_tiles -c data/valhalla/valhalla.json data/valhalla/osm/vietnam-latest.osm.pbf \
-	&& valhalla_build_extract -c data/valhalla/valhalla.json \
-	&& valhalla_service data/valhalla/valhalla.json 1
+	valhalla_create_data_folders
+	valhalla_create_config -p data
+	valhalla_build_timezone -f -p data
+	valhalla_get_elevation -f -p data -b 96,4,120,28
+	valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+	valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+	valhalla_build_extract -p data
+	valhalla_service data/valhalla.json 1
