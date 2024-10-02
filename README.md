@@ -82,15 +82,15 @@ Clone newest submodules:
 
 Install dependencies:
 
-	./scripts/install_deps.sh
+	./scripts/install_deps
 
 Build prime_servce:
 
-	./scripts/install_prime_server.sh
+	./scripts/install_prime_server
 
 Build (will build to ./build):
 
-	./scripts/build_and_install.sh
+	./scripts/build_and_install
 
 ### Build docker image
 
