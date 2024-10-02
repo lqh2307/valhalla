@@ -49,12 +49,12 @@ if __name__ == "__main__":
 
     sys.exit(1)
   else:
-    osm_dir_path = Path(f"{args.prefix}/osm")
-    osm_pbf_file_path = Path(f"{args.prefix}/osm/{Path(args.url).name}")
+    osms_dir_path = Path(f"{args.prefix}/osms")
+    osm_pbf_file_path = Path(f"{args.prefix}/osms/{Path(args.url).name}")
 
     if args.force:
-      if osm_dir_path.is_dir():
-        for item in osm_dir_path.iterdir():
+      if osms_dir_path.is_dir():
+        for item in osms_dir_path.iterdir():
           if item.is_dir():
             shutil.rmtree(item)
           else:

@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     LOGGER.info(f"Creating data folders at {args.prefix}...")
 
-    for dir in ["osm", "tiles", "transit", "traffic", "landmarks", "admin", "timezone", "transit_feeds", "elevation_tiles", "logs"]:
+    for dir in ["osms", "tiles", "transit", "traffic", "landmarks", "admin", "timezone", "transit_feeds", "elevation_tiles", "logs"]:
       Path(f"{args.prefix}/{dir}").mkdir(parents=True, exist_ok=True)
 
   except Exception as e:
