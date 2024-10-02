@@ -45,6 +45,20 @@ parser.add_argument(
   type=Path,
   default="data",
 )
+parser.add_argument(
+  "-a",
+  "--build-admin",
+  help="Build admin database",
+  action="store_true",
+  default=False,
+)
+parser.add_argument(
+  "-l",
+  "--build-landmarks",
+  help="Build landmarks database",
+  action="store_true",
+  default=False,
+)
 
 def run_command(command: str):
   LOGGER.info(f"Running command: {command}...")
@@ -87,11 +101,13 @@ if __name__ == "__main__":
 
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
-  LOGGER.info(f"<===============> Building landmarks database... <===============>")
-  run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}")
+  if args.build_admin:
+    LOGGER.info(f"<===============> Building admins database... <===============>")
+    run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}")
 
-  LOGGER.info(f"<===============> Building admins database... <===============>")
-  run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}")
+  if args.build_landmarks:
+    LOGGER.info(f"<===============> Building landmarks database... <===============>")
+    run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}")
 
   LOGGER.info(f"<===============> Building tiles... <===============>")
   res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}")
@@ -99,7 +115,7 @@ if __name__ == "__main__":
     sys.exit(1)
 
   LOGGER.info(f"<===============> Building tiles extract... <===============>")
-  res = run_command(f"valhalla_build_extract -p {args.prefix} -d")
+  res = run_command(f"valhalla_build_extract -d -p {args.prefix}")
   if not res:
     sys.exit(1)
 
