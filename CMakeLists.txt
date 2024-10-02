@@ -290,7 +290,7 @@ if(ENABLE_SERVICES)
 endif()
 
 # add the scripts to the build folder as well
-foreach(script valhalla_auto_run valhalla_create_config valhalla_get_elevation valhalla_build_extract valhalla_build_timezone valhalla_create_data_folder)
+foreach(script valhalla_auto_run valhalla_create_config valhalla_get_elevation valhalla_build_extract valhalla_build_timezone valhalla_get_osm_pbf valhalla_create_data_folders)
   configure_file(${VALHALLA_SOURCE_DIR}/scripts/${script} ${CMAKE_BINARY_DIR}/${script} COPYONLY)
   
   install(
