@@ -39,12 +39,12 @@ parser.add_argument(
 )
 
 def run_command(command):
-  LOGGER.info(f"Running command {command}...")
+  LOGGER.info(f"Running command: {command}...")
 
   try:
     subprocess.run(command, check=True, shell=True)
   except Exception as e:
-    LOGGER.error(f"Failed to run command {command}: {e}.")
+    LOGGER.error(f"Failed to run command: {command}: {e}.")
 
     return False
 
@@ -63,33 +63,33 @@ if __name__ == "__main__":
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
   # Auto run
-  LOGGER.info(f"[1/7] ==========> Creating data folders...")
+  LOGGER.info(f"[1/7] ==========> Creating data folders... <==========")
   res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[2/7] ==========> Creating config file...")
+  LOGGER.info(f"[2/7] ==========> Creating config file... <==========")
   res = run_command(f"valhalla_create_config -p {args.prefix}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[3/7] ==========> Building landmarks using {inputOSMPBFFilePath}...")
+  LOGGER.info(f"[3/7] ==========> Building landmarks using {inputOSMPBFFilePath}... <==========")
   run_command(f"valhalla_build_landmarks -c {config_file_path} {inputOSMPBFFilePath}")
 
-  LOGGER.info(f"[4/7] ==========> Building admins using {inputOSMPBFFilePath}...")
+  LOGGER.info(f"[4/7] ==========> Building admins using {inputOSMPBFFilePath}... <==========")
   run_command(f"valhalla_build_admins -c {config_file_path} {inputOSMPBFFilePath}")
 
-  LOGGER.info(f"[5/7] ==========> Building tiles using {inputOSMPBFFilePath}...")
+  LOGGER.info(f"[5/7] ==========> Building tiles using {inputOSMPBFFilePath}... <==========")
   res = run_command(f"valhalla_build_tiles -c {config_file_path} {inputOSMPBFFilePath}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[6/7] ==========> Building extract...")
+  LOGGER.info(f"[6/7] ==========> Building extract... <==========")
   res = run_command(f"valhalla_build_extract -p {args.prefix}")
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"[7/7] ==========> Starting service with {args.service_num_processes} processes...")
+  LOGGER.info(f"[7/7] ==========> Starting service with {args.service_num_processes} processes... <==========")
   res = run_command(f"valhalla_service {config_file_path} {args.service_num_processes}")
   if not res:
     sys.exit(1)
