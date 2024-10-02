@@ -44,7 +44,6 @@ RUN \
     libsqlite3-dev \
     libsqlite3-mod-spatialite \
     libtool \
-    lld \
     locales \
     luajit \
     spatialite-bin \
