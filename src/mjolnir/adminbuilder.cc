@@ -821,7 +821,7 @@ bool BuildAdminFromPBF(const boost::property_tree::ptree& pt,
 
   sqlite3_close(db_handle);
 
-  LOG_INFO("Finished.");
+  LOG_INFO("Finished to building admin database");
 
   return true;
 }

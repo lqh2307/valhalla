@@ -350,7 +350,7 @@ void ElevationBuilder::Build(const boost::property_tree::ptree& pt,
     thread->join();
   }
 
-  LOG_INFO("Finished adding elevation to tiles");
+  LOG_INFO("Finished to adding elevation to tiles");
 }
 
 } // namespace mjolnir

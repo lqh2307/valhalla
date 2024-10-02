@@ -113,7 +113,6 @@ struct LandmarkDatabase::db_pimpl {
         throw std::logic_error("Cannot open sqlite database in read-only mode if it does not exist");
     } else if (!read_only) {
       filesystem::remove(db_name);
-      LOG_INFO("deleting existing landmark database " + db_name + ", creating a new one");
     }
 
     // get a connection to the database
@@ -311,7 +310,8 @@ bool BuildLandmarkFromPBF(const boost::property_tree::ptree& pt,
   const std::string db_name = pt.get<std::string>("landmarks", "");
   landmark_callback callback(db_name);
 
-  LOG_INFO("Parsing files...");
+  LOG_INFO("Parsing files: " + boost::algorithm::join(input_files, ", "));
+
   // hold open all the files so that if something else (like diff application)
   // needs to mess with them we wont have troubles with inodes changing underneath us
   std::list<std::ifstream> file_handles;
