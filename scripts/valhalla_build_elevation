@@ -50,7 +50,7 @@ method.add_argument(
 parser.add_argument(
   "-c",
   "--config",
-  help="Absolute or relative path to the Valhalla config JSON.",
+  help="Path to the Valhalla config JSON file.",
   type=Path,
 )
 parser.add_argument(
