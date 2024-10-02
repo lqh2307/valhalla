@@ -53,7 +53,6 @@ RUN \
     python3-shapely \
     python3-requests \
     python3-pip \
-    unzip \
     zlib1g-dev \
   && apt-get -y --purge autoremove \
   && apt-get clean \
