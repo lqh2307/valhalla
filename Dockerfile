@@ -22,7 +22,6 @@ RUN \
     automake \
     ccache \
     cmake \
-    coreutils \
     curl \
     git \
     wget \
