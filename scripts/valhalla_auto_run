@@ -80,7 +80,7 @@ if __name__ == "__main__":
   if args.input_osm_files:
     inputOSMPBFFilePath = args.input_osm_files
   else:
-    inputOSMPBFFilePath = " ".join([Path(f"{args.prefix}/osm/{file_name}") for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
+    inputOSMPBFFilePath = " ".join([str(Path(f"{args.prefix}/osm/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
 
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
