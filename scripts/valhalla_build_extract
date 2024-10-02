@@ -124,7 +124,6 @@ parser.add_argument(
   "--bbox",
   help="If specified, will only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'.",
   type=str,
-  default="",
 )
 
 def get_tile_bbox(tile_path_id: str) -> Tuple[float, float, float, float]:

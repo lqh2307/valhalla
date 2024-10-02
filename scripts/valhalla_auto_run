@@ -21,7 +21,6 @@ parser.add_argument(
   "-i",
   "--input-osm-files",
   type=str,
-  required=True,
   help="Input OSM osm.pbf file paths, separated by space"
 )
 parser.add_argument(
