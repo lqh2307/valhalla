@@ -5,6 +5,7 @@ import argparse
 import logging
 import json
 import sys
+import os
 
 # Config logs
 LOGGER = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ if __name__ == '__main__':
       'use_lru_mem_cache': False,
       'lru_mem_cache_hard_control': False,
       'use_simple_mem_cache': False,
+      'concurrency': os.cpu_count(),
       'tile_dir': f"{args.prefix}/tiles",
       'tile_extract': f"{args.prefix}/tiles/tiles.tar",
       'traffic_extract': f"{args.prefix}/traffic/traffic.tar",

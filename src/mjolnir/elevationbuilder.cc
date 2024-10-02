@@ -317,8 +317,13 @@ void ElevationBuilder::Build(const boost::property_tree::ptree& pt,
                              std::deque<baldr::GraphId> tile_ids) {
   auto elevation = pt.get_optional<std::string>("additional_data.elevation");
   if (!elevation || !filesystem::exists(*elevation)) {
-    LOG_WARN("Elevation storage directory does not exist");
+    LOG_WARN("Elevation storage directory does not exist. Skipping add elevation to tiles...");
     return;
+  } else {
+    if (filesystem::is_empty(*elevation)) {
+      LOG_WARN("Elevation storage directory is empty. Skipping add elevation to tiles...");
+      return;
+    }
   }
 
   std::unique_ptr<skadi::sample> sample = std::make_unique<skadi::sample>(pt);
@@ -345,7 +350,7 @@ void ElevationBuilder::Build(const boost::property_tree::ptree& pt,
     thread->join();
   }
 
-  LOG_INFO("Finished");
+  LOG_INFO("Finished adding elevation to tiles");
 }
 
 } // namespace mjolnir
