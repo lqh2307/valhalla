@@ -116,8 +116,6 @@ RUN \
     python3-shapely \
     python3-requests \
     spatialite-bin \
-    unzip \
-    wget \
   && apt-get -y --purge autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*

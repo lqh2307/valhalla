@@ -18,21 +18,14 @@ parser = argparse.ArgumentParser(description="""Script to auto run valhalla.""")
 
 parser.add_argument(
   "-i",
-  "--input_osm_files",
+  "--input-osm-files",
   type=str,
   required=True,
   help="Input OSM osm.pbf file paths, separated by space"
 )
 parser.add_argument(
-  "-e",
-  "--elevation_bounding_box",
-  type=str,
-  default="96,4,120,28",
-  help="Bounding box for elevation data (format: min_lon,min_lat,max_lon,max_lat)"
-)
-parser.add_argument(
   "-n",
-  "--service_num_processes",
+  "--num-processes",
   type=int,
   default=1,
   help="Number of processes for the Valhalla service"
@@ -57,14 +50,20 @@ def run_command(command):
 
   return True
 
+
 if __name__ == "__main__":
   args = parser.parse_args()
 
-  inputOSMPBFFilePath = " ".join([Path(f"{args.prefix}/osm/{file_name}") for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
+  inputOSMPBFFilePath = ""
+  if args.input_osm_files:
+    inputOSMPBFFilePath = args.input_osm_files
+  else:
+    inputOSMPBFFilePath = " ".join([Path(f"{args.prefix}/osm/{file_name}") for file_name in os.listdir(Path(f"{args.prefix}/osm"))])
+
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
   # Auto run
-  LOGGER.info(f"[1/7] ==========> Creating data folder...")
+  LOGGER.info(f"[1/7] ==========> Creating data folders...")
   res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
   if not res:
     sys.exit(1)
