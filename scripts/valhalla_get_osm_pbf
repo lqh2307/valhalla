@@ -59,11 +59,12 @@ if __name__ == "__main__":
     osms_dir_path = Path(f"{args.prefix}/osms")
 
     if args.force:
-      for item in osms_dir_path.iterdir():
-        if item.is_dir():
-          shutil.rmtree(item)
-        else:
-          item.unlink()
+      if osms_dir_path.exists() and osms_dir_path.is_dir():
+        for item in osms_dir_path.iterdir():
+          if item.is_dir():
+            shutil.rmtree(item)
+          else:
+            item.unlink()
 
     try:
       LOGGER.info(f"Downloading OSM osm.pbf file from {args.url}...")

@@ -99,8 +99,8 @@ if __name__ == "__main__":
   if args.build_datas:
     config_file_path = Path(f"{args.prefix}/valhalla.json")
     input_osm_file_path = None
-    if args.input_osm_files:
-      input_osm_file_path = args.input_osm_files
+    if args.input_files:
+      input_osm_file_path = args.input_files
     else:
       input_osm_file_path = " ".join([str(Path(f"{args.prefix}/osms/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osms"))])
 

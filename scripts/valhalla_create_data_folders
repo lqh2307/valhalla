@@ -348,7 +348,8 @@ if __name__ == "__main__":
 
     try:
       if args.force:
-        shutil.rmtree(args.prefix)
+        if Path(args.prefix).exists() and Path(args.prefix).is_dir():
+          shutil.rmtree(args.prefix)
 
       LOGGER.info(f"Creating data folders and config file at {args.prefix}...")
 
