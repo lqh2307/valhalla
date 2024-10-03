@@ -25,6 +25,7 @@ RUN \
     curl \
     git \
     wget \
+    coreutils \
     jq \
     lcov \
     lld \
