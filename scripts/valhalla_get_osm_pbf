@@ -23,13 +23,13 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
   "-u",
   "--url",
-  help="OSM osm.pbf file URL.",
+  help="OSM osm.pbf file URL",
   type=str,
 )
 parser.add_argument(
   "-n",
   "--name",
-  help="OSM osm.pbf file name.",
+  help="OSM osm.pbf file name",
   type=str,
 )
 parser.add_argument(
@@ -59,34 +59,36 @@ if __name__ == "__main__":
     osms_dir_path = Path(f"{args.prefix}/osms")
 
     if args.force:
-      if osms_dir_path.is_dir():
-        for item in osms_dir_path.iterdir():
-          if item.is_dir():
-            shutil.rmtree(item)
-          else:
-            item.unlink()
+      for item in osms_dir_path.iterdir():
+        if item.is_dir():
+          shutil.rmtree(item)
+        else:
+          item.unlink()
 
     try:
       LOGGER.info(f"Downloading OSM osm.pbf file from {args.url}...")
 
-      with requests.get(args.url) as r:
+      with requests.get(args.url, stream=True) as r:
         r.raise_for_status()
 
         osm_file_name = Path(args.url).name
         if args.name:
           osm_file_name = args.name
         else:
-          content_disposition = r.headers.get('content-disposition')
+          content_disposition = r.headers.get("content-disposition")
+          LOGGER.info(f"{content_disposition}")
           if content_disposition:
             file_name_match = re.findall('filename="(.+)"', content_disposition)
             if file_name_match:
               osm_file_name = file_name_match[0]
 
-        with open(Path(f"{args.prefix}/osms/{osm_file_name}"), 'wb') as f:
-          f.write(r.content)
+        with open(Path(f"{osms_dir_path}/{osm_file_name}"), "wb") as f:
+          for chunk in r.iter_content(chunk_size=10*1024*1024):
+            if chunk:
+              f.write(chunk)
     except Exception as e:
       LOGGER.error(f"Failed to downloading OSM osm.pbf file from {args.url}: {e}")
 
       sys.exit(1)
 
-  LOGGER.info(f"Finished to downloading OSM osm.pbf file from {args.url}...")
+  LOGGER.info(f"Finished to downloading OSM osm.pbf file from {args.url}")

@@ -20,47 +20,45 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  "-u",
   "--url",
   help="OSM osm.pbf file URL",
   type=str,
 )
 parser.add_argument(
-  "-i",
-  "--input-osm-files",
+  "--name",
+  help="OSM osm.pbf file name",
+  type=str,
+)
+parser.add_argument(
+  "--input-files",
   type=str,
   help="Input OSM osm.pbf file paths, separated by space"
 )
 parser.add_argument(
-  "-n",
   "--num-processes",
   type=int,
   default=1,
   help="Number of processes for the Valhalla service"
 )
 parser.add_argument(
-  "-p",
   "--prefix",
   help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
 parser.add_argument(
-  "-s",
   "--start-service",
   help="Start service",
   action="store_true",
   default=False,
 )
 parser.add_argument(
-  "-b",
-  "--build",
+  "--build-datas",
   help="Build data",
   action="store_true",
   default=False,
 )
 parser.add_argument(
-  "-c",
   "--create-data-folders",
   help="Create data folders",
   action="store_true",
@@ -73,7 +71,7 @@ if __name__ == "__main__":
 
   if args.create_data_folders:
     try:
-      command = f"valhalla_create_data_folders -p {args.prefix}"
+      command = f"valhalla_create_data_folders --force --prefix {args.prefix}"
 
       LOGGER.info(f"<===============> Creating data folders: {command}... <===============>")
 
@@ -85,7 +83,10 @@ if __name__ == "__main__":
 
   if args.url:
     try:
-      command = f"valhalla_get_osm_pbf -f -p {args.prefix} -u {args.url}"
+      command = f"valhalla_get_osm_pbf --force --prefix {args.prefix} --url {args.url}"
+
+      if args.name:
+        command = f"{command} --name {args.name}"
 
       LOGGER.info(f"<===============> Getting OSM osm.pbf file: {command}... <===============>")
 
@@ -95,7 +96,7 @@ if __name__ == "__main__":
 
       sys.exit(1)
 
-  if args.build:
+  if args.build_datas:
     config_file_path = Path(f"{args.prefix}/valhalla.json")
     input_osm_file_path = None
     if args.input_osm_files:
@@ -137,7 +138,7 @@ if __name__ == "__main__":
       sys.exit(1)
 
     try:
-      command = f"valhalla_build_extract -d -p {args.prefix}"
+      command = f"valhalla_build_extract --delete-tiles --prefix {args.prefix}"
 
       LOGGER.info(f"<===============> Building tiles extract: {command}... <===============>")
 

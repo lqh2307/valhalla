@@ -22,14 +22,12 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  "-f",
   "--force",
   action="store_true",
   help="Force delete existing timezone polygon zip file and redownload",
   default=False,
 )
 parser.add_argument(
-  "-p",
   "--prefix",
   help="Prefix of path to the data folders",
   type=Path,
@@ -57,11 +55,13 @@ if __name__ == "__main__":
 
       LOGGER.info(f"Downloading timezone polygon zip file from {tz_polygon_file_url}...")
 
-      with requests.get(tz_polygon_file_url) as r:
+      with requests.get(tz_polygon_file_url, stream=True) as r:
         r.raise_for_status()
 
-        with open(tz_polygon_zip_file_path, 'wb') as f:
-          f.write(r.content)
+        with open(tz_polygon_zip_file_path, "wb") as f:
+          for chunk in r.iter_content(chunk_size=10*1024*1024):
+            if chunk:
+              f.write(chunk)
     except Exception as e:
       LOGGER.error(f"Failed to download timezone polygon zip file from {tz_polygon_file_url}: {e}")
 
@@ -92,11 +92,13 @@ if __name__ == "__main__":
 
       sys.exit(1)
     else:
-      subprocess.run(["spatialite_tool", "-i", "-shp", f"{tz_polygon_unzip_dir_path}/{tz_polygon_shp_file}", "-d", 
-        str(tz_polygon_db_file_path), "-t", "timezone", "-s", "4326", "-g", "geom", "-c", "UTF-8"], check=True)
-      subprocess.run(["spatialite", str(tz_polygon_db_file_path), f"SELECT CreateSpatialIndex('timezone', 'geom');"], check=True)
-      subprocess.run(["spatialite", str(tz_polygon_db_file_path), "VACUUM;"], check=True)
-      subprocess.run(["spatialite", str(tz_polygon_db_file_path), "ANALYZE;"], check=True)
+      subprocess.run(f"spatialite_tool -i -shp {tz_polygon_unzip_dir_path}/{tz_polygon_shp_file} -d {tz_polygon_db_file_path} -t timezone -s 4326 -g geom -c UTF-8", check=True, shell=True)
+
+      subprocess.run(f"spatialite {tz_polygon_db_file_path} \"SELECT CreateSpatialIndex('timezone', 'geom')\"", check=True, shell=True)
+
+      subprocess.run([f"spatialite {tz_polygon_db_file_path} \"VACUUM\""], check=True, shell=True)
+
+      subprocess.run([f"spatialite {tz_polygon_db_file_path} \"ANALYZE\""], check=True, shell=True)
 
     shutil.rmtree(tz_polygon_unzip_dir_path)
   except Exception as e:

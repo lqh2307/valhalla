@@ -42,7 +42,7 @@ for i, arg in enumerate(sys.argv):
 class TileHeader(ctypes.Structure):
   """
   Resembles the uint64_t bit field at bytes 40 - 48 of the
-  graphtileheader to get the directededgecount_.
+  graphtileheader to get the directededgecount_
   """
 
   _fields_ = [
@@ -55,10 +55,10 @@ class TileHeader(ctypes.Structure):
 class TileResolver:
   def __init__(self, path: Path):
     """
-    Abstraction so we don't have to care whether we're looking at a tile directory or tar file.
+    Abstraction so we don't have to care whether we're looking at a tile directory or tar file
 
     Args:
-      path: path to the tile directory or tar file.
+      path: path to the tile directory or tar file
     """
     self.path = path.resolve()
     self._is_tar = path.is_file()
@@ -78,12 +78,12 @@ class TileResolver:
       )
 
   def __del__(self):
-    """Close the tar object on GC."""
+    """Close the tar object on GC"""
     if self._tar_obj:
       self._tar_obj.close()
 
   def add_to_tar(self, tar: tarfile.TarFile):
-    """Adds the self.matched_paths to the passed tar file."""
+    """Adds the self.matched_paths to the passed tar file"""
     # deduplicate the list (geojson variant might've added dups)
     # since 3.7 python dicts are insertion-ordered, so order is preserved
     for t in list(dict.fromkeys(self.matched_paths)):
@@ -108,28 +108,24 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  "-p",
   "--prefix",
   help="Prefix of path to the data folders",
   type=Path,
   default="data",
 )
 parser.add_argument(
-  "-t",
   "--with-traffic",
   help="Flag to add a traffic.tar skeleton",
   action="store_true",
   default=False,
 )
 parser.add_argument(
-  "-d",
   "--delete-tiles",
   help="Delete all graph tiles",
   action="store_true",
   default=False,
 )
 parser.add_argument(
-  "-b",
   "--bbox",
   help="If specified, will only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'",
   type=str,
@@ -219,7 +215,7 @@ def write_index_to_tar(tar_fp_: Path):
       tar.write(struct.pack(INDEX_BIN_FORMAT, *entry))
 
 def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_resolver_: TileResolver, delete_tiles: bool):
-  """Actually creates the tar ball. Break out of main function for testability."""
+  """Actually creates the tar ball. Break out of main function for testability"""
   tiles_count = len(tile_resolver_.matched_paths)
 
   if not tiles_count:

@@ -106,24 +106,13 @@ Run docker container (normal run):
 
     docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-    valhalla_create_data_folders -p data
-    valhalla_get_elevation -f -p data -b 96,4,120,28
-    valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
-    valhalla_build_timezone -f -p data
+Run command:
+    valhalla_create_data_folders --force --prefix data
+    valhalla_get_elevation --force --prefix data --from-bbox 96,4,120,28
+    valhalla_get_osm_pbf --force --prefix data --url https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+    valhalla_build_timezone --force --prefix data
     valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
     valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
     valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-    valhalla_build_extract -p data
-    valhalla_service data/valhalla.json 1
-
-Normal run:
-
-    valhalla_create_data_folders -p data
-    valhalla_build_timezone -f -p data
-    valhalla_get_elevation -f -p data -b 96,4,120,28
-    valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
-    valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-    valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-    valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-    valhalla_build_extract -p data
+    valhalla_build_extract --delete-tiles --prefix data
     valhalla_service data/valhalla.json 1
