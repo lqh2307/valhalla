@@ -113,7 +113,7 @@ GraphReader::tile_extract_t::tile_extract_t(const boost::property_tree::ptree& p
         }
       }
     } catch (const std::exception& e) {
-      LOG_WARN("Tile extract could not be loaded: " + e.what());
+      LOG_WARN("Tile extract could not be loaded: " + std::string(e.what()));
     }
   }
 
@@ -154,7 +154,7 @@ GraphReader::tile_extract_t::tile_extract_t(const boost::property_tree::ptree& p
         }
       }
     } catch (const std::exception& e) {
-      LOG_WARN("Traffic tile extract could not be loaded: " + e.what());
+      LOG_WARN("Traffic tile extract could not be loaded: " + std::string(e.what()));
     }
   }
 }
