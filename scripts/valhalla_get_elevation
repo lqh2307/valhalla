@@ -139,11 +139,11 @@ def get_tiles_with_graph(graph_dir: Path) -> Set[Tile]:
 
 def download_tile(tile: Tile, output_dir: Path) -> bool:
   try:
+    url = f"https://elevation-tiles-prod.s3.us-east-1.amazonaws.com/skadi/{tile.dir}/{tile.name}.gz"
+
     LOGGER.info(f"Downloading elevation tile from {url}...")
 
     Path(f"{output_dir}/{tile.dir}").mkdir(parents=True, exist_ok=True)
-
-    url = f"https://elevation-tiles-prod.s3.us-east-1.amazonaws.com/skadi/{tile.dir}/{tile.name}.gz"
 
     with request.urlopen(url) as res, open(Path(f"{output_dir}/{tile.dir}/{tile.name}"), "wb") as f:
       with gzip.GzipFile(fileobj=res, mode="rb") as gz:

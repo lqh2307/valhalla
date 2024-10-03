@@ -106,7 +106,6 @@ Run docker container (normal run):
 
     docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-    valhalla_create_data_folders
     valhalla_create_data_folders -p data
     valhalla_get_elevation -f -p data -b 96,4,120,28
     valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
@@ -119,7 +118,6 @@ Run docker container (normal run):
 
 Normal run:
 
-    valhalla_create_data_folders
     valhalla_create_data_folders -p data
     valhalla_build_timezone -f -p data
     valhalla_get_elevation -f -p data -b 96,4,120,28

@@ -71,11 +71,9 @@ if __name__ == "__main__":
         if content_disposition:
           file_name_match = re.findall('filename="(.+)"', content_disposition)
           if file_name_match:
-            file_name = file_name_match[0]
+            osm_file_name = file_name_match[0]
 
-        osm_pbf_file_path = Path(f"{args.prefix}/osms/{osm_file_name}")
-
-        with open(osm_pbf_file_path, 'wb') as f:
+        with open(Path(f"{args.prefix}/osms/{osm_file_name}"), 'wb') as f:
           f.write(r.content)
     except Exception as e:
       LOGGER.error(f"Failed to downloading OSM osm.pbf file from {args.url}: {e}.")

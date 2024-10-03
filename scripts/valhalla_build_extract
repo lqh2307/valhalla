@@ -253,7 +253,7 @@ def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_reso
           else:
             item.unlink()
 
-  LOGGER.info(f"Finished tarring {tiles_count} tiles to {tiles_extract_file_path}")
+  LOGGER.info(f"Finished tarring {tiles_count} tiles")
 
   # exit if no traffic extract wanted
   if not do_traffic:

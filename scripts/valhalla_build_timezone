@@ -55,7 +55,7 @@ if __name__ == "__main__":
     try:
       tz_polygon_file_url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
 
-      LOGGER.info(f"Downloading timezone polygon zip file from {tz_polygon_file_url} to {tz_polygon_zip_file_path}...")
+      LOGGER.info(f"Downloading timezone polygon zip file from {tz_polygon_file_url}...")
 
       with requests.get(tz_polygon_file_url) as r:
         r.raise_for_status()
@@ -63,17 +63,17 @@ if __name__ == "__main__":
         with open(tz_polygon_zip_file_path, 'wb') as f:
           f.write(r.content)
     except Exception as e:
-      LOGGER.error(f"Failed to download timezone polygon zip file from {tz_polygon_file_url} to {tz_polygon_zip_file_path}: {e}.")
+      LOGGER.error(f"Failed to download timezone polygon zip file from {tz_polygon_file_url}: {e}.")
 
       sys.exit(1)
 
   try:
-    LOGGER.info(f"Unzipping timezone polygon zip file {tz_polygon_zip_file_path} to {tz_polygon_unzip_dir_path}...")
+    LOGGER.info(f"Unzipping timezone polygon zip file {tz_polygon_zip_file_path}...")
 
     with zipfile.ZipFile(tz_polygon_zip_file_path, "r") as z:
       z.extractall(tz_polygon_unzip_dir_path)
   except Exception as e:
-    LOGGER.error(f"Failed to unzipping timezone polygon zip file {tz_polygon_zip_file_path} to {tz_polygon_unzip_dir_path}: {e}.")
+    LOGGER.error(f"Failed to unzipping timezone polygon zip file {tz_polygon_zip_file_path}: {e}.")
 
     sys.exit(1)
 
