@@ -22,6 +22,7 @@ export DEBIAN_FRONTEND=noninteractive \
     wget \
     jq \
     lcov \
+    lld \
     clang \
     clang-tidy \
     libboost-all-dev \

@@ -27,6 +27,7 @@ RUN \
     wget \
     jq \
     lcov \
+    lld \
     clang \
     clang-tidy \
     libboost-all-dev \
