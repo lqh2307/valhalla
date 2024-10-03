@@ -46,16 +46,23 @@ parser.add_argument(
   default="data",
 )
 parser.add_argument(
-  "-a",
-  "--build-admin",
-  help="Build admin database",
+  "-s",
+  "--start-service",
+  help="Start service",
   action="store_true",
   default=False,
 )
 parser.add_argument(
-  "-l",
-  "--build-landmarks",
-  help="Build landmarks database",
+  "-b",
+  "--build",
+  help="Build data",
+  action="store_true",
+  default=False,
+)
+parser.add_argument(
+  "-c",
+  "--create-data-folders",
+  help="Create data folders",
   action="store_true",
   default=False,
 )
@@ -76,11 +83,11 @@ def run_command(command: str):
 if __name__ == "__main__":
   args = parser.parse_args()
 
-  # Auto run
-  LOGGER.info(f"<===============> Creating data folders... <===============>")
-  res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
-  if not res:
-    sys.exit(1)
+  if args.create_data_folders:
+    LOGGER.info(f"<===============> Creating data folders... <===============>")
+    res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
+    if not res:
+      sys.exit(1)
 
   if args.url:
     LOGGER.info(f"<===============> Get OSM osm.pbf file... <===============>")
@@ -88,33 +95,33 @@ if __name__ == "__main__":
     if not res:
       sys.exit(1)
 
-  input_osm_file_path = None
-  if args.input_osm_files:
-    input_osm_file_path = args.input_osm_files
-  else:
-    input_osm_file_path = " ".join([str(Path(f"{args.prefix}/osms/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osms"))])
-
   config_file_path = Path(f"{args.prefix}/valhalla.json")
 
-  if args.build_admin:
+  if args.build:
+    input_osm_file_path = None
+    if args.input_osm_files:
+      input_osm_file_path = args.input_osm_files
+    else:
+      input_osm_file_path = " ".join([str(Path(f"{args.prefix}/osms/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osms"))])
+
     LOGGER.info(f"<===============> Building admins database... <===============>")
     run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}")
 
-  if args.build_landmarks:
     LOGGER.info(f"<===============> Building landmarks database... <===============>")
     run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}")
 
-  LOGGER.info(f"<===============> Building tiles... <===============>")
-  res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}")
-  if not res:
-    sys.exit(1)
+    LOGGER.info(f"<===============> Building tiles... <===============>")
+    res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}")
+    if not res:
+      sys.exit(1)
 
-  LOGGER.info(f"<===============> Building tiles extract... <===============>")
-  res = run_command(f"valhalla_build_extract -d -p {args.prefix}")
-  if not res:
-    sys.exit(1)
+    LOGGER.info(f"<===============> Building tiles extract... <===============>")
+    res = run_command(f"valhalla_build_extract -d -p {args.prefix}")
+    if not res:
+      sys.exit(1)
 
-  LOGGER.info(f"<===============> Starting service... <===============>")
-  res = run_command(f"valhalla_service {config_file_path} {args.num_processes}")
-  if not res:
-    sys.exit(1)
+  if args.start_service:
+    LOGGER.info(f"<===============> Starting service... <===============>")
+    res = run_command(f"valhalla_service {config_file_path} {args.num_processes}")
+    if not res:
+      sys.exit(1)
