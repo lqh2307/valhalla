@@ -82,11 +82,6 @@ if __name__ == "__main__":
   if not res:
     sys.exit(1)
 
-  LOGGER.info(f"<===============> Creating config file... <===============>")
-  res = run_command(f"valhalla_create_config -p {args.prefix}")
-  if not res:
-    sys.exit(1)
-
   if args.url:
     LOGGER.info(f"<===============> Get OSM osm.pbf file... <===============>")
     res = run_command(f"valhalla_get_osm_pbf -f -p {args.prefix} -u {args.url}")

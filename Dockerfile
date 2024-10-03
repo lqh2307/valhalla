@@ -73,7 +73,6 @@ RUN \
   git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git \
   && cd valhalla \
   && git submodule sync && git submodule update --init --recursive \
-  # && switch back to -DCMAKE_BUILD_TYPE=RelWithDebInfo if you want debug symbols \
   && cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off \
   && make -C build -j$(nproc) \
   && make -C build install \
@@ -128,5 +127,3 @@ WORKDIR /
 VOLUME /data
 
 EXPOSE 8002
-
-CMD [ "valhalla_auto_run" ]

@@ -30,7 +30,7 @@ The Valhalla organization is comprised of several library modules each responsib
 - [Mjolnir](https://github.com/valhalla/valhalla/tree/master/valhalla/mjolnir) - Tools for turning open data into Valhalla graph tiles.
 - [Loki](https://github.com/valhalla/valhalla/tree/master/valhalla/loki) - Library used to search graph tiles and correlate input locations to an entity within a tile. This correlated entity (edge or vertex) can be used as input to `thor`.
 - [Meili](https://github.com/valhalla/valhalla/tree/master/valhalla/meili) - Library used to for map-matching.
-- [Thor](https://github.com/valhalla/valhalla/tree/master/valhalla/thor) - Library used to generate a path through the graph tile hierarchy.  This path and attribution along the path can be used as input to `odin`.
+- [Thor](https://github.com/valhalla/valhalla/tree/master/valhalla/thor) - Library used to generate a path through the graph tile hierarchy. This path and attribution along the path can be used as input to `odin`.
 - [Odin](https://github.com/valhalla/valhalla/tree/master/valhalla/odin) - Library used to generate manoeuvres and narrative based on a path. This set of directions information can be used as input to `tyr`.
 - [Tyr](https://github.com/valhalla/valhalla/tree/master/valhalla/tyr) - Service used to handle http requests for a route communicating with all of the other valhalla APIs. The service will format output from `odin` and support json (and eventually protocol buffer) output.
 - [Tools](https://github.com/valhalla/valhalla/tree/master/src) - A set command line tools that exercise bits of functionality from the library components above and provide the basis for quality testing and performance benchmarking.
@@ -46,86 +46,86 @@ Valhalla uses CMake as build system. When compiling with `gcc`, currently versio
 
 Important build options include:
 
-| Option | Behavior |
-|--------|----------|
-| `-DENABLE_TOOLS` (`On`/`Off`) | Build `valhalla_service` and other utilities (defaults to on)|
-| `-DENABLE_DATA_TOOLS` (`On`/`Off`) | Build the data preprocessing tools (defaults to on)|
-| `-DENABLE_HTTP` (`On`/`Off`) | Build with `curl` support (defaults to on)|
-| `-DENABLE_SERVICES` (`On` / `Off`) | Build the HTTP service (defaults to on)|
-| `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)|
-| `-DENABLE_CCACHE` (`On` / `Off`) | Speed up incremental rebuilds via ccache (defaults to on)|
-| `-DENABLE_BENCHMARKS` (`On` / `Off`) | Enable microbenchmarking (defaults to on)|
-| `-DENABLE_COVERAGE` (`On` / `Off`) | Build with coverage instrumentalisation (defaults to off)|
-| `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`) | If ON builds Valhalla modules as STATIC library targets (defaults to off)|
-| `-DENABLE_COMPILER_WARNINGS` (`ON` / `OFF`) | Build with common compiler warnings (defaults to off)|
-| `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`) | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)|
-| `-DENABLE_WERROR` (`ON` / `OFF`) | Treat compiler warnings as errors (defaults to off). Requires `-DENABLE_COMPILER_WARNINGS=ON` to take effect.|
-| `-DENABLE_SANITIZERS` (`ON` / `OFF`) | Build with all the integrated sanitizers (defaults to off).|
-| `-DENABLE_ADDRESS_SANITIZER` (`ON` / `OFF`) | Build with address sanitizer (defaults to off).|
-| `-DENABLE_UNDEFINED_SANITIZER` (`ON` / `OFF`) | Build with undefined behavior sanitizer (defaults to off).|
-| `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`) | Whether to use internally vendored headers or find the equivalent external package (defaults to off).|
-| `-DENABLE_GDAL` (`ON` / `OFF`) | Whether to include GDAL as a dependency (used for GeoTIFF serialization of isochrone grid) (defaults to off).|
+| Option                                               | Behavior                                                                                                      |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `-DENABLE_TOOLS` (`On`/`Off`)                        | Build `valhalla_service` and other utilities (defaults to on)                                                 |
+| `-DENABLE_DATA_TOOLS` (`On`/`Off`)                   | Build the data preprocessing tools (defaults to on)                                                           |
+| `-DENABLE_HTTP` (`On`/`Off`)                         | Build with `curl` support (defaults to on)                                                                    |
+| `-DENABLE_SERVICES` (`On` / `Off`)                   | Build the HTTP service (defaults to on)                                                                       |
+| `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)                             |
+| `-DENABLE_CCACHE` (`On` / `Off`)                     | Speed up incremental rebuilds via ccache (defaults to on)                                                     |
+| `-DENABLE_BENCHMARKS` (`On` / `Off`)                 | Enable microbenchmarking (defaults to on)                                                                     |
+| `-DENABLE_COVERAGE` (`On` / `Off`)                   | Build with coverage instrumentalisation (defaults to off)                                                     |
+| `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`)     | If ON builds Valhalla modules as STATIC library targets (defaults to off)                                     |
+| `-DENABLE_COMPILER_WARNINGS` (`ON` / `OFF`)          | Build with common compiler warnings (defaults to off)                                                         |
+| `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`)        | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)                       |
+| `-DENABLE_WERROR` (`ON` / `OFF`)                     | Treat compiler warnings as errors (defaults to off). Requires `-DENABLE_COMPILER_WARNINGS=ON` to take effect. |
+| `-DENABLE_SANITIZERS` (`ON` / `OFF`)                 | Build with all the integrated sanitizers (defaults to off).                                                   |
+| `-DENABLE_ADDRESS_SANITIZER` (`ON` / `OFF`)          | Build with address sanitizer (defaults to off).                                                               |
+| `-DENABLE_UNDEFINED_SANITIZER` (`ON` / `OFF`)        | Build with undefined behavior sanitizer (defaults to off).                                                    |
+| `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`)                | Whether to use internally vendored headers or find the equivalent external package (defaults to off).         |
+| `-DENABLE_GDAL` (`ON` / `OFF`)                       | Whether to include GDAL as a dependency (used for GeoTIFF serialization of isochrone grid) (defaults to off). |
 
 Clone source:
 
-	git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git
+    git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git
 
 Jump to source:
 
-	cd valhalla
+    cd valhalla
 
 Clone newest submodules:
 
-	git submodule sync && git submodule update --init --recursive
+    git submodule sync && git submodule update --init --recursive
 
 ### Build from source
 
 Install dependencies:
 
-	./scripts/install_deps
+    ./scripts/install_deps
 
 Build prime_servce:
 
-	./scripts/install_prime_server
+    ./scripts/install_prime_server
 
 Build (will build to ./build):
 
-	./scripts/build_and_install
+    ./scripts/build_and_install
 
 ### Build docker image
 
-	docker build -t quanghuy2307/valhalla:1.0.0 .
+    docker build -t quanghuy2307/valhalla:1.0.0 .
 
 ### Run
 
 Run docker container (auto run):
 
-	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0
+    docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0
 
 Run docker container (normal run):
 
-	docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
+    docker run --rm -it --name valhalla -p 8002:8002 -v ./data/:/data quanghuy2307/valhalla:1.0.0 bash
 
-	valhalla_create_data_folders
-	valhalla_create_config -p data
-	valhalla_get_elevation -f -p data -b 96,4,120,28
-	valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
-	valhalla_build_timezone -f -p data
-	valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_extract -p data
-	valhalla_service data/valhalla.json 1
+    valhalla_create_data_folders
+    valhalla_create_data_folders -p data
+    valhalla_get_elevation -f -p data -b 96,4,120,28
+    valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+    valhalla_build_timezone -f -p data
+    valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_extract -p data
+    valhalla_service data/valhalla.json 1
 
 Normal run:
 
-	valhalla_create_data_folders
-	valhalla_create_config -p data
-	valhalla_build_timezone -f -p data
-	valhalla_get_elevation -f -p data -b 96,4,120,28
-	valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
-	valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
-	valhalla_build_extract -p data
-	valhalla_service data/valhalla.json 1
+    valhalla_create_data_folders
+    valhalla_create_data_folders -p data
+    valhalla_build_timezone -f -p data
+    valhalla_get_elevation -f -p data -b 96,4,120,28
+    valhalla_get_osm_pbf -f -p data -u https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
+    valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_tiles -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
+    valhalla_build_extract -p data
+    valhalla_service data/valhalla.json 1
