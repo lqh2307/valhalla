@@ -97,7 +97,7 @@ def get_tiles_with_bbox(bbox_str: str) -> Set[Tile]:
   try:
     bbox = min_x, min_y, max_x, max_y = [float(x) for x in bbox_str.split(",")]
   except ValueError:
-    LOGGER.error(f"BBox {bbox_str} is not a comma-separated string of coordinates.")
+    LOGGER.error(f"BBox {bbox_str} is not a comma-separated string of coordinates")
 
     sys.exit(1)
 
@@ -118,7 +118,7 @@ def get_tiles_with_graph(graph_dir: Path) -> Set[Tile]:
   LOGGER.info(f"Get elevation tiles with Graph directory: {graph_dir}")
 
   if not graph_dir.is_dir():
-    LOGGER.error(f"Graph directory {graph_dir.resolve()} does not exist.")
+    LOGGER.error(f"Graph directory {graph_dir.resolve()} does not exist")
 
     sys.exit(1)
 
@@ -150,13 +150,13 @@ def download_tile(tile: Tile, output_dir: Path) -> bool:
         try:
           uncompressed = gz.read()
         except Exception as e:
-          LOGGER.error(f"Failed to decompress elevation tile {tile.dir}/{tile.name}: {e}.")
+          LOGGER.error(f"Failed to decompress elevation tile {tile.dir}/{tile.name}: {e}")
 
           return False
         else:
           f.write(uncompressed)
   except Exception as e:
-    LOGGER.error(f"Failed to downloading elevation tile {tile.dir}/{tile.name}: {e}.")
+    LOGGER.error(f"Failed to downloading elevation tile {tile.dir}/{tile.name}: {e}")
 
     return False
 
@@ -184,20 +184,20 @@ if __name__ == "__main__":
   elif args.from_tiles:
     tiles = get_tiles_with_graph(Path(f"{args.prefix}/tiles"))
   else:
-    LOGGER.error("No download method specified.")
+    LOGGER.error("No download method specified")
 
     sys.exit(1)
 
-  LOGGER.info(f"Found {len(tiles)} matching tiles: {tiles}.")
+  LOGGER.info(f"Found {len(tiles)} matching tiles: {tiles}")
 
   if not args.force:
     existing_tiles = list_tiles(elevation_tiles_dir_path)
 
-    LOGGER.info(f"Found {len(existing_tiles)} existing tiles: {existing_tiles}.")
+    LOGGER.info(f"Found {len(existing_tiles)} existing tiles: {existing_tiles}")
 
     other_tiles = [tile for tile in tiles if tile not in existing_tiles]
     if len(other_tiles):
-      LOGGER.error(f"Missing {len(other_tiles)} elevation tiles: {other_tiles}.")
+      LOGGER.error(f"Missing {len(other_tiles)} elevation tiles: {other_tiles}")
 
       sys.exit(1) 
   else:
@@ -208,4 +208,4 @@ if __name__ == "__main__":
 
     downloaded = list(filter(lambda res: res is True, results))
 
-    LOGGER.info(f"Downloaded {len(downloaded)} elevation tiles.")
+    LOGGER.info(f"Finished to downloading {len(downloaded)} elevation tiles")

@@ -67,61 +67,96 @@ parser.add_argument(
   default=False,
 )
 
-def run_command(command: str):
-  LOGGER.info(f"Running command: {command}...")
-
-  try:
-    subprocess.run(command, check=True, shell=True)
-  except Exception as e:
-    LOGGER.error(f"Failed to run command: {command}: {e}.")
-
-    return False
-
-  return True
-
 
 if __name__ == "__main__":
   args = parser.parse_args()
 
   if args.create_data_folders:
-    LOGGER.info(f"<===============> Creating data folders... <===============>")
-    res = run_command(f"valhalla_create_data_folders -p {args.prefix}")
-    if not res:
+    try:
+      command = f"valhalla_create_data_folders -p {args.prefix}"
+
+      LOGGER.info(f"<===============> Creating data folders: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to creating data folders: {e}")
+
       sys.exit(1)
 
   if args.url:
-    LOGGER.info(f"<===============> Get OSM osm.pbf file... <===============>")
-    res = run_command(f"valhalla_get_osm_pbf -f -p {args.prefix} -u {args.url}")
-    if not res:
+    try:
+      command = f"valhalla_get_osm_pbf -f -p {args.prefix} -u {args.url}"
+
+      LOGGER.info(f"<===============> Getting OSM osm.pbf file: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to getting OSM osm.pbf file: {e}")
+
       sys.exit(1)
 
-  config_file_path = Path(f"{args.prefix}/valhalla.json")
-
   if args.build:
+    config_file_path = Path(f"{args.prefix}/valhalla.json")
     input_osm_file_path = None
     if args.input_osm_files:
       input_osm_file_path = args.input_osm_files
     else:
       input_osm_file_path = " ".join([str(Path(f"{args.prefix}/osms/{file_name}")) for file_name in os.listdir(Path(f"{args.prefix}/osms"))])
 
-    LOGGER.info(f"<===============> Building admins database... <===============>")
-    run_command(f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}")
+    try:
+      command = f"valhalla_build_admins -c {config_file_path} {input_osm_file_path}"
 
-    LOGGER.info(f"<===============> Building landmarks database... <===============>")
-    run_command(f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}")
+      LOGGER.info(f"<===============> Building admins database: {command}... <===============>")
 
-    LOGGER.info(f"<===============> Building tiles... <===============>")
-    res = run_command(f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}")
-    if not res:
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to building admins database: {e}")
+
       sys.exit(1)
 
-    LOGGER.info(f"<===============> Building tiles extract... <===============>")
-    res = run_command(f"valhalla_build_extract -d -p {args.prefix}")
-    if not res:
+    try:
+      command = f"valhalla_build_landmarks -c {config_file_path} {input_osm_file_path}"
+
+      LOGGER.info(f"<===============> Building landmarks database: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to building landmarks database: {e}")
+
       sys.exit(1)
+
+    try:
+      command = f"valhalla_build_tiles -c {config_file_path} {input_osm_file_path}"
+
+      LOGGER.info(f"<===============> Building tiles: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to building tiles: {e}")
+
+      sys.exit(1)
+
+    try:
+      command = f"valhalla_build_extract -d -p {args.prefix}"
+
+      LOGGER.info(f"<===============> Building tiles extract: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to building tiles extract: {e}")
+
+      sys.exit(1) 
 
   if args.start_service:
-    LOGGER.info(f"<===============> Starting service... <===============>")
-    res = run_command(f"valhalla_service {config_file_path} {args.num_processes}")
-    if not res:
-      sys.exit(1)
+    config_file_path = Path(f"{args.prefix}/valhalla.json")
+
+    try:
+      command = f"valhalla_service {config_file_path} {args.num_processes}"
+
+      LOGGER.info(f"<===============> Starting service: {command}... <===============>")
+
+      subprocess.run(command, check=True, shell=True)
+    except Exception as e:
+      LOGGER.error(f"Failed to starting service: {e}")
+
+      sys.exit(1) 

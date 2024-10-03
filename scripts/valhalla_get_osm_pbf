@@ -52,7 +52,7 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   if not args.url:
-    LOGGER.error("No OSM osm.pbf file URL specified.")
+    LOGGER.error("No OSM osm.pbf file URL specified")
 
     sys.exit(1)
   else:
@@ -85,6 +85,8 @@ if __name__ == "__main__":
         with open(Path(f"{args.prefix}/osms/{osm_file_name}"), 'wb') as f:
           f.write(r.content)
     except Exception as e:
-      LOGGER.error(f"Failed to downloading OSM osm.pbf file from {args.url}: {e}.")
+      LOGGER.error(f"Failed to downloading OSM osm.pbf file from {args.url}: {e}")
 
       sys.exit(1)
+
+  LOGGER.info(f"Finished to downloading OSM osm.pbf file from {args.url}...")

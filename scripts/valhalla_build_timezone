@@ -18,7 +18,7 @@ LOGGER.setLevel(logging.INFO)
 
 # Config args
 parser = argparse.ArgumentParser(
-  description="""Script to download timezone polygon zip file and build timezone polygon database file""",
+  description="""Script to download timezone polygon zip file and build timezone polygon database""",
 )
 
 parser.add_argument(
@@ -46,11 +46,11 @@ if __name__ == "__main__":
 
   if not args.force:
     if not tz_polygon_zip_file_path.exists():
-      LOGGER.error(f"Missing timezone polygon zip file {tz_polygon_zip_file_path}.")
+      LOGGER.error(f"Missing timezone polygon zip file {tz_polygon_zip_file_path}")
 
       sys.exit(1)
     else:
-      LOGGER.info(f"Found timezone polygon zip file {tz_polygon_zip_file_path}.")
+      LOGGER.info(f"Found timezone polygon zip file {tz_polygon_zip_file_path}")
   else:
     try:
       tz_polygon_file_url = "https://github.com/evansiroky/timezone-boundary-builder/releases/download/2024a/timezones-with-oceans.shapefile.zip"
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         with open(tz_polygon_zip_file_path, 'wb') as f:
           f.write(r.content)
     except Exception as e:
-      LOGGER.error(f"Failed to download timezone polygon zip file from {tz_polygon_file_url}: {e}.")
+      LOGGER.error(f"Failed to download timezone polygon zip file from {tz_polygon_file_url}: {e}")
 
       sys.exit(1)
 
@@ -73,12 +73,12 @@ if __name__ == "__main__":
     with zipfile.ZipFile(tz_polygon_zip_file_path, "r") as z:
       z.extractall(tz_polygon_unzip_dir_path)
   except Exception as e:
-    LOGGER.error(f"Failed to unzipping timezone polygon zip file {tz_polygon_zip_file_path}: {e}.")
+    LOGGER.error(f"Failed to unzipping timezone polygon zip file {tz_polygon_zip_file_path}: {e}")
 
     sys.exit(1)
 
   try:
-    LOGGER.info(f"Creating timezone polygon database file from {tz_polygon_unzip_dir_path}...")
+    LOGGER.info(f"Creating timezone polygon database from {tz_polygon_unzip_dir_path}...")
 
     if tz_polygon_db_file_path.exists():
       tz_polygon_db_file_path.unlink()
@@ -88,7 +88,7 @@ if __name__ == "__main__":
       tz_polygon_shp_file = file.stem
 
     if not tz_polygon_shp_file:
-      LOGGER.error(f"No timezone polygon shapefile found in {tz_polygon_unzip_dir_path}.")
+      LOGGER.error(f"No timezone polygon shapefile found in {tz_polygon_unzip_dir_path}")
 
       sys.exit(1)
     else:
@@ -100,6 +100,8 @@ if __name__ == "__main__":
 
     shutil.rmtree(tz_polygon_unzip_dir_path)
   except Exception as e:
-    LOGGER.error(f"Failed to creating timezone polygon database file from {tz_polygon_unzip_dir_path}: {e}.")
+    LOGGER.error(f"Failed to creating timezone polygon database from {tz_polygon_unzip_dir_path}: {e}")
 
     sys.exit(1)
+
+  LOGGER.info(f"Finished to creating timezone polygon database")

@@ -52,9 +52,11 @@ if __name__ == "__main__":
 
       shutil.rmtree(args.prefix)
     except Exception as e:
-      LOGGER.error(f"Failed to deleting data folders and config file at {args.prefix}: {e}.")
+      LOGGER.error(f"Failed to deleting data folders and config file at {args.prefix}: {e}")
 
       sys.exit(1)
+
+    LOGGER.info(f"Finished to deleting data folders and config file at {args.prefix}")
   else:
     config = {
       'mjolnir': {
@@ -361,6 +363,8 @@ if __name__ == "__main__":
       with open(configFilePath, 'w') as f:
         json.dump(config, f, sort_keys=True, indent=2)
     except Exception as e:
-      LOGGER.error(f"Failed to creating data folders and config file at {args.prefix}: {e}.")
+      LOGGER.error(f"Failed to creating data folders and config file at {args.prefix}: {e}")
 
       sys.exit(1)
+
+    LOGGER.info(f"Finished to creating data folders and config file at {args.prefix}")

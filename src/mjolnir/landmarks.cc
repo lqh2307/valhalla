@@ -330,7 +330,7 @@ bool BuildLandmarkFromPBF(const boost::property_tree::ptree& pt,
                           callback);
   }
 
-  LOG_INFO("Successfully built landmark database from PBF");
+  LOG_INFO("Finished to building landmark database");
   return true;
 }
 
