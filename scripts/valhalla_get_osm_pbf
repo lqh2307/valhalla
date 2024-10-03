@@ -27,6 +27,12 @@ parser.add_argument(
   type=str,
 )
 parser.add_argument(
+  "-n",
+  "--name",
+  help="OSM osm.pbf file name.",
+  type=str,
+)
+parser.add_argument(
   "-f",
   "--force",
   action="store_true",
@@ -67,11 +73,14 @@ if __name__ == "__main__":
         r.raise_for_status()
 
         osm_file_name = Path(args.url).name
-        content_disposition = r.headers.get('content-disposition')
-        if content_disposition:
-          file_name_match = re.findall('filename="(.+)"', content_disposition)
-          if file_name_match:
-            osm_file_name = file_name_match[0]
+        if args.name:
+          osm_file_name = args.name
+        else:
+          content_disposition = r.headers.get('content-disposition')
+          if content_disposition:
+            file_name_match = re.findall('filename="(.+)"', content_disposition)
+            if file_name_match:
+              osm_file_name = file_name_match[0]
 
         with open(Path(f"{args.prefix}/osms/{osm_file_name}"), 'wb') as f:
           f.write(r.content)
