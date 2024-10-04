@@ -11,6 +11,7 @@ import argparse
 import logging
 import tarfile
 import ctypes
+import signal
 import shutil
 import struct
 import sys
@@ -309,6 +310,18 @@ def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_reso
 
 
 if __name__ == '__main__':
+  signal.signal(signal.SIGINT, lambda sig, frame: (
+    LOGGER.info(f"Received \"SIGINT\" signal. Exitting..."),
+
+    sys.exit(0)
+  ))
+
+  signal.signal(signal.SIGTERM, lambda sig, frame: (
+    LOGGER.info(f"Received \"SIGTERM\" signal. Exitting..."),
+
+    sys.exit(0)
+  ))
+
   args = parser.parse_args()
 
   tile_resolver = TileResolver(Path(f"{args.prefix}/tiles"))
