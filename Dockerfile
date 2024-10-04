@@ -96,10 +96,10 @@ RUN \
   && apt-get -y upgrade \
   && apt-get -y install \
     ca-certificates \
-    libcurl4 \
+    libcurl4t64 \
     libczmq4 \
     libluajit-5.1-2 \
-    libgdal34 \
+    libgdal34t64 \
     libprotobuf-lite32 \
     libsqlite3-0 \
     libsqlite3-mod-spatialite \
