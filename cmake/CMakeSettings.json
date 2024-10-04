@@ -15,10 +15,7 @@
     { "VALHALLA_D_DEFAULT_ENABLE_SANITIZERS": "OFF" },
     { "VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER": "OFF" },
     { "VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS": "OFF" },
     { "VALHALLA_D_DEFAULT_ENABLE_HTTP": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_SERVICES": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_TOOLS": "OFF" },
     { "VALHALLA_D_DEFAULT_LOGGING_LEVEL": "INFO" }
   ],
   "configurations": [
@@ -38,10 +35,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -61,10 +55,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -84,10 +75,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -107,9 +95,6 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -128,10 +113,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -150,10 +132,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -172,10 +151,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -194,10 +170,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -216,10 +189,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -238,10 +208,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -260,10 +227,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     },
@@ -282,10 +246,7 @@
         { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
         { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
         { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_DATA_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_DATA_TOOLS}" },
         { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "ENABLE_SERVICES", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SERVICES}" },
-        { "name": "ENABLE_TOOLS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_TOOLS}" },
         { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
       ]
     }

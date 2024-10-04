@@ -122,9 +122,7 @@ add_subdirectory(sif)
 add_subdirectory(skadi)
 add_subdirectory(thor)
 add_subdirectory(tyr)
-if(ENABLE_DATA_TOOLS)
-  add_subdirectory(mjolnir)
-endif()
+add_subdirectory(mjolnir)
 
 ## libvalhalla
 
@@ -151,10 +149,8 @@ if (UNIX AND ENABLE_SINGLE_FILES_WERROR)
   set_source_files_properties(proto_conversions.cc PROPERTIES COMPILE_FLAGS "-Wall -Werror")
 endif()
 
-if (ENABLE_SERVICES)
-  set(valhalla_hdrs ${valhalla_hdrs} ${VALHALLA_SOURCE_DIR}/valhalla/tile_server.h)
-  set(valhalla_src ${valhalla_src} tile_server.cc)
-endif()
+set(valhalla_hdrs ${valhalla_hdrs} ${VALHALLA_SOURCE_DIR}/valhalla/tile_server.h)
+set(valhalla_src ${valhalla_src} tile_server.cc)
 
 add_library(valhalla ${valhalla_src})
 set_target_properties(valhalla PROPERTIES FOLDER "Library")

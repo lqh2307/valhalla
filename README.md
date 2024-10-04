@@ -48,10 +48,7 @@ Important build options include:
 
 | Option                                               | Behavior                                                                                                      |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `-DENABLE_TOOLS` (`On`/`Off`)                        | Build `valhalla_service` and other utilities (defaults to on)                                                 |
-| `-DENABLE_DATA_TOOLS` (`On`/`Off`)                   | Build the data preprocessing tools (defaults to on)                                                           |
 | `-DENABLE_HTTP` (`On`/`Off`)                         | Build with `curl` support (defaults to on)                                                                    |
-| `-DENABLE_SERVICES` (`On` / `Off`)                   | Build the HTTP service (defaults to on)                                                                       |
 | `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)                             |
 | `-DENABLE_CCACHE` (`On` / `Off`)                     | Speed up incremental rebuilds via ccache (defaults to on)                                                     |
 | `-DENABLE_BENCHMARKS` (`On` / `Off`)                 | Enable microbenchmarking (defaults to on)                                                                     |

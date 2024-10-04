@@ -18,9 +18,6 @@ set(VALHALLA_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 list(INSERT CMAKE_MODULE_PATH 0 ${VALHALLA_SOURCE_DIR}/cmake)
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 17)")
-option(ENABLE_TOOLS "Enable Valhalla tools" ON)
-option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" ON)
-option(ENABLE_SERVICES "Enable Valhalla services" ON)
 option(ENABLE_HTTP "Enable the use of CURL" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
@@ -99,8 +96,7 @@ pkg_check_modules(ZLIB REQUIRED IMPORTED_TARGET zlib)
 pkg_check_modules(LZ4 REQUIRED IMPORTED_TARGET liblz4)
 
 # cURL
-set(curl_targets "")
-if (ENABLE_HTTP OR ENABLE_DATA_TOOLS)
+if (ENABLE_HTTP)
   pkg_check_modules(CURL REQUIRED IMPORTED_TARGET libcurl)
   if (CURL_FOUND)
     set(curl_targets PkgConfig::CURL)
@@ -152,14 +148,13 @@ if (PREFER_EXTERNAL_DEPS)
     message(WARNING "No robin_hood found in system libraries, using vendored robin_hood...")
   endif()
   # cxxopts
-  if (ENABLE_DATA_TOOLS OR ENABLE_TOOLS)
-    find_package(cxxopts QUIET)
-    if (cxxopts_FOUND)
-      get_target_property(cxxopts_include_dir cxxopts::cxxopts INTERFACE_INCLUDE_DIRECTORIES)
-    else()
-      message(WARNING "No cxxopts found in system libraries, using vendored cxxopts...")
-    endif()
+  find_package(cxxopts QUIET)
+  if (cxxopts_FOUND)
+    get_target_property(cxxopts_include_dir cxxopts::cxxopts INTERFACE_INCLUDE_DIRECTORIES)
+  else()
+    message(WARNING "No cxxopts found in system libraries, using vendored cxxopts...")
   endif()
+
   # dirent
   if (WIN32)
     find_path(dirent_include_dir dirent.h REQUIRED)
@@ -197,28 +192,22 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
 
 # libprime_server
 # see https://gitlab.kitware.com/cmake/cmake/-/issues/19467
-set(libprime_server_targets "")
-if(ENABLE_SERVICES)
-  pkg_check_modules(libprime_server IMPORTED_TARGET libprime_server>=0.6.3)
-  if (libprime_server_FOUND)
-    target_compile_definitions(PkgConfig::libprime_server INTERFACE ENABLE_SERVICES)
-    set(libprime_server_targets PkgConfig::libprime_server)
-  else()
-    set(ENABLE_SERVICES OFF)
-    message(FATAL_ERROR "ENABLE_SERVICES=ON but prime_server not found...")
-  endif()
+pkg_check_modules(libprime_server IMPORTED_TARGET libprime_server>=0.6.3)
+if (libprime_server_FOUND)
+  target_compile_definitions(PkgConfig::libprime_server INTERFACE ON)
+  set(libprime_server_targets PkgConfig::libprime_server)
+else()
+  message(FATAL_ERROR "prime_server not found...")
 endif()
 
 
 ## Mjolnir and associated executables
-if(ENABLE_DATA_TOOLS)
-  add_compile_definitions(DATA_TOOLS)
-  # keep sqlite3 with cmake find_package(), as OSX needs our own FindSqlite3.cmake
-  # otherwise the system sqlite3 is found which doesn't allow for spatialite
-  find_package(SQLite3 REQUIRED)
-  pkg_check_modules(SpatiaLite REQUIRED IMPORTED_TARGET spatialite)
-  pkg_check_modules(LuaJIT REQUIRED IMPORTED_TARGET luajit)
-endif()
+add_compile_definitions(DATA_TOOLS)
+# keep sqlite3 with cmake find_package(), as OSX needs our own FindSqlite3.cmake
+# otherwise the system sqlite3 is found which doesn't allow for spatialite
+find_package(SQLite3 REQUIRED)
+pkg_check_modules(SpatiaLite REQUIRED IMPORTED_TARGET spatialite)
+pkg_check_modules(LuaJIT REQUIRED IMPORTED_TARGET luajit)
 
 if (ENABLE_THREAD_SAFE_TILE_REF_COUNT)
  add_definitions(-DENABLE_THREAD_SAFE_TILE_REF_COUNT)
@@ -243,51 +232,45 @@ set(valhalla_data_tools valhalla_build_statistics valhalla_ways_to_edges valhall
 ## Valhalla services
 set(valhalla_services valhalla_loki_worker valhalla_odin_worker valhalla_thor_worker)
 
-if(ENABLE_TOOLS)
-  foreach(program ${valhalla_programs})
-    get_source_path(path ${program})
-    add_executable(${program} ${path})
-    set_target_properties(${program} PROPERTIES FOLDER "Tools")
-    create_source_groups("Source Files" ${path})
-    target_link_libraries(${program} valhalla)
-    target_include_directories(${program} PRIVATE ${cxxopts_include_dir})
-    install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
-  endforeach()
-endif()
+foreach(program ${valhalla_programs})
+  get_source_path(path ${program})
+  add_executable(${program} ${path})
+  set_target_properties(${program} PROPERTIES FOLDER "Tools")
+  create_source_groups("Source Files" ${path})
+  target_link_libraries(${program} valhalla)
+  target_include_directories(${program} PRIVATE ${cxxopts_include_dir})
+  install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
+endforeach()
 
-if(ENABLE_DATA_TOOLS)
-  foreach(program ${valhalla_data_tools})
-    get_source_path(path ${program})
-    add_executable(${program} ${path})
-    create_source_groups("Source Files" ${path})
-    set_target_properties(${program} PROPERTIES FOLDER "Data Tools")
-    target_include_directories(${program} PRIVATE ${cxxopts_include_dir})
-    target_link_libraries(${program} valhalla)
-    if (LuaJIT_FOUND AND APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
-      # Using LuaJIT on macOS on Intel processors requires a couple of extra linker flags
-      target_link_options(${program} PUBLIC -pagezero_size 10000 -image_base 100000000)
-    endif()
-    install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
-  endforeach()
+foreach(program ${valhalla_data_tools})
+  get_source_path(path ${program})
+  add_executable(${program} ${path})
+  create_source_groups("Source Files" ${path})
+  set_target_properties(${program} PROPERTIES FOLDER "Data Tools")
+  target_include_directories(${program} PRIVATE ${cxxopts_include_dir})
+  target_link_libraries(${program} valhalla)
+  if (LuaJIT_FOUND AND APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    # Using LuaJIT on macOS on Intel processors requires a couple of extra linker flags
+    target_link_options(${program} PUBLIC -pagezero_size 10000 -image_base 100000000)
+  endif()
+  install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
+endforeach()
 
-  # Target-specific dependencies
-  pkg_check_modules(GEOS REQUIRED IMPORTED_TARGET geos)
-  target_link_libraries(valhalla_build_admins PkgConfig::GEOS)
-  target_sources(valhalla_build_statistics
-    PUBLIC
-      ${VALHALLA_SOURCE_DIR}/src/mjolnir/statistics.cc
-      ${VALHALLA_SOURCE_DIR}/src/mjolnir/statistics_database.cc)
-endif()
+# Target-specific dependencies
+pkg_check_modules(GEOS REQUIRED IMPORTED_TARGET geos)
+target_link_libraries(valhalla_build_admins PkgConfig::GEOS)
+target_sources(valhalla_build_statistics
+  PUBLIC
+    ${VALHALLA_SOURCE_DIR}/src/mjolnir/statistics.cc
+    ${VALHALLA_SOURCE_DIR}/src/mjolnir/statistics_database.cc)
 
-if(ENABLE_SERVICES)
-  foreach(program ${valhalla_services})
-    add_executable(${program} src/${program}.cc)
-    create_source_groups("Source Files" src/${program}.cc)
-    set_target_properties(${program} PROPERTIES FOLDER "Services")
-    target_link_libraries(${program} valhalla)
-    install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
-  endforeach()
-endif()
+foreach(program ${valhalla_services})
+  add_executable(${program} src/${program}.cc)
+  create_source_groups("Source Files" src/${program}.cc)
+  set_target_properties(${program} PROPERTIES FOLDER "Services")
+  target_link_libraries(${program} valhalla)
+  install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
+endforeach()
 
 # add the scripts to the build folder as well
 foreach(script valhalla_auto_run valhalla_create_data_folders valhalla_get_elevation valhalla_build_extract valhalla_build_timezone valhalla_get_osm_pbf)

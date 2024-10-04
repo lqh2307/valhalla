@@ -5,11 +5,10 @@
 #include <string>
 #include <thread>
 
-#ifdef ENABLE_SERVICES
 #include <prime_server/http_protocol.hpp>
 #include <prime_server/prime_server.hpp>
+
 using namespace prime_server;
-#endif
 
 #include "config.h"
 #include "midgard/logging.h"
@@ -20,18 +19,11 @@ using namespace prime_server;
 #include "tyr/actor.h"
 
 int main(int argc, char** argv) {
-#ifdef ENABLE_SERVICES
   if (argc < 2 || argc > 4) {
     LOG_ERROR("Usage: " + std::string(argv[0]) + " config/file.json [concurrency]");
     LOG_ERROR("Usage: " + std::string(argv[0]) + " config/file.json action json_request");
     return 1;
   }
-#else
-  if (argc < 4) {
-    LOG_ERROR("Usage: " + std::string(argv[0]) + " config/file.json action json_request");
-    return 1;
-  }
-#endif
 
   // config file
   // TODO: validate the config
@@ -131,7 +123,6 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-#ifdef ENABLE_SERVICES
   // gracefully shutdown when asked via SIGTERM
   prime_server::quiesce(config.get<unsigned int>("httpd.service.drain_seconds", 28),
                         config.get<unsigned int>("httpd.service.shutting_seconds", 1));
@@ -213,7 +204,6 @@ int main(int argc, char** argv) {
 
   // wait forever (or for interrupt)
   server_thread.join();
-#endif
 
   return 0;
 }

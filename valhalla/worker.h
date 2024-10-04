@@ -8,10 +8,8 @@
 #include <valhalla/proto/api.pb.h>
 #include <valhalla/valhalla.h>
 
-#ifdef ENABLE_SERVICES
 #include <prime_server/http_protocol.hpp>
 #include <prime_server/prime_server.hpp>
-#endif
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -59,7 +57,7 @@ struct valhalla_exception_t : public std::runtime_error {
  *                      already filled out, it will be validated and the json will be ignored
  */
 void ParseApi(const std::string& json_request, Options::Action action, Api& api);
-#ifdef ENABLE_SERVICES
+
 /**
  * Take the json OR pbf request and parse/validate it. If you pass a protobuf mime type in the request
  * it is assumed that the body of the request is protobuf bytes and any json will be ignored. Likewise
@@ -71,7 +69,6 @@ void ParseApi(const std::string& json_request, Options::Action action, Api& api)
  *                      will be ignored
  */
 void ParseApi(const prime_server::http_request_t& http_request, Api& api);
-#endif
 
 std::string serialize_error(const valhalla_exception_t& exception, Api& options);
 
@@ -84,7 +81,6 @@ std::string serialize_error(const valhalla_exception_t& exception, Api& options)
  */
 void add_warning(valhalla::Api& api, unsigned code, const std::string& extra = "");
 
-#ifdef ENABLE_SERVICES
 prime_server::worker_t::result_t serialize_error(const valhalla_exception_t& exception,
                                                  prime_server::http_request_info_t& request_info,
                                                  Api& options);
@@ -99,7 +95,6 @@ const content_type GPX_MIME{"Content-type", "application/gpx+xml;charset=utf-8"}
 prime_server::worker_t::result_t to_response(const std::string& data,
                                              prime_server::http_request_info_t& request_info,
                                              const Api& options);
-#endif
 
 struct statsd_client_t;
 class service_worker_t {
@@ -108,7 +103,6 @@ public:
 
   virtual ~service_worker_t();
 
-#ifdef ENABLE_SERVICES
   /**
    * The main work function that stages in the prime_server will call when responding to requests
    *
@@ -124,7 +118,6 @@ public:
   virtual prime_server::worker_t::result_t work(const std::list<zmq::message_t>& job,
                                                 void* request_info,
                                                 const std::function<void()>& interrupt) = 0;
-#endif
 
   /**
    * After forwarding the completed work on, this is called to reset any internal state, deallocate

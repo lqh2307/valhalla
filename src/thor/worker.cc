@@ -45,7 +45,6 @@ const std::unordered_map<std::string, float> kMaxDistances = {
 // a scale factor to apply to the score so that we bias towards closer results more
 constexpr float kDistanceScale = 10.f;
 
-#ifdef ENABLE_SERVICES
 std::string serialize_to_pbf(Api& request) {
   std::string buf;
   if (!request.SerializeToString(&buf)) {
@@ -54,7 +53,6 @@ std::string serialize_to_pbf(Api& request) {
   }
   return buf;
 };
-#endif
 
 } // namespace
 
@@ -110,7 +108,6 @@ thor_worker_t::thor_worker_t(const boost::property_tree::ptree& config,
 thor_worker_t::~thor_worker_t() {
 }
 
-#ifdef ENABLE_SERVICES
 prime_server::worker_t::result_t
 thor_worker_t::work(const std::list<zmq::message_t>& job,
                     void* request_info,
@@ -217,7 +214,6 @@ void run_service(const boost::property_tree::ptree& config) {
 
   // TODO: should we listen for SIGINT and terminate gracefully/exit(0)?
 }
-#endif
 
 std::string thor_worker_t::parse_costing(const Api& request) {
   // Parse out the type of route - this provides the costing method to use
