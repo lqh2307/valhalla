@@ -33,9 +33,8 @@ function(configure_valhalla_pc)
 
   list(APPEND REQUIRES libprime_server)
 
-  if(ENABLE_GDAL)
-    list(APPEND REQUIRES gdal)
-  endif()
+  list(APPEND REQUIRES gdal)
+
   if(WIN32 AND NOT MINGW)
     list(APPEND LIBS_PRIVATE -lole32 -lshell32)
   else()

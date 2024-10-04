@@ -21,17 +21,15 @@ set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 
 option(ENABLE_HTTP "Enable the use of CURL" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
-option(ENABLE_COMPILER_WARNINGS "Build with compiler warnings" OFF)
 option(ENABLE_SANITIZERS "Use all the integrated sanitizers for Debug build" OFF)
 option(ENABLE_ADDRESS_SANITIZER "Use memory sanitizer for Debug build" OFF)
 option(ENABLE_UNDEFINED_SANITIZER "Use UB sanitizer for Debug build" OFF)
-option(ENABLE_WERROR "Convert compiler warnings to errors. Requires ENABLE_COMPILER_WARNINGS=ON to take effect" OFF)
+option(ENABLE_WERROR "Convert compiler warnings to errors" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
 option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
 option(PREFER_EXTERNAL_DEPS "Whether to use internally vendored headers or find the equivalent external package" OFF)
 # useful to workaround issues likes this https://stackoverflow.com/questions/24078873/cmake-generated-xcode-project-wont-compile
 option(ENABLE_STATIC_LIBRARY_MODULES "If ON builds Valhalla modules as STATIC library targets" OFF)
-option(ENABLE_GDAL "Whether to include GDAL; currently only used for raster serialization of isotile grid" ON)
 
 set(LOGGING_LEVEL "" CACHE STRING "Logging level, default is INFO")
 set_property(CACHE LOGGING_LEVEL PROPERTY STRINGS "NONE;ALL;ERROR;WARN;INFO;DEBUG;TRACE")

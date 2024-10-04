@@ -9,9 +9,7 @@
 #include <sstream>
 #include <utility>
 
-#ifdef ENABLE_GDAL
 #include <gdal_priv.h>
-#endif
 
 using namespace valhalla::baldr::json;
 
@@ -27,9 +25,7 @@ struct gdal_singleton_t {
 
 private:
   gdal_singleton_t() {
-#ifdef ENABLE_GDAL
     GDALRegister_GTiff();
-#endif
   }
 };
 
@@ -157,7 +153,6 @@ void addLocations(Api& request, valhalla::baldr::json::ArrayPtr& features) {
   }
 }
 
-#ifdef ENABLE_GDAL
 // get a temporary file name suffix for GDAL's virtual file system
 std::string GenerateTmpFName() {
   std::stringstream ss;
@@ -240,7 +235,6 @@ std::string serializeGeoTIFF(Api& request, const std::shared_ptr<const GriddedDa
 
   return data;
 };
-#endif
 
 std::string serializeIsochroneJson(Api& request,
                                    std::vector<contour_interval_t>& intervals,
@@ -395,10 +389,8 @@ std::string serializeIsochrones(Api& request,
                                           request.options().polygons())
                  : serializeIsochronePbf(request, intervals, contours);
 
-#ifdef ENABLE_GDAL
     case Options_Format_geotiff:
       return serializeGeoTIFF(request, isogrid);
-#endif
     default:
       throw;
   }

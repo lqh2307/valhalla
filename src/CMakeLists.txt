@@ -5,10 +5,6 @@ include(ValhallaWarnings)
 ## Set relative binary path
 set(VALHALLA_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
-if (ENABLE_COMPILER_WARNINGS)
-  message(STATUS "Enabling compiler warning flags")
-endif()
-
 # TODO: Remove workaround after switching to CMake 3.11
 # with fixed  https://gitlab.kitware.com/cmake/cmake/issues/14778
 # and merged https://gitlab.kitware.com/cmake/cmake/merge_requests/1524
@@ -81,9 +77,7 @@ function(valhalla_module)
     target_add_compile_flags_if_supported(${library} PRIVATE -mfpmath=sse -msse2)
   endif()
 
-  if(ENABLE_COMPILER_WARNINGS)
-    cxx_add_warning_flags(${library})
-  endif()
+  cxx_add_warning_flags(${library})
 
   install(FILES ${MODULE_HEADERS}
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/${MODULE_NAME}"
@@ -167,9 +161,7 @@ target_compile_definitions(valhalla
 
 target_compile_options(valhalla PUBLIC ${libvalhalla_compile_options})
 
-if(ENABLE_COMPILER_WARNINGS)
-  cxx_add_warning_flags(valhalla)
-endif()
+cxx_add_warning_flags(valhalla)
 
 target_include_directories(valhalla
   PUBLIC
