@@ -100,7 +100,7 @@ if (ENABLE_HTTP)
     set(curl_targets PkgConfig::CURL)
     target_compile_definitions(PkgConfig::CURL INTERFACE ENABLE_HTTP)
   else()
-    message(FATAL_ERROR "ENABLE_HTTP=ON, but cURL not found...")
+    message(FATAL_ERROR "ENABLE_HTTP=ON, but cURL not found")
   endif()
 endif()
 
@@ -129,35 +129,35 @@ if (PREFER_EXTERNAL_DEPS)
   if (date_FOUND)
     get_target_property(date_include_dir date::date INTERFACE_INCLUDE_DIRECTORIES)
   else()
-    message(WARNING "No date found in system libraries, using vendored date...")
+    message(WARNING "No date found in system libraries, using vendored date")
   endif()
   # rapidjson
   find_package(RapidJSON QUIET)
   if (RapidJSON_FOUND)
     get_target_property(rapidjson_include_dir rapidjson INTERFACE_INCLUDE_DIRECTORIES)
   else()
-    message(WARNING "No RapidJSON found in system libraries, using vendored RapidJSON...")
+    message(WARNING "No RapidJSON found in system libraries, using vendored RapidJSON")
   endif()
   # robin-hood-hashing
   find_package(robin_hood QUIET)
   if (robin_hood_FOUND)
     get_target_property(robinhoodhashing_include_dir robin_hood::robin_hood INTERFACE_INCLUDE_DIRECTORIES)
   else()
-    message(WARNING "No robin_hood found in system libraries, using vendored robin_hood...")
+    message(WARNING "No robin_hood found in system libraries, using vendored robin_hood")
   endif()
   # cxxopts
   find_package(cxxopts QUIET)
   if (cxxopts_FOUND)
     get_target_property(cxxopts_include_dir cxxopts::cxxopts INTERFACE_INCLUDE_DIRECTORIES)
   else()
-    message(WARNING "No cxxopts found in system libraries, using vendored cxxopts...")
+    message(WARNING "No cxxopts found in system libraries, using vendored cxxopts")
   endif()
 
   # dirent
   if (WIN32)
     find_path(dirent_include_dir dirent.h REQUIRED)
     if (dirent_include_dir-NOTFOUND)
-      message(WARNING "No dirent.h found in system headers, using vendored dirent.h...")
+      message(WARNING "No dirent.h found in system headers, using vendored dirent.h")
     endif()
   endif()
 endif()
@@ -184,7 +184,12 @@ endif()
 
 # unless you said you didnt want gdal we try to turn it on, if we cant we tell you
 # we don't need it to build tiles (yet)
-set(GDAL_TARGET "")
+find_package(GDAL QUIET)
+if (GDAL_FOUND)
+  set(GDAL_TARGET GDAL::GDAL)
+else()
+  message(FATAL_ERROR "Unable to enable gdal support")
+endif()
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
 
@@ -195,12 +200,11 @@ if (libprime_server_FOUND)
   target_compile_definitions(PkgConfig::libprime_server INTERFACE ON)
   set(libprime_server_targets PkgConfig::libprime_server)
 else()
-  message(FATAL_ERROR "prime_server not found...")
+  message(FATAL_ERROR "prime_server not found")
 endif()
 
 
 ## Mjolnir and associated executables
-add_compile_definitions(DATA_TOOLS)
 # keep sqlite3 with cmake find_package(), as OSX needs our own FindSqlite3.cmake
 # otherwise the system sqlite3 is found which doesn't allow for spatialite
 find_package(SQLite3 REQUIRED)
