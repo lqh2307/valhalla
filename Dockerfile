@@ -4,8 +4,8 @@ ARG TARGET_IMAGE=ubuntu:24.04
 FROM ${BUILDER_IMAGE} AS builder
 
 # set proxy
-ARG http_proxy=http://10.55.123.98:3333
-ARG https_proxy=http://10.55.123.98:3333
+# ARG http_proxy=http://10.55.123.98:3333
+# ARG https_proxy=http://10.55.123.98:3333
 
 WORKDIR /usr/local/src
 
@@ -72,7 +72,7 @@ RUN \
 
 # Build valhalla
 RUN \
-  git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git \
+  git clone --recurse-submodules --single-branch -b 1.0.0 https://github.com/lqh2307/valhalla.git \
   && cd valhalla \
   && git submodule sync && git submodule update --init --recursive \
   && cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DENABLE_SINGLE_FILES_WERROR=Off \
@@ -86,8 +86,8 @@ RUN \
 FROM ${TARGET_IMAGE} AS runner
 
 # set proxy
-ARG http_proxy=http://10.55.123.98:3333
-ARG https_proxy=http://10.55.123.98:3333
+# ARG http_proxy=http://10.55.123.98:3333
+# ARG https_proxy=http://10.55.123.98:3333
 
 # Install the runtime dependencies
 RUN \

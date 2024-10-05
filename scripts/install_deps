@@ -3,8 +3,8 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 # set proxy
-http_proxy=http://10.55.123.98:3333
-https_proxy=http://10.55.123.98:3333
+# http_proxy=http://10.55.123.98:3333
+# https_proxy=http://10.55.123.98:3333
 
 export DEBIAN_FRONTEND=noninteractive \
   && apt-get -y update \
@@ -47,7 +47,7 @@ export DEBIAN_FRONTEND=noninteractive \
     parallel \
     protobuf-compiler \
     python3-all-dev \
-    python3-shapely \
+    python3-requests \
     python3-pip \
     zlib1g-dev \
   && apt-get -y --purge autoremove \

@@ -319,11 +319,11 @@ void ElevationBuilder::Build(const boost::property_tree::ptree& pt,
   if (!elevation || !filesystem::exists(*elevation)) {
     LOG_WARN("Elevation storage directory does not exist. Skipping add elevation to tiles...");
     return;
-  } else {
-    if (filesystem::is_empty(*elevation)) {
-      LOG_WARN("Elevation storage directory is empty. Skipping add elevation to tiles...");
-      return;
-    }
+  }
+
+  if (filesystem::is_empty(*elevation)) {
+    LOG_WARN("Elevation storage directory is empty. Skipping add elevation to tiles...");
+    return;
   }
 
   std::unique_ptr<skadi::sample> sample = std::make_unique<skadi::sample>(pt);

@@ -63,7 +63,7 @@ Important build options include:
 
 Clone source:
 
-    git clone --recurse-submodules --single-branch -b dev https://github.com/lqh2307/valhalla.git
+    git clone --recurse-submodules --single-branch -b 1.0.0 https://github.com/lqh2307/valhalla.git
 
 Jump to source:
 
