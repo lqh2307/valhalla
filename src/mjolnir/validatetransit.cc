@@ -494,12 +494,12 @@ bool ValidateTransit::Validate(const boost::property_tree::ptree& pt,
   }
 
   if (!all_tiles.size()) {
-    LOG_INFO("No transit tiles found. Transit will not be validated.");
+    LOG_WARN("No transit tiles found. Skipping validate transit tiles...");
     return false;
   }
 
   if (!onestoptests.size()) {
-    LOG_INFO("No transit tests found. Transit will not be validated.");
+    LOG_WARN("No test transit tiles found. Skipping validate transit tiles...");
     return false;
   }
 

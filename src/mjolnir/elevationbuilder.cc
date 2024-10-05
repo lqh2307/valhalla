@@ -315,8 +315,8 @@ namespace mjolnir {
 
 void ElevationBuilder::Build(const boost::property_tree::ptree& pt,
                              std::deque<baldr::GraphId> tile_ids) {
-  auto elevation = pt.get_optional<std::string>("additional_data.elevation");
-  if (!elevation || !filesystem::exists(*elevation) || filesystem::is_empty(*elevation)) {
+  std::string elevation_dir = pt.get<std::string>("additional_data.elevation");
+  if (!filesystem::exists(elevation_dir) || filesystem::is_empty(elevation_dir)) {
     LOG_WARN("Elevation storage directory is empty or does not exist. Skipping add elevation to tiles...");
     return;
   }

@@ -583,7 +583,7 @@ void TransitBuilder::Build(const boost::property_tree::ptree& pt) {
 
   // Bail if no matching tiles
   if (!tiles.size()) {
-    LOG_INFO("No transit tiles found. Transit will not be added.");
+    LOG_WARN("No transit tiles found. Skipping add transit tiles...");
     return;
   }
 

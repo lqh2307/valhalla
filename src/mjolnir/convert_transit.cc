@@ -1229,11 +1229,10 @@ std::unordered_set<GraphId> convert_transit(const ptree& pt) {
   auto thread_count =
       pt.get<unsigned int>("mjolnir.concurrency", std::max(static_cast<unsigned int>(1),
                                                            std::thread::hardware_concurrency()));
-  LOG_INFO("Building transit network.");
 
   auto t1 = std::chrono::high_resolution_clock::now();
   if (!all_tiles.size()) {
-    LOG_INFO("No transit tiles found. Transit will not be added.");
+    LOG_WARN("No transit tiles found. Skipping add transit tiles...");
     return all_tiles;
   }
 
