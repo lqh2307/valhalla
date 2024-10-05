@@ -21,9 +21,6 @@ set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 
 option(ENABLE_HTTP "Enable the use of CURL" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
-option(ENABLE_SANITIZERS "Use all the integrated sanitizers for Debug build" OFF)
-option(ENABLE_ADDRESS_SANITIZER "Use memory sanitizer for Debug build" OFF)
-option(ENABLE_UNDEFINED_SANITIZER "Use UB sanitizer for Debug build" OFF)
 option(ENABLE_WERROR "Convert compiler warnings to errors" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
 option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
@@ -84,7 +81,6 @@ if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILE
   endif()
 endif()
 
-include(ValhallaSanitizerOptions)
 include(ValhallaSourceGroups)
 
 # We use pkg-config for (almost) all dependencies:

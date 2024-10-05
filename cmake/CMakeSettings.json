@@ -8,94 +8,144 @@
     "See Valhalla top-level CMakeLists.txt for complete list of options available to be passed via -D to cmake."
   ],
   "environments": [
-    { "BuildDir": "${workspaceRoot}\\_build" },
-    { "InstallDir": "${workspaceRoot}\\_install" },
-    { "VALHALLA_D_DEFAULT_ENABLE_CCACHE": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_COVERAGE": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_SANITIZERS": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER": "OFF" },
-    { "VALHALLA_D_DEFAULT_ENABLE_HTTP": "OFF" },
-    { "VALHALLA_D_DEFAULT_LOGGING_LEVEL": "INFO" }
+    {
+      "BuildDir": "${workspaceRoot}\\_build"
+    },
+    {
+      "InstallDir": "${workspaceRoot}\\_install"
+    },
+    {
+      "VALHALLA_D_DEFAULT_ENABLE_CCACHE": "OFF"
+    },
+    {
+      "VALHALLA_D_DEFAULT_ENABLE_COVERAGE": "OFF"
+    },
+    {
+      "VALHALLA_D_DEFAULT_ENABLE_HTTP": "OFF"
+    },
+    {
+      "VALHALLA_D_DEFAULT_LOGGING_LEVEL": "INFO"
+    }
   ],
   "configurations": [
     {
       "name": "x64-Debug-Ninja",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "inheritEnvironments": [
+        "msvc_x64_x64"
+      ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
       "name": "x64-Release-Ninja",
       "generator": "Ninja",
       "configurationType": "RelWithDebInfo",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "inheritEnvironments": [
+        "msvc_x64_x64"
+      ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
       "name": "x86-Debug-Ninja",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x86" ],
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
       "name": "x86-Release-Ninja",
       "generator": "Ninja",
       "configurationType": "RelWithDebInfo",
-      "inheritEnvironments": [ "msvc_x86" ],
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -108,13 +158,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -127,13 +186,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -146,13 +214,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -165,13 +242,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -184,13 +270,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -203,13 +298,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -222,13 +326,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     },
     {
@@ -241,13 +354,22 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-        { "name": "ENABLE_CCACHE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}" },
-        { "name": "ENABLE_COVERAGE", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}" },
-        { "name": "ENABLE_SANITIZERS", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_SANITIZERS}" },
-        { "name": "ENABLE_ADDRESS_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_ADDRESS_SANITIZER}" },
-        { "name": "ENABLE_UNDEFINED_SANITIZER", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_UNDEFINED_SANITIZER}" },
-        { "name": "ENABLE_HTTP", "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}" },
-        { "name": "LOGGING_LEVEL", "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}" }
+        {
+          "name": "ENABLE_CCACHE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_CCACHE}"
+        },
+        {
+          "name": "ENABLE_COVERAGE",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_COVERAGE}"
+        },
+        {
+          "name": "ENABLE_HTTP",
+          "value": "${env.VALHALLA_D_DEFAULT_ENABLE_HTTP}"
+        },
+        {
+          "name": "LOGGING_LEVEL",
+          "value": "${env.VALHALLA_D_DEFAULT_LOGGING_LEVEL}"
+        }
       ]
     }
   ]
