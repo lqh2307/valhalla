@@ -107,6 +107,7 @@ Run command:
     valhalla_get_osm_pbf --force --prefix data --url https://download.geofabrik.de/asia/vietnam-latest.osm.pbf
 
     valhalla_build_timezone --force --prefix data
+
     valhalla_build_landmarks -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
 
     valhalla_build_admins -c data/valhalla.json data/osm/vietnam-latest.osm.pbf
