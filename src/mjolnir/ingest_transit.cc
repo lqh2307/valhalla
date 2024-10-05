@@ -864,7 +864,6 @@ std::list<GraphId> ingest_transit(const boost::property_tree::ptree& pt) {
     transit_dir.push_back(filesystem::path::preferred_separator);
   }
   if (filesystem::exists(transit_dir) && !filesystem::is_empty(transit_dir)) {
-    LOG_WARN("Non-empty " + transit_dir + " will be purged of tiles");
     filesystem::remove_all(transit_dir);
   }
 

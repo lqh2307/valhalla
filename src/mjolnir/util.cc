@@ -254,7 +254,6 @@ bool build_tile_set(const boost::property_tree::ptree& original_config,
     for (const auto& level : valhalla::baldr::TileHierarchy::levels()) {
       auto level_dir = tile_dir + std::to_string(level.level);
       if (filesystem::exists(level_dir) && !filesystem::is_empty(level_dir)) {
-        LOG_WARN("Non-empty " + level_dir + " will be purged of tiles");
         filesystem::remove_all(level_dir);
       }
     }
@@ -263,7 +262,6 @@ bool build_tile_set(const boost::property_tree::ptree& original_config,
     auto level_dir =
         tile_dir + std::to_string(valhalla::baldr::TileHierarchy::GetTransitLevel().level);
     if (filesystem::exists(level_dir) && !filesystem::is_empty(level_dir)) {
-      LOG_WARN("Non-empty " + level_dir + " will be purged of tiles");
       filesystem::remove_all(level_dir);
     }
 
