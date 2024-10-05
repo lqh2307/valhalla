@@ -34,9 +34,7 @@
 namespace valhalla {
 namespace thor {
 
-#ifdef ENABLE_SERVICES
 void run_service(const boost::property_tree::ptree& config);
-#endif
 
 class thor_worker_t : public service_worker_t {
 public:
@@ -44,11 +42,11 @@ public:
   thor_worker_t(const boost::property_tree::ptree& config,
                 const std::shared_ptr<baldr::GraphReader>& graph_reader = {});
   virtual ~thor_worker_t();
-#ifdef ENABLE_SERVICES
+
   virtual prime_server::worker_t::result_t work(const std::list<zmq::message_t>& job,
                                                 void* request_info,
                                                 const std::function<void()>& interrupt) override;
-#endif
+
   virtual void cleanup() override;
 
   static void adjust_scores(valhalla::Options& options);

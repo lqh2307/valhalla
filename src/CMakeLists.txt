@@ -5,10 +5,6 @@ include(ValhallaWarnings)
 ## Set relative binary path
 set(VALHALLA_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
-if (ENABLE_COMPILER_WARNINGS)
-  message(STATUS "Enabling compiler warning flags")
-endif()
-
 # TODO: Remove workaround after switching to CMake 3.11
 # with fixed  https://gitlab.kitware.com/cmake/cmake/issues/14778
 # and merged https://gitlab.kitware.com/cmake/cmake/merge_requests/1524
@@ -81,9 +77,7 @@ function(valhalla_module)
     target_add_compile_flags_if_supported(${library} PRIVATE -mfpmath=sse -msse2)
   endif()
 
-  if(ENABLE_COMPILER_WARNINGS)
-    cxx_add_warning_flags(${library})
-  endif()
+  cxx_add_warning_flags(${library})
 
   install(FILES ${MODULE_HEADERS}
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/${MODULE_NAME}"
@@ -122,9 +116,7 @@ add_subdirectory(sif)
 add_subdirectory(skadi)
 add_subdirectory(thor)
 add_subdirectory(tyr)
-if(ENABLE_DATA_TOOLS)
-  add_subdirectory(mjolnir)
-endif()
+add_subdirectory(mjolnir)
 
 ## libvalhalla
 
@@ -151,10 +143,8 @@ if (UNIX AND ENABLE_SINGLE_FILES_WERROR)
   set_source_files_properties(proto_conversions.cc PROPERTIES COMPILE_FLAGS "-Wall -Werror")
 endif()
 
-if (ENABLE_SERVICES)
-  set(valhalla_hdrs ${valhalla_hdrs} ${VALHALLA_SOURCE_DIR}/valhalla/tile_server.h)
-  set(valhalla_src ${valhalla_src} tile_server.cc)
-endif()
+set(valhalla_hdrs ${valhalla_hdrs} ${VALHALLA_SOURCE_DIR}/valhalla/tile_server.h)
+set(valhalla_src ${valhalla_src} tile_server.cc)
 
 add_library(valhalla ${valhalla_src})
 set_target_properties(valhalla PROPERTIES FOLDER "Library")
@@ -171,9 +161,7 @@ target_compile_definitions(valhalla
 
 target_compile_options(valhalla PUBLIC ${libvalhalla_compile_options})
 
-if(ENABLE_COMPILER_WARNINGS)
-  cxx_add_warning_flags(valhalla)
-endif()
+cxx_add_warning_flags(valhalla)
 
 target_include_directories(valhalla
   PUBLIC

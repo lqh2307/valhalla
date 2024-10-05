@@ -21,9 +21,7 @@
 #include <cpp-statsd-client/StatsdClient.hpp>
 
 using namespace valhalla;
-#ifdef ENABLE_SERVICES
 using namespace prime_server;
-#endif
 
 namespace {
 
@@ -697,11 +695,10 @@ void from_json(rapidjson::Document& doc, Options::Action action, Api& api) {
       options.clear_jsonp();
     }
   }
-#ifndef ENABLE_GDAL
+
   else if (options.format() == Options::geotiff) {
     throw valhalla_exception_t{504};
   }
-#endif
 
   auto units = rapidjson::get_optional<std::string>(doc, "/units");
   if (units && ((*units == "miles") || (*units == "mi"))) {
@@ -1327,7 +1324,6 @@ void ParseApi(const std::string& request, Options::Action action, valhalla::Api&
   from_json(document, action, api);
 }
 
-#ifdef ENABLE_SERVICES
 void ParseApi(const http_request_t& request, valhalla::Api& api) {
   // block all but get and post
   if (request.method != method_t::POST && request.method != method_t::GET) {
@@ -1449,7 +1445,6 @@ to_response(const std::string& data, http_request_info_t& request_info, const Ap
   return result;
 }
 
-#endif
 
 // TODO: when we want to use this in mjolnir too we can move this into a private header
 // this is a wrapper of a third party lib that provides a client for statsd integration

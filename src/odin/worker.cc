@@ -45,17 +45,14 @@ std::string odin_worker_t::narrate(Api& request) const {
 }
 
 void odin_worker_t::status(Api&) const {
-#ifdef ENABLE_SERVICES
   // if we are in the process of shutting down we signal that here
   // should react by draining traffic (though they are likely doing this as they are usually the ones
   // who sent us the request to shutdown)
   if (prime_server::draining() || prime_server::shutting_down()) {
     throw valhalla_exception_t{203};
   }
-#endif
 }
 
-#ifdef ENABLE_SERVICES
 prime_server::worker_t::result_t
 odin_worker_t::work(const std::list<zmq::message_t>& job,
                     void* request_info,
@@ -126,6 +123,5 @@ void run_service(const boost::property_tree::ptree& config) {
   // TODO: should we listen for SIGINT and terminate gracefully/exit(0)?
 }
 
-#endif
 } // namespace odin
 } // namespace valhalla

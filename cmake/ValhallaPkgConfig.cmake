@@ -24,18 +24,17 @@ function(configure_valhalla_pc)
     list(APPEND REQUIRES protobuf)
   endif()
   
-  if(ENABLE_DATA_TOOLS)
-    list(APPEND REQUIRES spatialite sqlite3 luajit geos)
-  endif()
+
+  list(APPEND REQUIRES spatialite sqlite3 luajit geos)
+
   if(ENABLE_HTTP)
     list(APPEND REQUIRES libcurl)
   endif()
-  if(ENABLE_SERVICES)
-    list(APPEND REQUIRES libprime_server)
-  endif()
-  if(ENABLE_GDAL)
-    list(APPEND REQUIRES gdal)
-  endif()
+
+  list(APPEND REQUIRES libprime_server)
+
+  list(APPEND REQUIRES gdal)
+
   if(WIN32 AND NOT MINGW)
     list(APPEND LIBS_PRIVATE -lole32 -lshell32)
   else()

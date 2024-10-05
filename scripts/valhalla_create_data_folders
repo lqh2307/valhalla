@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse
 import logging
 import shutil
+import signal
 import json
 import sys
 import os
@@ -41,6 +42,18 @@ parser.add_argument(
 
 
 if __name__ == "__main__":
+  signal.signal(signal.SIGINT, lambda sig, frame: (
+    LOGGER.info('Received "SIGINT" signal. Exitting...'),
+
+    sys.exit(0)
+  ))
+
+  signal.signal(signal.SIGTERM, lambda sig, frame: (
+    LOGGER.info('Received "SIGTERM" signal. Exitting...'),
+
+    sys.exit(0)
+  ))
+
   args = parser.parse_args()
 
   if args.delete:
