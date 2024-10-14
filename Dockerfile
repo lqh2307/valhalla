@@ -4,8 +4,8 @@ ARG TARGET_IMAGE=ubuntu:24.04
 FROM ${BUILDER_IMAGE} AS builder
 
 # set proxy
-# ARG http_proxy=http://10.55.123.98:3333
-# ARG https_proxy=http://10.55.123.98:3333
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
 
 WORKDIR /usr/local/src
 
@@ -86,8 +86,8 @@ RUN \
 FROM ${TARGET_IMAGE} AS runner
 
 # set proxy
-# ARG http_proxy=http://10.55.123.98:3333
-# ARG https_proxy=http://10.55.123.98:3333
+ARG http_proxy=http://10.55.123.98:3333
+ARG https_proxy=http://10.55.123.98:3333
 
 # Install the runtime dependencies
 RUN \
