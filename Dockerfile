@@ -105,7 +105,8 @@ RUN \
     libsqlite3-mod-spatialite \
     libzmq5 \
     zlib1g \
-    curl \
+    curl \  
+    osmosis \
     locales \
     parallel \
     python3-minimal \
