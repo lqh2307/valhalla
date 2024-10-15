@@ -70,13 +70,9 @@ class TileResolver:
 
     # pre-populate the available paths
     if self._is_tar:
-      self.normalized_tile_paths = sorted(
-        [Path(m.name) for m in self._tar_obj.getmembers() if m.name.endswith('.gph')]
-      )
+      self.normalized_tile_paths = sorted([Path(m.name) for m in self._tar_obj.getmembers() if m.name.endswith('.gph')])
     else:
-      self.normalized_tile_paths = sorted(
-        p.relative_to(self.path) for p in self.path.rglob('*.gph')
-      )
+      self.normalized_tile_paths = sorted(p.relative_to(self.path) for p in self.path.rglob('*.gph'))
 
   def __del__(self):
     """Close the tar object on GC"""
@@ -128,7 +124,7 @@ parser.add_argument(
 )
 parser.add_argument(
   "--bbox",
-  help="If specified, will only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'",
+  help="Only archive tiles which are intersecting this bbox in the format 'minX,minY,maxX,maxY'",
   type=str,
 )
 
@@ -231,6 +227,8 @@ def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_reso
 
   tiles_extract_file_path = Path(f"{tile_resolver_.path}/tiles.tar")
 
+  LOGGER.info(f"Start tarring {tiles_count} tiles...")
+
   # first add the index file, then the sorted tiles to the tarfile
   # TODO: come up with a smarter strategy to cluster the tiles in the tar
   with tarfile.open(tiles_extract_file_path, 'w') as tar:
@@ -306,7 +304,7 @@ def create_extracts(traffic_extract_file_path: Path, do_traffic: bool, tile_reso
 
   write_index_to_tar(traffic_extract_file_path)
 
-  LOGGER.info(f"Finished to creating the traffic extract {traffic_extract_file_path}")
+  LOGGER.info(f"Finished to creating traffic extract {traffic_extract_file_path}")
 
 
 if __name__ == '__main__':

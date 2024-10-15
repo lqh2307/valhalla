@@ -116,7 +116,3 @@ Run command:
     valhalla_build_extract --delete-tiles --prefix data
 
     valhalla_service data/valhalla.json 1
-
-Or run command:
-
-    valhalla_auto_run --url https://download.geofabrik.de/asia/vietnam-latest.osm.pbf --name vietnam.osm.pbf --prefix data/vietnam --start-service --build-datas --create-data-folders
