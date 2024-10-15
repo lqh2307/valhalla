@@ -20,7 +20,6 @@ list(INSERT CMAKE_MODULE_PATH 0 ${VALHALLA_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 17)")
 option(ENABLE_HTTP "Enable the use of CURL" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
-option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
 option(ENABLE_WERROR "Convert compiler warnings to errors" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
 option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
@@ -294,26 +293,6 @@ install(DIRECTORY ${date_include_dir}/
 if (WIN32)
   install(DIRECTORY ${dirent_include_dir}/
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
-endif()
-
-## Coverage report targets
-if(ENABLE_COVERAGE)
-  find_program(GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat)
-  if(NOT GENHTML_PATH)
-    message(FATAL_ERROR "no genhtml installed")
-  endif()
-
-  set(FASTCOV_PATH ${VALHALLA_SOURCE_DIR}/third_party/fastcov/fastcov.py)
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
-    COMMAND ${FASTCOV_PATH} -d . --exclude /usr/ third_party/ ${CMAKE_CURRENT_BINARY_DIR}/ --lcov -o coverage.info
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS check)
-
-  add_custom_target(coverage
-    COMMAND ${GENHTML_PATH} --prefix ${CMAKE_CURRENT_BINARY_DIR} --output-directory coverage --title "Test Coverage" --legend --show-details coverage.info
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/coverage.info)
-  set_target_properties(coverage PROPERTIES FOLDER "Tests")
 endif()
 
 ## Packaging via CPack

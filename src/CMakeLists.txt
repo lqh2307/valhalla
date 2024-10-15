@@ -64,10 +64,6 @@ function(valhalla_module)
 
   target_link_libraries(${library} Boost::boost)
 
-  if(ENABLE_COVERAGE)
-    target_compile_options(${library} PUBLIC -ftest-coverage -fprofile-arcs)
-  endif()
-
   # On more modern x86 processors that support SSE2, specifying the compiler options -mfpmath=sse -msse2
   # ensures all float and double operations are performed in SSE registers and correctly rounded.
   # These options do not affect the ABI and should therefore be used whenever possible for
@@ -182,7 +178,6 @@ target_link_libraries(valhalla
     ${libvalhalla_link_libraries}
     $<$<BOOL:${WIN32}>:ws2_32>
   PRIVATE
-    $<$<BOOL:${ENABLE_COVERAGE}>:gcov>
     Threads::Threads)
 
 set_target_properties(valhalla PROPERTIES

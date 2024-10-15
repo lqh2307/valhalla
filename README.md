@@ -52,7 +52,6 @@ Important build options include:
 | `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)                             |
 | `-DENABLE_CCACHE` (`On` / `Off`)                     | Speed up incremental rebuilds via ccache (defaults to on)                                                     |
 | `-DENABLE_BENCHMARKS` (`On` / `Off`)                 | Enable microbenchmarking (defaults to on)                                                                     |
-| `-DENABLE_COVERAGE` (`On` / `Off`)                   | Build with coverage instrumentalisation (defaults to off)                                                     |
 | `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`)     | If ON builds Valhalla modules as STATIC library targets (defaults to off)                                     |
 | `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`)        | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)                       |
 | `-DENABLE_WERROR` (`ON` / `OFF`)                     | Treat compiler warnings as errors (defaults to off).                                                          |
