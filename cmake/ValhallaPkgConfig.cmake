@@ -47,7 +47,7 @@ function(configure_valhalla_pc)
   list(JOIN LIBS_PRIVATE " " LIBS_PRIVATE)
 
   configure_file(
-    ${CMAKE_SOURCE_DIR}/libvalhalla.pc.in
-    ${CMAKE_BINARY_DIR}/libvalhalla.pc
+    ${VALHALLA_SOURCE_DIR}/libvalhalla.pc.in
+    ${VALHALLA_BUILD_DIR}/libvalhalla.pc
     @ONLY)
 endfunction()
