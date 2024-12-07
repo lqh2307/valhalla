@@ -295,12 +295,6 @@ if (WIN32)
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
 endif()
 
-<<<<<<< HEAD
-=======
-if(ENABLE_TESTS)
-  add_subdirectory(test)
-endif()
-
 ## Coverage report targets
 if(ENABLE_COVERAGE)
   find_program(GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat)
@@ -321,7 +315,6 @@ if(ENABLE_COVERAGE)
   set_target_properties(coverage PROPERTIES FOLDER "Tests")
 endif()
 
->>>>>>> d98654aaf2753ee7c3e45542a5d63be0ea0cf8ad
 ## Packaging via CPack
 include(CPackComponent)
 

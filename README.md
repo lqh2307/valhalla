@@ -38,7 +38,7 @@ The Valhalla organization is comprised of several library modules each responsib
 
 ## Documentation
 
-Documentation is stored in the `docs/` folder in this GitHub repository. It can be viewed at [valhalla.github.io/valhalla](https://valhalla.github.io/valhalla).
+Documentation can be viewed at [valhalla.github.io/valhalla](https://valhalla.github.io/valhalla).
 
 ## Build & Run
 
@@ -46,16 +46,15 @@ Valhalla uses CMake as build system. When compiling with `gcc`, currently versio
 
 Important build options include:
 
-| Option                                               | Behavior                                                                                                      |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `-DENABLE_HTTP` (`On`/`Off`)                         | Build with `curl` support (defaults to on)                                                                    |
-| `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)                             |
-| `-DENABLE_CCACHE` (`On` / `Off`)                     | Speed up incremental rebuilds via ccache (defaults to on)                                                     |
-| `-DENABLE_BENCHMARKS` (`On` / `Off`)                 | Enable microbenchmarking (defaults to on)                                                                     |
-| `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`)     | If ON builds Valhalla modules as STATIC library targets (defaults to off)                                     |
-| `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`)        | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)                       |
-| `-DENABLE_WERROR` (`ON` / `OFF`)                     | Treat compiler warnings as errors (defaults to off).                                                          |
-| `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`)                | Whether to use internally vendored headers or find the equivalent external package (defaults to off).         |
+| Option                                               | Behavior                                                                                              |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `-DENABLE_HTTP` (`On`/`Off`)                         | Build with `curl` support (defaults to on)                                                            |
+| `-DENABLE_THREAD_SAFE_TILE_REF_COUNT` (`ON` / `OFF`) | If ON uses shared_ptr as tile reference (i.e. it is thread safe, defaults to off)                     |
+| `-DENABLE_CCACHE` (`On` / `Off`)                     | Speed up incremental rebuilds via ccache (defaults to on)                                             |
+| `-DENABLE_STATIC_LIBRARY_MODULES` (`On` / `Off`)     | If ON builds Valhalla modules as STATIC library targets (defaults to off)                             |
+| `-DENABLE_SINGLE_FILES_WERROR` (`ON` / `OFF`)        | Convert compiler warnings to errors for a (growing) selection of files (defaults to on)               |
+| `-DENABLE_WERROR` (`ON` / `OFF`)                     | Treat compiler warnings as errors (defaults to off).                                                  |
+| `-DPREFER_SYSTEM_DEPS` (`ON` / `OFF`)                | Whether to use internally vendored headers or find the equivalent external package (defaults to off). |
 
 Clone source:
 
