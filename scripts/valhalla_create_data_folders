@@ -75,15 +75,22 @@ if __name__ == "__main__":
         "use_lru_mem_cache": False,
         "lru_mem_cache_hard_control": False,
         "use_simple_mem_cache": False,
+        "user_agent": "",
+        "tile_url": "",
+        "tile_url_gz": "",
         "concurrency": os.cpu_count(),
         "tile_dir": f"{args.prefix}/tiles",
         "tile_extract": f"{args.prefix}/tiles/tiles.tar",
         "traffic_extract": f"{args.prefix}/traffic/traffic.tar",
+        "incident_dir": "",
+        "incident_log": "",
+        "shortcut_caching": False,
         "admin": f"{args.prefix}/admin/admin.sqlite",
         "landmarks": f"{args.prefix}/landmarks/landmarks.sqlite",
         "timezone": "data/timezone/timezone.sqlite",
         "transit_dir": f"{args.prefix}/transit",
         "transit_feeds_dir": f"{args.prefix}/transit_feeds",
+        "transit_bounding_box": "",
         "transit_pbf_limit": 20000,
         "hierarchy": True,
         "shortcuts": True,
@@ -97,6 +104,7 @@ if __name__ == "__main__":
         "global_synchronized_cache": False,
         "max_concurrent_reader_users": 1,
         "reclassify_links": True,
+        "default_speeds_config": "",
         "data_processing": {
           "infer_internal_intersections": True,
           "infer_turn_channels": True,
@@ -117,6 +125,7 @@ if __name__ == "__main__":
       },
       "additional_data": {
         "elevation": "data/elevation_tiles",
+        "elevation_url": "",
       },
       "loki": {
         "actions": [
@@ -356,6 +365,14 @@ if __name__ == "__main__":
         "max_alternates": 2,
         "max_exclude_polygons_length": 10000,
         "max_distance_disable_hierarchy_culling": 0,
+        "allow_hard_exclusions": False,
+      },
+      "statsd": {
+        "host": "",
+        "port": 8125,
+        "prefix": "valhalla",
+        "batch_size": "",
+        "tags": "",
       },
     }
 
