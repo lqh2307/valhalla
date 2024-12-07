@@ -9,6 +9,7 @@ FROM ${BUILDER_IMAGE} AS builder
 
 WORKDIR /usr/local/src
 
+<<<<<<< HEAD
 # Install the build dependencies
 RUN \
   export DEBIAN_FRONTEND=noninteractive \
@@ -58,6 +59,16 @@ RUN \
   && apt-get -y --purge autoremove \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+=======
+# the binaries are huge with all the symbols so we strip them but keep the debug there if we need it
+#WORKDIR /usr/local/bin
+#RUN for f in valhalla_*; do objcopy --only-keep-debug $f $f.debug; done
+#RUN tar -cvf valhalla.debug.tar valhalla_*.debug && gzip -9 valhalla.debug.tar
+#RUN rm -f valhalla_*.debug
+#RUN strip --strip-debug --strip-unneeded valhalla_* || true
+#RUN strip /usr/local/lib/libvalhalla.a
+#RUN strip /usr/local/lib/python3.12/dist-packages/valhalla/python_valhalla*.so
+>>>>>>> d98654aaf2753ee7c3e45542a5d63be0ea0cf8ad
 
 # Build prime_server
 RUN \

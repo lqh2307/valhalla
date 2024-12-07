@@ -295,6 +295,33 @@ if (WIN32)
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
 endif()
 
+<<<<<<< HEAD
+=======
+if(ENABLE_TESTS)
+  add_subdirectory(test)
+endif()
+
+## Coverage report targets
+if(ENABLE_COVERAGE)
+  find_program(GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat)
+  if(NOT GENHTML_PATH)
+    message(FATAL_ERROR "no genhtml installed")
+  endif()
+
+  set(FASTCOV_PATH ${VALHALLA_SOURCE_DIR}/third_party/fastcov/fastcov.py)
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
+    COMMAND ${FASTCOV_PATH} -d . --exclude /usr/ third_party/ ${CMAKE_CURRENT_BINARY_DIR}/ --lcov -o coverage.info
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS check)
+
+  add_custom_target(coverage
+    COMMAND ${GENHTML_PATH} --prefix ${CMAKE_CURRENT_BINARY_DIR} --output-directory coverage --title "Test Coverage" --legend --show-details coverage.info --ignore-errors=negative
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/coverage.info)
+  set_target_properties(coverage PROPERTIES FOLDER "Tests")
+endif()
+
+>>>>>>> d98654aaf2753ee7c3e45542a5d63be0ea0cf8ad
 ## Packaging via CPack
 include(CPackComponent)
 
