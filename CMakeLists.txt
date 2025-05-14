@@ -22,17 +22,10 @@ option(ENABLE_TOOLS "Enable Valhalla tools" ON)
 option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" ON)
 option(ENABLE_SERVICES "Enable Valhalla services" ON)
 option(ENABLE_HTTP "Enable the use of CURL" ON)
-option(ENABLE_PYTHON_BINDINGS "Enable Python bindings" ON)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
-option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
 option(ENABLE_COMPILER_WARNINGS "Build with compiler warnings" OFF)
-option(ENABLE_SANITIZERS "Use all the integrated sanitizers for Debug build" OFF)
-option(ENABLE_ADDRESS_SANITIZER "Use memory sanitizer for Debug build" OFF)
-option(ENABLE_UNDEFINED_SANITIZER "Use UB sanitizer for Debug build" OFF)
-option(ENABLE_TESTS "Enable Valhalla tests" ON)
 option(ENABLE_WERROR "Convert compiler warnings to errors. Requires ENABLE_COMPILER_WARNINGS=ON to take effect" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
-option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
 option(PREFER_EXTERNAL_DEPS "Whether to use internally vendored headers or find the equivalent external package" OFF)
 # useful to workaround issues likes this https://stackoverflow.com/questions/24078873/cmake-generated-xcode-project-wont-compile
 option(ENABLE_STATIC_LIBRARY_MODULES "If ON builds Valhalla modules as STATIC library targets" OFF)
@@ -91,7 +84,6 @@ if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILE
   endif()
 endif()
 
-include(ValhallaSanitizerOptions)
 include(ValhallaSourceGroups)
 
 # We use pkg-config for (almost) all dependencies:
@@ -194,7 +186,7 @@ endif()
 # unless you said you didnt want gdal we try to turn it on, if we cant we tell you
 # we don't need it to build tiles (yet)
 set(GDAL_TARGET "")
-if (ENABLE_GDAL AND (ENABLE_SERVICES OR ENABLE_TOOLS OR ENABLE_PYTHON_BINDINGS))
+if (ENABLE_GDAL AND (ENABLE_SERVICES OR ENABLE_TOOLS))
   find_package(GDAL QUIET)
   if (GDAL_FOUND)
     set(GDAL_TARGET GDAL::GDAL)
@@ -238,21 +230,6 @@ endif ()
 
 ## libvalhalla
 add_subdirectory(src)
-
-## Python bindings
-if(ENABLE_PYTHON_BINDINGS)
-  # python is fine for cmake as well
-  find_package(Python COMPONENTS Development Interpreter)
-  if (Python_FOUND)
-    add_subdirectory(src/bindings/python)
-    install(FILES COPYING CHANGELOG.md
-      DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/python-valhalla"
-      COMPONENT python)
-  else()
-    set(ENABLE_PYTHON_BINDINGS OFF)
-    message(WARNING "Python development version not found, skipping Python bindings...")
-  endif()
-endif()
 
 ## Executable targets
 
@@ -333,10 +310,6 @@ foreach(script valhalla_build_config valhalla_build_elevation
     )
 endforeach()
 
-install(FILES COPYING CHANGELOG.md
-  DESTINATION "${CMAKE_INSTALL_DOCDIR}"
-  COMPONENT runtime)
-
 # install third_party
 install(DIRECTORY ${rapidjson_include_dir}/
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
@@ -347,30 +320,6 @@ if (WIN32)
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/third_party")
 endif()
 
-if(ENABLE_TESTS)
-  add_subdirectory(test)
-endif()
-
-## Coverage report targets
-if(ENABLE_COVERAGE)
-  find_program(GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat)
-  if(NOT GENHTML_PATH)
-    message(FATAL_ERROR "no genhtml installed")
-  endif()
-
-  set(FASTCOV_PATH ${VALHALLA_SOURCE_DIR}/third_party/fastcov/fastcov.py)
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
-    COMMAND ${FASTCOV_PATH} -d . --exclude /usr/ third_party/ ${CMAKE_CURRENT_BINARY_DIR}/ --lcov -o coverage.info
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS check)
-
-  add_custom_target(coverage
-    COMMAND ${GENHTML_PATH} --prefix ${CMAKE_CURRENT_BINARY_DIR} --output-directory coverage --title "Test Coverage" --legend --show-details coverage.info --ignore-errors=negative
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/coverage.info)
-  set_target_properties(coverage PROPERTIES FOLDER "Tests")
-endif()
-
 ## Packaging via CPack
 include(CPackComponent)
 
@@ -379,8 +328,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${VALHALLA_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VALHALLA_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VALHALLA_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}${CPACK_PACKAGE_VERSION_SUFFIX}")
-set(CPACK_PACKAGE_CONTACT "Team Valhalla <valhalla@mapzen.com>")
-set(CPACK_RESOURCE_FILE_LICENSE "${VALHALLA_SOURCE_DIR}/LICENSE.md")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStreetMap Routing API
  A set of routing APIs designed around OSM map data using
  dynamic costing and a tiled data structure")
@@ -416,12 +363,6 @@ if(${CPACK_GENERATOR} MATCHES "^DEB$")
   endif()
 
   message(STATUS "Configured deb packages of ${CMAKE_CXX_LIBRARY_ARCHITECTURE} build for ${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
-endif()
-
-if(BUILD_SHARED_LIBS)
-  set(CPACK_COMPONENTS_ALL "shared;runtime;python")
-else()
-  set(CPACK_COMPONENTS_ALL "development")
 endif()
 
 set(CPACK_PROJECT_CONFIG_FILE ${VALHALLA_SOURCE_DIR}/cmake/CPackConfig.cmake)

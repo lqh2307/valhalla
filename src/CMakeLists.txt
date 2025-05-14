@@ -27,13 +27,6 @@ function(valhalla_module)
   set(multiValueArgs SOURCES SOURCES_WITH_WARNINGS HEADERS DEPENDS INCLUDE_DIRECTORIES SYSTEM_INCLUDE_DIRECTORIES)
   cmake_parse_arguments(MODULE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-  if (UNIX AND ENABLE_SINGLE_FILES_WERROR)
-    set_source_files_properties(
-            ${MODULE_SOURCES}
-            PROPERTIES
-            COMPILE_FLAGS
-            "-Werror -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers")
-  endif()
   list(APPEND MODULE_SOURCES ${MODULE_SOURCES_WITH_WARNINGS})
 
   # add object or static library
@@ -70,10 +63,6 @@ function(valhalla_module)
 
   target_link_libraries(${library} Boost::boost)
 
-  if(ENABLE_COVERAGE)
-    target_compile_options(${library} PUBLIC -ftest-coverage -fprofile-arcs)
-  endif()
-
   # On more modern x86 processors that support SSE2, specifying the compiler options -mfpmath=sse -msse2
   # ensures all float and double operations are performed in SSE registers and correctly rounded.
   # These options do not affect the ABI and should therefore be used whenever possible for
@@ -90,10 +79,6 @@ function(valhalla_module)
   install(FILES ${MODULE_HEADERS}
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/valhalla/${MODULE_NAME}"
     COMPONENT development)
-
-  if(BUILD_SHARED_LIBS OR ENABLE_PYTHON_BINDINGS)
-    set_property(TARGET ${library} PROPERTY POSITION_INDEPENDENT_CODE ON)
-  endif()
 
   ## Save properties of external dependencies and target objects to propagate to valhalla target
   string(REGEX REPLACE "(valhalla::[^;]+)" "" external_module_depends "${MODULE_DEPENDS}")
@@ -151,12 +136,6 @@ set(valhalla_src
     ${valhalla_hdrs}
     ${libvalhalla_link_objects})
 
-if (UNIX AND ENABLE_SINGLE_FILES_WERROR)
-  # Enables stricter compiler checks on a file-by-file basis
-  # which allows us to migrate piecemeal
-  set_source_files_properties(proto_conversions.cc PROPERTIES COMPILE_FLAGS "-Wall -Werror")
-endif()
-
 if (ENABLE_SERVICES)
   set(valhalla_hdrs ${valhalla_hdrs} ${VALHALLA_SOURCE_DIR}/valhalla/tile_server.h)
   set(valhalla_src ${valhalla_src} tile_server.cc)
@@ -203,7 +182,6 @@ target_link_libraries(valhalla
     ${libvalhalla_link_libraries}
     $<$<BOOL:${WIN32}>:ws2_32>
   PRIVATE
-    $<$<BOOL:${ENABLE_COVERAGE}>:gcov>
     Threads::Threads)
 
 set_target_properties(valhalla PROPERTIES
@@ -226,25 +204,7 @@ install(TARGETS valhalla
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shared NAMELINK_SKIP
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT development)
 
-if(BUILD_SHARED_LIBS)
-  install(FILES ${VALHALLA_SOURCE_DIR}/COPYING ${VALHALLA_SOURCE_DIR}/CHANGELOG.md
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/libvalhalla0"
-    COMPONENT shared)
-
-  set(LIBVALHALLA_SO_LINK ${CMAKE_SHARED_LIBRARY_PREFIX}valhalla${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIBVALHALLA_SO_LINK}
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    COMPONENT development)
-
-  if(UNIX)
-    add_custom_target(${LIBVALHALLA_SO_LINK} ALL
-      COMMAND ${CMAKE_COMMAND} -E create_symlink "${LIBVALHALLA_SO_LINK}.${VALHALLA_VERSION_MAJOR}" ${LIBVALHALLA_SO_LINK})
-    set_target_properties(${LIBVALHALLA_SO_LINK} PROPERTIES FOLDER "Library")
-  endif()
-endif()
-
-install(FILES ${VALHALLA_SOURCE_DIR}/COPYING ${VALHALLA_SOURCE_DIR}/CHANGELOG.md ${VALHALLA_SOURCE_DIR}/README.md
+install(FILES ${VALHALLA_SOURCE_DIR}/README.md
   DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/libvalhalla-dev"
   COMPONENT development)
 

@@ -24,9 +24,6 @@ if [[ $server == "builder" ]]; then
         -DENABLE_TOOLS=OFF \
         -DENABLE_SERVICES=OFF \
         -DENABLE_HTTP=OFF \
-        -DENABLE_PYTHON_BINDINGS=OFF \
-        -DENABLE_TESTS=OFF \
-        -DENABLE_SINGLE_FILES_WERROR=OFF \
         -DENABLE_GDAL=OFF
 
     sudo make -C "${src_dir}/build" -j$(nproc) install
@@ -35,10 +32,7 @@ else
     cmake -S "${src_dir}" -B "${src_dir}/build" \
     -DENABLE_DATA_TOOLS=OFF \
     -DENABLE_SERVICES=ON \
-    -DENABLE_HTTP=ON \
-    -DENABLE_PYTHON_BINDINGS=OFF \
-    -DENABLE_TESTS=OFF \
-    -DENABLE_SINGLE_FILES_WERROR=OFF
+    -DENABLE_HTTP=ON
 
     sudo make -C "${src_dir}/build" -j$(nproc) install
     # Update the configs
