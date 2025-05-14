@@ -58,17 +58,17 @@ ADD . .
 
 WORKDIR /usr/local/src/valhalla/third_party/prime_server
 
-RUN ./autogen.sh && ./configure &&
-  make -j$(nproc) &&
-  make install
+RUN ./autogen.sh && ./configure \
+  && make -j$(nproc) \
+  && make install
 
 WORKDIR /usr/local/src/valhalla/build
 
 RUN cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER=gcc \
-  make all ${ADDITIONAL_TARGETS} -j$(nproc) &&
-  make install
+  && make all ${ADDITIONAL_TARGETS} -j$(nproc) \
+  && make install
 
 WORKDIR /usr/local/src
 
