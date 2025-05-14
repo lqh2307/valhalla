@@ -2,11 +2,10 @@ FROM ubuntu:24.04 AS builder
 
 ARG ADDITIONAL_TARGETS
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
-RUN DEBIAN_FRONTEND=noninteractive \
-  apt-get update -y &&
-  apt-get install -y \
+RUN \
+  export DEBIAN_FRONTEND=noninteractive \
+  && apt-get -y update \
+  && apt-get -y install \
     build-essential \
     autoconf \
     automake \
@@ -46,10 +45,12 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python3-pip \
     spatialite-bin \
     unzip \
-    zlib1g-dev &&
-  apt-get -y --purge autoremove &&
-  apt-get clean &&
-  rm -rf /var/lib/apt/lists/*
+    zlib1g-dev \
+  && apt-get -y --purge autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 WORKDIR /usr/local/src/valhalla
 
@@ -76,11 +77,9 @@ RUN for f in valhalla/locales/*.json; do cat ${f} | python3 -c 'import sys; impo
 
 FROM ubuntu:24.04 AS runner
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
-
-RUN DEBIAN_FRONTEND=noninteractive \
-  apt-get update -y && \
-  apt-get install -y \
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && apt-get -y update \
+  && apt-get -y install \
     libcurl4 \
     libczmq4 \
     libluajit-5.1-2 \
@@ -100,10 +99,12 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python3-requests \
     spatialite-bin \
     unzip \
-    wget &&
-  apt-get -y --purge autoremove &&
-  apt-get clean &&
-  rm -rf /var/lib/apt/lists/*
+    wget \
+  && apt-get -y --purge autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /usr/local/lib/python3.12/dist-packages/valhalla/* /usr/local/lib/python3.12/dist-packages/valhalla/
