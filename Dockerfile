@@ -4,8 +4,7 @@ ARG ADDITIONAL_TARGETS
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
-RUN \
-  export DEBIAN_FRONTEND=noninteractive &&
+RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -y &&
   apt-get install -y \
     build-essential \
@@ -58,15 +57,13 @@ ADD . .
 
 WORKDIR /usr/local/src/valhalla/third_party/prime_server
 
-RUN \
-  ./autogen.sh && ./configure &&
+RUN ./autogen.sh && ./configure &&
   make -j$(nproc) &&
   make install
 
 WORKDIR /usr/local/src/valhalla/build
 
-RUN \
-  cmake .. \
+RUN cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER=gcc \
   make all ${ADDITIONAL_TARGETS} -j$(nproc) &&
@@ -81,8 +78,7 @@ FROM ubuntu:24.04 AS runner
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib32:/usr/lib32
 
-RUN \
-  export DEBIAN_FRONTEND=noninteractive &&
+RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -y && \
   apt-get install -y \
     libcurl4 \
