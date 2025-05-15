@@ -17,6 +17,7 @@ RUN \
     cmake \
     jq \
     lcov \
+    git \
     libboost-all-dev \
     libcurl4-openssl-dev \
     libczmq-dev \
@@ -54,6 +55,8 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-g
 WORKDIR /usr/local/src/valhalla
 
 ADD . .
+
+RUN git submodule sync && git submodule update --init --recursive
 
 WORKDIR /usr/local/src/valhalla/third_party/prime_server
 
