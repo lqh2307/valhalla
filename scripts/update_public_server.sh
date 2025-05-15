@@ -25,7 +25,6 @@ if [[ $server == "builder" ]]; then
         -DENABLE_SERVICES=OFF \
         -DENABLE_HTTP=OFF \
         -DENABLE_PYTHON_BINDINGS=OFF \
-        -DENABLE_TESTS=OFF \
         -DENABLE_SINGLE_FILES_WERROR=OFF \
         -DENABLE_GDAL=OFF
 
@@ -37,7 +36,6 @@ else
     -DENABLE_SERVICES=ON \
     -DENABLE_HTTP=ON \
     -DENABLE_PYTHON_BINDINGS=OFF \
-    -DENABLE_TESTS=OFF \
     -DENABLE_SINGLE_FILES_WERROR=OFF
 
     sudo make -C "${src_dir}/build" -j$(nproc) install
