@@ -1,0 +1,27 @@
+name: prime_server macos
+on: [pull_request]
+
+jobs:
+  build:
+    name: build and test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: dependencies
+        shell: bash
+        run: |
+          brew update
+          brew install pkg-config zeromq czmq
+      - name: build
+        shell: bash
+        run: |
+          xcrun --show-sdk-path
+          SDK_PATH=$(find /Library/Developer/CommandLineTools/SDKs/MacOSX*.sdk -type d -maxdepth 0 | tail -n 1)
+          echo ${SDK_PATH}
+          cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_SANITIZERS=On -DCMAKE_OSX_SYSROOT=${SDK_PATH} -DENABLE_WERROR=Off && make all -j$(sysctl -n hw.ncpu)
+      - name: test
+        shell: bash
+        run: |
+          make test -j$(sysctl -n hw.ncpu)
